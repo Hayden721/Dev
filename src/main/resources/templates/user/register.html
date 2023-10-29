@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http//www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+
+<div layout:fragment="content">
+
+    <div>
+        회원가입
+        <form action="/user/register" method="post">
+            아이디 <span><input type="text"></span>
+
+        </form>
+
+        <button>회원가입</button>
+    </div>
+    <button >취소</button>
+
+</div>
+
+</html>
