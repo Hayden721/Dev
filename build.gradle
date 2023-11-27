@@ -22,20 +22,37 @@ repositories {
 }
 
 dependencies {
+    // thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    // spring sequrity
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
-    // thymeleaf
-    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
-    // MyBatis Test
-    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.7.17'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.7.16'
+
+
+
+
+
+
+
 }
+
 
 tasks.named('test') {
     useJUnitPlatform()

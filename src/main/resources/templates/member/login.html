@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/member/login.css" />
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="login-container">
+
+<a>Logo</a>
+
+    <form action="/member/login" method="post">
+        <div class="login-flex">
+            <div class="login-input">
+                <label>ID
+                    <input class="form-control" name="memberId">
+                </label>
+            </div>
+            <div class="login-input">
+                <label>Password
+                    <input class="form-control" name="memberPw">
+                </label>
+            </div>
+
+        </div>
+        <button class="btn">로그인</button>
+    </form>
+    <button type="button" onclick="location.href='/member/register'">회원가입</button>
+</div>
+
+</body>
+</html>

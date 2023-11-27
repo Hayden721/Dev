@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html lang="ko"
-        xmlns:th="http//www.thymeleaf.org"
+
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/config}">
+<link rel="stylesheet" th:href="@{/css/home.css}" >
+
+<!--    <script th:src="@{/js/page/home.js}"></script>-->
+
+
 
 <div layout:fragment="content">
-    메인페이지 내용
 
-    <h1 class="text-3xl font-bold underline text-clifford">
+    <div class="">
 
-    </h1>
+
+    </div>
+
+
+
+    <div class="main-container">
+        <div class="navbar">
+            <div class="container-fluid">
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    게시판
+
 
 
 
