@@ -1,0 +1,21 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.register-container {
+    text-align: center;
+    margin: 40px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+label {
+    text-align: left;
+}
+
+.register-flex {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,30 @@
+server:
+  port: 8888
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/devshop?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: root1234
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  thymeleaf:
+    prefix: classpath:templates/
+    check-template-location: true
+    suffix: .html
+    cache: false
+
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.dev.shop.**.dto
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: null
+
+
+

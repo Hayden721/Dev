@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >
+
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+    <title>리스트 페이지</title>
+</head>
+
+
+<div layout:fragment="content">
+
+mypage
+    <div>
+        <a href="/member/mypage/update">정보 수정</a>
+    </div>
+
+</div>
+
+</html>

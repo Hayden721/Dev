@@ -1,0 +1,18 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.login-container {
+    text-align: center;
+    margin: 40px;
+}
+label {
+    text-align: left;
+}
+
+.login-flex {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,31 @@
+.header-ul {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.header-ul > li {
+    display: flex;
+    float: left;
+    margin: 20px;
+}
+.header-logo {
+    margin: 20px;
+}
+.header-logo > a {
+    font-size: 40px;
+
+}
+
+.header-ul > li > a {
+    text-decoration: none;
+}
+nav {
+    width: auto;
+    height: 80px;
+    display: flex;
+    align-items:center;
+    justify-content: space-between;
+    background-color: grey;
+}
