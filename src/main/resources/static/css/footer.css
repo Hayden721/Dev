@@ -1,8 +1,6 @@
 .footer-container {
     width: 100%;
-
     background-color: skyblue;
-    position: absolute;
+    position: relative; (absolute -> relative) transform: translatY(-100%);
     bottom: 0;
-
 }

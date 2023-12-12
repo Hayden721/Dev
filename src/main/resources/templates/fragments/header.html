@@ -6,15 +6,15 @@
 
   <nav>
     <div class="header-logo">
-      <a href="/">Dev-room</a>
+      <a href="/devroom/member/main">Dev-room</a>
     </div>
 
     <ul class="header-ul">
 
-      <li sec:authorize="isAnonymous()"><a href="/member/login">로그인</a></li>
-      <li sec:authorize="isAuthenticated()"><a href="/member/logout">로그아웃</a></li>
+      <li sec:authorize="isAnonymous()"><a href="/devroom/member/login">로그인</a></li>
+      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/logout">로그아웃</a></li>
 
-      <li sec:authorize="isAuthenticated()"><a href="member/mypage">MYPAGE</a></li>
+      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/mypage">MYPAGE</a></li>
 
 
       <li>3</li>

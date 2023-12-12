@@ -3,20 +3,20 @@ package com.dev.shop.member.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Delegate;
+
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+
 
 @Getter @Setter
 @AllArgsConstructor
-@Slf4j
+@Slf4j @ToString
 public class MemberDetailsDto implements UserDetails {
 
     private Long memberNo;
@@ -26,12 +26,11 @@ public class MemberDetailsDto implements UserDetails {
     private String memberPhone;
     private String memberName;
     private String memberAuth;
-    private String appendDate;
-    private String updateDate;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(this.memberAuth));
+        return Collections.singletonList(new SimpleGrantedAuthority(memberAuth));
     }
 
     @Override

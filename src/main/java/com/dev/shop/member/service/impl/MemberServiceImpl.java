@@ -1,7 +1,6 @@
 package com.dev.shop.member.service.impl;
 
 import com.dev.shop.member.dao.MemberDao;
-import com.dev.shop.member.dto.MemberDetailsDto;
 import com.dev.shop.member.dto.MemberDto;
 import com.dev.shop.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +22,14 @@ public class MemberServiceImpl implements MemberService {
     Date time = new Date();
     String localTime = format.format(time);
     @Override
-    public void memberRegister(MemberDetailsDto memberDetailsDto) {
+    public void memberRegister(MemberDto memberDto) {
 
-        memberDetailsDto.setMemberPw(bCryptPasswordEncoder.encode(memberDetailsDto.getMemberPw()));
-        memberDetailsDto.setMemberAuth("USER");
-        memberDetailsDto.setAppendDate(localTime);
-        memberDetailsDto.setUpdateDate(localTime);
+        memberDto.setMemberPw(bCryptPasswordEncoder.encode(memberDto.getMemberPw()));
+        memberDto.setMemberAuth("USER");
+        memberDto.setAppendDate(localTime);
+        memberDto.setUpdateDate(localTime);
 
-        memberDao.insertMemberRegister(memberDetailsDto);
+        memberDao.insertMemberRegister(memberDto);
     }
 
     @Override

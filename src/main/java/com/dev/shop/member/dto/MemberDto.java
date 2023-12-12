@@ -2,7 +2,7 @@ package com.dev.shop.member.dto;
 
 import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 로그인에 사용
 public class MemberDto {
@@ -13,6 +13,7 @@ public class MemberDto {
     private String memberPhone;
     private String memberName;
     private String memberAuth;
-
+    private String appendDate;
+    private String updateDate;
 
 }

@@ -2,7 +2,7 @@
 <html lang="ko"
 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/config}">
+      layout:decorate="~{layouts/seller-config}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -14,10 +14,11 @@
 </head>
 
 
-<div layout:fragment="content">
+<div layout:fragment="seller-content">
 
 <a>Seller Page</a>
-    <form action="/seller/login" method="post">
+    <form th:action="@{/seller/login}" method="post">
+
         <label> Id
             <input name="sellerId">
         </label>

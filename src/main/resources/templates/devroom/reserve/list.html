@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+
+
+    <link rel="stylesheet" th:href="@{/css/reserve/list.css}" >
+
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="content">
+
+<div id="wrap">
+    <!--  사이드옵션  -->
+    <div id="sideOption-menu">
+        <div class="container-fluid" style="margin-top: 10px">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn" type="submit">Search</button>
+            </form>
+        </div>
+
+        <div class="option">
+
+        </div>
+    </div>
+
+    <div id="list-container">
+        <div id="room-container" th:each="roomList : ${roomList.list}">
+            <div id="item-container" th:onclick="|location.href='@{/devroom/reserve/detail(roomNo=${roomList.roomNo})}'|">
+                <img src="https://www.dummyimage.com/200x200/000/fff" alt="..." style="border-radius: 20px">
+                <div style="display: inline-block;">
+                    <div id="item-content">
+                        <span th:text="${roomList.roomTitle}"></span>
+                        <span th:text="${roomList.roomDiv}"></span>
+                        <span th:text="${roomList.roomTitle}"></span>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- room-container -->
+
+        <div class="pagination-container"></div>
+
+    </div> <!-- list-container end -->
+
+</div> <!-- wrap end --->
+
+</div> <!-- content end -->
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        $(document).ready(function(){
+
+            const test = [[ ${params} ]]
+            console.log(test);
+            const test1 = [[ ${roomList.pagination} ]]
+            console.log(test1);
+
+
+            findAllList();
+        });
+
+        function findAllList() {
+            const roomList = [[${roomList.list}]];
+            console.log(roomList);
+            if (!roomList.length) {
+                $('#list-container').html('<b>방이 없어요</b>');
+                drawPage();
+            }
+
+            const pagination = [[ ${roomList.pagination} ]];
+
+            //@ModelAttribute를 이용해서 뷰(HTML)로 전달한 SearchDTo탑의 객체인 params를 의미
+            const params = [[ ${params} ]];
+
+            drawPage(pagination, params);
+        }
+
+        // 페이징
+        function drawPage(pagination, params) {
+            // 필수 파라미터가 없는 경우 html을 제거
+            if(!pagination || !params) {
+                $('.pagination-container').html('');
+                throw new Error('Missing required parameters...');
+            }
+
+            let html = `
+                <div aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+
+`;
+
+            if (pagination.prevPage) {
+                html += `
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(1)">첫 페이지</a></li>
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})">이전 페이지</a></li>
+          `;
+            }
+
+            html += '<li class="page-item">';
+            for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+                html += (i !== params.page)
+                    ? `<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${i});">${i}</a></li>`
+                    : `<li class="page-item active"><span class="page-link">${i}</span></li>`
+            }
+            html += '</li>';
+
+            if (pagination.nextPage) {
+                html += `
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.endPage} + 1);" class="page_bt next">다음 페이지</a></li>
+                    <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.totalPageCount});" class="page_bt last">마지막 페이지</a></li>
+                </ul>
+                </div>
+                `;
+            }
+            console.log(html);
+            $('.pagination-container').html(html);
+        }
+
+
+        function movePage(page) {
+
+            // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
+            const queryParams = {
+                page: (page) ? page : 1,
+                recordSize: 4,
+                pageSize: 5
+            }
+
+            /*
+             * 2. location.pathname : 리스트 페이지의 URI("/post/list.do")를 의미
+             *    new URLSearchParams(queryParams).toString() : queryParams의 모든 프로퍼티(key-value)를 쿼리 스트링으로 변환
+             *    URI + 쿼리 스트링에 해당하는 주소로 이동
+             *    (해당 함수가 리턴해주는 값을 브라우저 콘솔(console)에 찍어보시면 쉽게 이해하실 수 있습니다.)
+             */
+            location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
+        }
+
+
+        /*]]>*/
+    </script>
+
+
+
+</th:block>
+
+
+
+</html>

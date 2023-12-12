@@ -11,20 +11,21 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CustomDetailsServiceImpl implements UserDetailsService {
+
+public class MemberDetailsServiceImpl implements UserDetailsService {
 
     private final MemberDao memberDao;
 
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
         log.info("--- [CustomDetailsServiceImpl] 여기까지 옴");
-
-        MemberDetailsDto memberDetailsDto = memberDao.selectMemberById(memberId);
-        log.info("--- [customDetailServiceImpl] 데이터값 확인 : {}", memberDetailsDto);
-        if (memberDetailsDto == null) {
+        log.info("{}", memberId);
+        MemberDetailsDto dto = memberDao.selectMemberById(memberId);
+//        log.info("--- [customDetailServiceImpl] 데이터값 확인 : {}", dto);
+        if (dto.getMemberId() == null) {
             throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");
 
         }
-        return memberDetailsDto;
+        return dto;
     }
 }

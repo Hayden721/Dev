@@ -4,7 +4,20 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dev.shop.seller.dao.SellerDao">
+    <insert id="insertSellerRegister">
+        INSERT INTO seller_tb (
+        seller_id, seller_email, seller_pw, seller_auth, seller_phone, seller_name
+        , seller_appenddate, seller_updatedate)
+        VALUES(
+        #{sellerId}, #{sellerEmail}, #{sellerPw}, #{sellerAuth},#{sellerPhone}, #{sellerName}
+        , #{appendDate}, #{updateDate})
 
 
+    </insert>
 
+    <select id="selectSellerById" resultType="com.dev.shop.seller.dto.SellerDetailsDto">
+        SELECT *
+        FROM seller_tb
+        WHERE seller_id = #{sellerId}
+    </select>
 </mapper>

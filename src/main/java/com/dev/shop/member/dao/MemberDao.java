@@ -15,6 +15,6 @@ public interface MemberDao {
      * @return 멤버의 정보
      */
     MemberDetailsDto selectMemberById(String memberId);
-    void insertMemberRegister(MemberDetailsDto memberDetailsDto);
+    void insertMemberRegister(MemberDto memberDto);
     MemberDto selectMemberInfoById(String authId);
 }

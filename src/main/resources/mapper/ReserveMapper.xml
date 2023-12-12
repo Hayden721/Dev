@@ -4,10 +4,30 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
-    <select id="selectAllRoom" resultType="RoomDto">
-    SELECT *
-    FROM room_tb
+    <select id="selectRoomList" parameterType="CriteriaDto" resultType="RoomDto">
+        SELECT *
+        FROM room_tb
+        ORDER BY room_no DESC
+        LIMIT #{pagination.limitStart}, #{recordSize}
     </select>
+
+    <select id="countAllList" parameterType="CriteriaDto" resultType="int">
+        SELECT COUNT(*)
+        FROM room_tb
+    </select>
+
+    <select id="selectRoomInfoByRoomNo" resultType="RoomDto">
+        SELECT *
+        FROM room_tb
+        where room_no = #{roomNo}
+    </select>
+
+    <select id="selectRoomOptionInfoByRoomNo" resultType="RoomOptionDto">
+        SELECT *
+        FROM roomoption_tb
+        where room_no = #{roomNo}
+    </select>
+
 
 
 </mapper>

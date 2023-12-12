@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <link rel="stylesheet" th:href="@{/css/reserve/detail.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="content">
+
+<!--    <span th:text="${roomInfo}"></span>-->
+<!--    <div></div>-->
+<!--    <span th:text="${roomInfo.getRoomTitle}"></span>-->
+
+
+<!--    옵션-->
+<!--    <div th:each="roomOptionList : ${roomOptionInfo}">-->
+<!--    <span th:text="${roomOptionInfo}"></span>-->
+<!--    </div>-->
+<div id="wrap">
+    <div id="div1-container">
+    <!-- 설명-->
+        <div id="div1-inner-content">
+                <span th:text="${roomInfo.getRoomTitle}"></span>
+            div1
+        </div>
+    <!--지도 -->
+        <div id="div1-inner-map">
+            지도
+        </div>
+    </div>
+
+        <div id="div2-container">
+            옵션
+        </div>
+</div>
+
+</div>
+
+
+
+</html>

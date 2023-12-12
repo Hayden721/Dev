@@ -15,4 +15,5 @@ public class RoomDto {
     private String roomContent; // 상세내용
 
     private Long sellerNo;
+
 }

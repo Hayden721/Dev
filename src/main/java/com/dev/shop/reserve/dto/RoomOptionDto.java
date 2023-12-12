@@ -10,5 +10,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class RoomOptionDto {
+    private Long roptionNo;
+    private String roptionTitle;
+    private String roptionPrice;
+    private String roptionContent;
 
+    private Long roomNo; // foreign key
 }

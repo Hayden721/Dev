@@ -1,19 +1,18 @@
 #sideOption-menu {
-    width: 400px;
-    height: 100%;
+    width: 399px;
+    /*background-color: turquoise;*/
     position: fixed;
-    background-color: turquoise;
 }
 
 #list-container {
     margin-left: 400px;
-    background-color: violet;
+    height: 1100px;
+    background-color: tomato;
 
 }
 
 #room-container {
     padding: 20px 20px 0 20px;
-
 }
 #item-container {
     border: solid grey;
@@ -30,6 +29,6 @@ img {
     display: block;
 }
 
-#page {
-   margin-top: 20px;
+.pagination-container {
+    margin: 20px;
 }
