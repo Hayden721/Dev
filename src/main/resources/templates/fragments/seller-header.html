@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<div th:fragment="seller-header">
+
+  <nav>
+    <div class="header-logo">
+      <a href="/">Dev-room[Seller]</a>
+    </div>
+
+    <ul class="header-ul">
+      <li sec:authorize="isAuthenticated()"><a href="/seller/logout">로그아웃</a></li>
+    </ul>
+  </nav>
+
+
+</div>
+</html>

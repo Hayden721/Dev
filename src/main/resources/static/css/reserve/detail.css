@@ -1,0 +1,29 @@
+#div1-container {
+    width: 100vw;
+    height: 400px;
+    background-color: wheat;
+    display: flex;
+    justify-content: center;
+}
+
+#div1-inner-content{
+    width: 900px;
+    height: 400px;
+    background-color: tomato;
+    padding: 10px;
+    border: 1px solid;
+}
+
+#div1-inner-map{
+    width: 400px;
+    height: 400px;
+    background-color: yellowgreen;
+    padding: 10px;
+    border: 1px solid;
+}
+
+#div2-container {
+    width: 100vw;
+    height: 700px;
+    background-color: tan;
+}
