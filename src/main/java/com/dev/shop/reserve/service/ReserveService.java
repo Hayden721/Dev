@@ -5,7 +5,9 @@ import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
 import com.dev.shop.utils.PagingResponse;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public interface ReserveService {
     PagingResponse<RoomDto> findAllRoom(CriteriaDto roomDto);
@@ -14,4 +16,6 @@ public interface ReserveService {
 
 
     List<RoomOptionDto> findRoomOptionInfo(Long roomNo);
+
+    Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, long roomNo);
 }

@@ -27,3 +27,110 @@
     height: 700px;
     background-color: tan;
 }
+
+#option-container {
+    width: 400px;
+    border-right: 1px solid black;
+    margin: 10px;
+
+}
+.option-list {
+    position: relative;
+    margin-bottom: 15px;
+    height: 110px;
+
+}
+.option-list img {
+    position: absolute;
+    margin-top: 10px;
+    left: 280px;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#calendar {
+    width: 450px;
+}
+#calendar table {
+    width: 100%;
+}
+
+#calendar table > span {
+    font-size: larger;
+    font-weight: bolder;
+    color: tomato;
+    padding: 9px 9px;
+}
+
+#calendar table {
+
+}
+
+
+#calendar table > tbody > tr > td {
+    text-align: center;
+    padding: 9px 9px;
+
+
+}
+
+#calendar table > tbody > tr > td > span {
+    display: block;
+    padding: 9px 9px;
+    cursor: pointer;
+}
+
+.today {
+    border-radius: 50%;
+    color: white;
+    background-color: tomato;
+    padding: 8px 8px;
+}
+.past-day{
+    border-radius: 10px;
+    background-color: dimgrey;
+    color: white;
+}
+
+.calendar-container {
+
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*display: flex;*/
+}
+
+.calendar-header {
+    width: 450px;
+    position: relative;
+    height: 50px;
+    font-weight: bold;
+    color: red;
+    display: flex;
+    justify-content: center;
+}
+
+.calendar-container > .calendar-header > .calendar-control {
+    height: 10px;
+    position: absolute;
+    font-weight: bolder;
+
+}
+
+.calendar-container > .calendar-header > .calendar-control > button {
+
+    width: 30px;
+    border: 1px solid #cbcbcb;
+    background-color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+
+
+
+.calendar-yearmonth {
+    position: relative;
+    font-size: larger;
+    line-height: 50px;
+}

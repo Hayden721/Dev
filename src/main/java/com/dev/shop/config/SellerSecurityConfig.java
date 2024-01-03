@@ -32,7 +32,7 @@ public class SellerSecurityConfig {
 
 
         http. authorizeRequests().antMatchers( "/devroom/member/main","/devroom/member/login", "/devroom/member/register",
-                "/css/**","/js/**", "/devroom/reserve/*", "seller/*").permitAll();
+                "/css/**","/js/**", "/devroom/reserve/**", "seller/**", "seller/login").permitAll();
         http
                 .authenticationProvider(sellerAuthenticationProvider)
                 .csrf().disable(); //일반 사용자에 대해 Session을 저장하지 않으므로 csrf을 disable 처리함.

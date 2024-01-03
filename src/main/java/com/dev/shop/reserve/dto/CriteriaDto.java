@@ -15,7 +15,7 @@ public class CriteriaDto {
 
     private String keyword; // 검색 키워드
     private String searchLocation;  // 지역 검색
-    private String searchType; // 방 유형 검색
+    private String searchDiv; // 방 유형 검색
 
     private Pagination pagination;
 
@@ -24,7 +24,6 @@ public class CriteriaDto {
         this.recordSize = 4;
         this.pageSize = 5;
     }
-
 
     public String[] getTypeArr() {
         return keyword == null ? new String[]{} : keyword.split("");

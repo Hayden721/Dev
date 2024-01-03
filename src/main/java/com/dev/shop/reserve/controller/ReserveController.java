@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Controller
@@ -43,13 +43,28 @@ public class ReserveController {
     public void detailGet(@RequestParam final Long roomNo, Model model) {
         // roomDTO select
         RoomDto roomInfo = reserveService.findRoomInfo(roomNo);
-        // roomOption select 내일 할 것
+        // roomOption select
         List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
 
                 log.info("--- reserveController --- 값 : {}", roomOptionInfo);
 
         model.addAttribute("roomInfo", roomInfo);
         model.addAttribute("roomOptionInfo", roomOptionInfo);
+
+
+
     }
+
+    @GetMapping("/detail/reserveAjax")
+    public String reserveAjaxGet(String selectDate, long roomNo, Model model) {
+
+        Map<String, ArrayList<Integer>> availableReserveTimes = reserveService.getAvailableReservationTime(selectDate, roomNo);
+
+        model.addAttribute("availableReserveTimes", availableReserveTimes);
+        model.addAttribute("selectDate", selectDate);
+
+        return "/devroom/reserve/reserveAjax";
+    }
+
 
 }

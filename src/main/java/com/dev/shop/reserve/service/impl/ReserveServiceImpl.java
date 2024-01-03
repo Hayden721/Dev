@@ -9,11 +9,12 @@ import com.dev.shop.reserve.service.ReserveService;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReserveServiceImpl implements ReserveService {
@@ -46,5 +47,67 @@ public class ReserveServiceImpl implements ReserveService {
     public List<RoomOptionDto> findRoomOptionInfo(Long roomNo) {
         return reserveDao.selectRoomOptionInfoByRoomNo(roomNo);
     }
+
+    @Override
+    public Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, long roomNo) {
+        //start_time, end_time Map
+        Map<String, ArrayList<Integer>> timeMap = new HashMap<String, ArrayList<Integer>>();
+
+        ArrayList<Integer> startTimeValues = new ArrayList<>();
+        ArrayList<Integer> endTimeValues = new ArrayList<>();
+
+        for (int i=1; i<=24; i++) {
+            startTimeValues.add(i);
+            endTimeValues.add(i);
+        }
+
+        timeMap.put("start_time", startTimeValues);
+        timeMap.put("end_time", endTimeValues);
+
+        for (Map.Entry<String, ArrayList<Integer>> entry : timeMap.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue());
+        }
+
+        //----------------------------------------------------------
+
+        List<Map<String, Integer>> getReservationTime = reserveDao.getReservedAllTime(selectDate, roomNo);
+
+        ArrayList<Integer> removeStartTimeValues = new ArrayList<>();
+        ArrayList<Integer> removeEndTimeValues = new ArrayList<>();
+        log.info("예약된 전체 시간 조회 : {}", getReservationTime);
+
+        for(Map<String, Integer> reservation : getReservationTime) {
+            if(reservation.containsKey("start_time") && reservation.containsKey("end_time")) {
+                int startTime = reservation.get("start_time");
+                int endTime = reservation.get("end_time");
+
+                if (endTime - startTime >= 2) {
+                    for (int i = startTime; i < endTime; i++) {
+                        removeStartTimeValues.add(i);
+                    }
+
+                    for (int j = startTime + 1; j<=endTime; j++) {
+                        removeEndTimeValues.add(j);
+                    }
+
+                } else {
+                    removeStartTimeValues.add(startTime);
+                    removeEndTimeValues.add(endTime);
+                }
+            }
+        }
+
+        timeMap.get("start_time").removeAll(removeStartTimeValues);
+        timeMap.get("end_time").removeAll(removeEndTimeValues);
+
+        log.info("removeStart 확인 : {}", removeStartTimeValues);
+        log.info("removeEnd 확인 : {}", removeEndTimeValues);
+        log.info("예약 가능한 시간 확인 : {}", timeMap);
+
+        return timeMap;
+
+    }
+
+
 
 }

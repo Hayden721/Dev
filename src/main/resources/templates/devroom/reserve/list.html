@@ -17,15 +17,38 @@
     <!--  사이드옵션  -->
     <div id="sideOption-menu">
         <div class="container-fluid" style="margin-top: 10px">
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn" type="submit">Search</button>
+            <form class="d-flex" id="searchForm" role="search" onsubmit="return false;" autocomplete="off">
+                <div class="option-box">
+                    <div class="keywordSearch">
+                        <input class="form-control me-2" id="keyword" name="keyword" type="search" placeholder="Search" aria-label="Search">
+                    </div>
+
+                    <div class="divOptionSearch">
+                        <label><input name="checkDiv" type="checkbox" value="studyroom">스터디룸</label>
+                        <label><input name="checkDiv" type="checkbox" value="metting">회의룸</label>
+                        <label><input name="checkDiv" type="checkbox" value="office">오피스</label>
+                    </div>
+
+                    <div class="locOptionSearch">
+                        <select class="locOption" name="locOption" >
+                            <option value="">=== 지역 ===</option>
+                            <option value="서울">서울</option>
+                            <option value="경기">경기</option>
+                            <option value="대전">대전</option>
+                            <option value="부산">부산</option>
+                        </select>
+                    </div>
+
+                    <button class="btn" onclick="movePage(1);" type="submit">적용</button>
+
+                </div>
+
+
+
             </form>
         </div>
 
-        <div class="option">
 
-        </div>
     </div>
 
     <div id="list-container">
@@ -36,7 +59,8 @@
                     <div id="item-content">
                         <span th:text="${roomList.roomTitle}"></span>
                         <span th:text="${roomList.roomDiv}"></span>
-                        <span th:text="${roomList.roomTitle}"></span>
+                        <span th:text="${roomList.roomAddress}"></span>
+                        <span th:text="${roomList.sellerNo}"></span>
                     </div>
                 </div>
             </div>
@@ -55,15 +79,36 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
         $(document).ready(function(){
-
+            setQueryStringParams();
             const test = [[ ${params} ]]
             console.log(test);
             const test1 = [[ ${roomList.pagination} ]]
             console.log(test1);
 
+            console.log(location.search);
+
 
             findAllList();
+
         });
+
+        function setQueryStringParams() {
+            if (!location.search) {
+                return false;
+            }
+
+            const form = $('#searchForm');
+
+            new URLSearchParams(location.search).forEach((value, key) => {
+                console.log(`${key}:${value}`);
+                const inputField = form.find(`[name="${key}"]`);
+                console.log("---" + inputField.length);
+
+                if (inputField.length) {
+                    inputField.val(value);
+                }
+            });
+        }
 
         function findAllList() {
             const roomList = [[${roomList.list}]];
@@ -123,15 +168,31 @@
         }
 
 
+
         function movePage(page) {
+
+            const keywordValue = $("#keyword").val();
+            const searchLocaValue = $("select[name=locOption] option:selected").val();
+
+            const chk_val = [];
+            const searTypeValue = $("input[name=checkDiv]:checked").each(function () {
+                const chk =$(this).val();
+                chk_val.push(chk);
+            })
+
+            console.log(chk_val);
 
             // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
             const queryParams = {
                 page: (page) ? page : 1,
                 recordSize: 4,
-                pageSize: 5
-            }
+                pageSize: 5,
+                keyword: keywordValue,
+                searchLocation: searchLocaValue,
+                searchDiv: chk_val
 
+
+            }
             /*
              * 2. location.pathname : 리스트 페이지의 URI("/post/list.do")를 의미
              *    new URLSearchParams(queryParams).toString() : queryParams의 모든 프로퍼티(key-value)를 쿼리 스트링으로 변환
@@ -140,6 +201,7 @@
              */
             location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
         }
+
 
 
         /*]]>*/
