@@ -37,4 +37,27 @@ public class MemberServiceImpl implements MemberService {
         return memberDao.selectMemberInfoById(authId);
     }
 
+    @Override
+    public void updateMemberInfo(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
+
+        String oldPw = memberDao.selectMemberPw(memberDto.getMemberNo());
+
+        memberDto.setMemberPhone(memberDto.getMemberPhone());
+        memberDto.setUpdateDate(localTime);
+        memberDto.setMemberEmail(memberDto.getMemberEmail());
+
+        if (bCryptPasswordEncoder.matches(memberDto.getMemberPw(), oldPw) && memberNewPw.equals(memberNewPwChk) && memberDto.getMemberPw() != null) {
+
+            memberDto.setMemberPw(bCryptPasswordEncoder.encode(memberNewPw));
+
+            memberDao.updateMemberInformation(memberDto);
+
+        } else {
+
+            memberDao.updateMemberInformation(memberDto);
+        }
+
+
+    }
+
 }

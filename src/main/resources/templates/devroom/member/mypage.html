@@ -6,7 +6,7 @@
 <head>
     <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >
 
-    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 
     <title>리스트 페이지</title>
 </head>
@@ -16,8 +16,11 @@
 
 mypage
     <div>
-        <a href="/member/mypage/update">정보 수정</a>
+        <a th:href="@{/devroom/member/mypage/edit}">정보 수정</a>
     </div>
+
+    <div><a th:href="@{/}">예약 정보</a></div>
+    <div><a th:href="@{/}">찜 목록</a></div>
 
 </div>
 

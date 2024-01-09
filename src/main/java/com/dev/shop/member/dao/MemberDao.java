@@ -17,4 +17,8 @@ public interface MemberDao {
     MemberDetailsDto selectMemberById(String memberId);
     void insertMemberRegister(MemberDto memberDto);
     MemberDto selectMemberInfoById(String authId);
+    void updateMemberInformation(MemberDto memberDto);
+
+
+    String selectMemberPw(Long memberNo);
 }

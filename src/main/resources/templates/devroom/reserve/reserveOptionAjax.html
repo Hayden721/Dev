@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="calendar-wrapper">
+    <!-- 달력 -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <div class="calendar-control">
+                <button type="button" class="calendar-prev">&lt;</button>
+                <span class="calendar-yearmonth"></span>
+                <button type="button" class="calendar-next">&gt;</button>
+                <button type="button" class="calendar-today">오늘</button>
+            </div>
+        </div>
+
+        <div id="calendar"></div>
+        <label> 선택한 날짜 값 확인
+            <input class="selectDate" name="selectDate" value="">
+        </label>
+        <!--     TimeAjax       -->
+    </div>
+        <div class="reserveTimeAjax"></div>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+
+    $(document).ready(function(){
+        buildCalendar(new Date());
+
+    });
+
+    var date = new Date();
+
+    function buildCalendar(date) {
+
+        var calendarYear = date.getFullYear(); // 년
+        console.log(calendarYear);
+        var calendarMonth = date.getMonth() + 1; // 월
+        console.log(calendarMonth);
+        var calendarToday = date.getDate(); // 일
+        console.log(calendarToday);
+
+        var monthLastDate = new Date(calendarYear, calendarMonth, 0);
+        var calendarMonthLastDate = monthLastDate.getDate(); // 월의 마지막 일
+        var monthStartDay = new Date(calendarYear, date.getMonth(), 1);
+        var calendarMonthStartDay = monthStartDay.getDay(); //달력에서 시작하는 요일
+
+        var calendarWeekCount = Math.ceil((calendarMonthStartDay + calendarMonthLastDate) / 7); // 주 계산
+
+        $(".calendar-yearmonth").html(calendarYear + "/" + calendarMonth);
+
+        var html = "";
+
+        html += "<table>";
+        html += "<thead>";
+        html += "<tr style='text-align: center'>";
+        html += "<th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>";
+        html += "</tr>";
+        html += "</thead>";
+        html += "<tbody>";
+
+        var today = new Date();
+
+        console.log(today.getDate());
+
+        var calendarPos = 0;
+        var calendarDay = 0;
+        for (var index1 = 0; index1 < calendarWeekCount; index1++) {
+            html += "<tr>";
+            for (var index2 = 0; index2 < 7; index2++) {
+                html += "<td style='padding: 10px 10px; text-align: center;'>"
+                if(calendarMonthStartDay <= calendarPos && calendarDay < calendarMonthLastDate) {
+                    calendarDay++;
+                    html+= "<span";
+
+                    var cellDate = new Date(calendarYear, calendarMonth -1, calendarDay)
+                    console.log("여기다", cellDate);
+
+                    if (calendarYear === today.getFullYear() && calendarMonth === today.getMonth() + 1
+                        && calendarDay === today.getDate()) {
+                        html += " class=\"today\"";
+                    } else if(cellDate < today) {
+                        html += " class=\"past-day\"";
+                    }
+                    html += ">"+calendarDay+"</span>";
+                }
+                html += "</td>";
+                calendarPos++;
+            }
+            html += "</tr>";
+        }
+        html += "</tbody>";
+        html += "</table>";
+        $("#calendar").html(html);
+    }
+
+    // 달력 버튼 이벤트 처리
+
+    // 이전 달 이동 버튼 클릭
+    $(".calendar-control > .calendar-prev").on("click", function() {
+        var yearmonth = $(".calendar-yearmonth").text().split("/");
+        buildCalendar(new Date(parseInt(yearmonth[0]), parseInt(yearmonth[1]) - 2, 1));
+    });
+
+    // 다음 달 이동 버튼 클릭
+    $(".calendar-control > .calendar-next").on("click", function() {
+        var yearmonth = $(".calendar-yearmonth").text().split("/");
+        buildCalendar(new Date(parseInt(yearmonth[0]), parseInt(yearmonth[1]), 1));
+    });
+
+    $(".calendar-control > .calendar-today").on("click", function () {
+        buildCalendar(new Date());
+    });
+
+
+    var calendarYear = date.getFullYear(); // 년
+    console.log(calendarYear);
+    var calendarMonth = date.getMonth() + 1; // 월
+    console.log(calendarMonth);
+    var calendarToday = date.getDate(); // 일
+    console.log(calendarToday);
+
+    var compareToday = calendarYear + "-" + calendarMonth + "-" + calendarToday;
+    console.log(calendarYear + "-" + calendarMonth + "-" + calendarToday);
+
+    // 날짜 클릭
+    $(document).on("click", "#calendar table > tbody > tr > td > span", function(event) {
+        var yearmonth = $(".calendar-yearmonth").text().split("/");
+        var clickDate = yearmonth[0] + "-" + yearmonth[1] + "-" + $(event.target).text();
+
+            $.ajax({
+                type: 'get',           // 타입 (get, post, put 등등)
+                url: './detail/reserveTimeAjax',  // 요청할 서버url
+                dataType: 'html',       // 데이터 타입 (html, xml, json, text 등등)
+                data: {  // 보낼 데이터 (Object , String, Array)
+                    roomNo : [[${roomNo}]],
+                    sellerNo : [[${sellerNo}]],
+                    optionNo: [[${optionNo}]],
+                    selectDate: clickDate
+                },
+                success: function (result) { // 결과 성공 콜백함수
+                    $(".reserveTimeAjax").html(result)
+                },
+                error: function (request, status, error) {
+                    console.log(error)
+                }
+            })
+
+
+        $(".selectDate").val(clickDate);
+    });
+
+</script>
+
+
+</body>
+</html>

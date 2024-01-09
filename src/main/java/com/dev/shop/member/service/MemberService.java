@@ -1,7 +1,7 @@
 package com.dev.shop.member.service;
 
-import com.dev.shop.member.dto.MemberDto;
 
+import com.dev.shop.member.dto.MemberDto;
 
 public interface MemberService {
 
@@ -9,4 +9,6 @@ public interface MemberService {
 
 
     MemberDto memberInfoByAuthId(String authId);
+
+    void updateMemberInfo(MemberDto memberDto, String memberNewPw, String memberNewPwChk);
 }

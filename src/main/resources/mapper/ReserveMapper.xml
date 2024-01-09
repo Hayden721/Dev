@@ -4,6 +4,7 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
+
     <select id="selectRoomList" parameterType="CriteriaDto" resultType="RoomDto">
         SELECT *
         FROM room_tb
@@ -11,7 +12,7 @@
             <!-- 검색어가 존재할 때 -->
             <if test="keyword != null and keyword != ''">
                 <choose>
-                    <!-- sear -->
+                    <!-- search -->
                     <when test="searchDiv != null and searchDiv !=''">
                         <choose>
                             <when test="'studyroom'.equals(searchDiv)">
@@ -139,12 +140,27 @@
 
     <select id="getReservedAllTime" resultType="java.util.Map">
         SELECT start_time, end_time
-        FROM time_reservations_tb
+        FROM reservation_tb
         WHERE room_no = #{roomNo}
-        AND reservation_date = #{selectDate}
-
-
-
+            AND roption_no = #{optionNo}
+            AND reservation_date = #{selectDate}
     </select>
+
+
+    <select id="selectMemberNoByAuthId" resultType="java.lang.String">
+        SELECT member_no
+        FROM member_tb
+        WHERE member_id = #{memberId}
+    </select>
+
+    <insert id="insertReserveInfo">
+        INSERT INTO reservation_tb (
+            reservation_date, start_time, end_time, seller_no, member_no, room_no, roption_no
+            )
+        VALUES (
+            #{selectDate}, #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}
+            )
+
+    </insert>
 
 </mapper>

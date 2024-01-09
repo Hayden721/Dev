@@ -29,7 +29,7 @@ public class MemberSecurityConfig {
     public SecurityFilterChain MemberFilterChain(HttpSecurity http) throws Exception {
 
         http. authorizeRequests().antMatchers( "/devroom/member/main","/devroom/member/login", "/devroom/member/register",
-                "/css/**","/js/**", "/devroom/reserve/**", "seller/**").permitAll();
+                "/css/**","/js/**", "/devroom/reserve/**").permitAll();
 
         http
                 .authenticationProvider(memberAuthenticationProvider)

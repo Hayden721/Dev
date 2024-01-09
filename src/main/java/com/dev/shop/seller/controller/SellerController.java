@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/seller")
@@ -26,13 +28,29 @@ public class SellerController {
 
     @GetMapping("/main")
     public void mainGet() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
+        log.info("--- [/seller/login] 권한 확인 : {}", authorities);
     }
 
     @GetMapping("/login")
-    public void loginGet(){
+    public String loginGet(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("--- [/seller/login] 토큰값 : {}", authentication);
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        boolean hasUserAuthority = authorities.stream().anyMatch(grantedAuthority -> "USER".equals(grantedAuthority.getAuthority()));
+        log.info("=================== {}", hasUserAuthority);
+
+        if(hasUserAuthority) {
+            return "redirect:/seller/logout";
+        }
+
+        log.info("------------------ authorities : {}",authorities);
+
+        return "seller/login";
     }
 
     @GetMapping("/logout")

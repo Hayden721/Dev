@@ -1,5 +1,6 @@
 package com.dev.shop.member.controller;
 
+
 import com.dev.shop.member.dto.MemberDto;
 import com.dev.shop.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.Collection;
 
 
 @Slf4j
@@ -31,14 +34,26 @@ public class MemberController {
         log.info("--- mainGet ---");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("--- [/login] 토큰값 : {}", authentication);
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+        boolean hasUserAuthority = authorities.stream().anyMatch(grantedAuthority -> "SELLER".equals(grantedAuthority.getAuthority()));
+        log.info("=================== {}", hasUserAuthority);
+
+        if(hasUserAuthority) {
+            return "redirect:/devroom/member/logout";
+        }
+
+        log.info("------------------ authorities : {}",authorities);
+
+
 
         if(authentication instanceof AnonymousAuthenticationToken) {
             log.info("--- [/member/login] 토큰값 : {}", authentication);
         } else {
             String memberId = principal.getName();
             log.info("멤버 아이디 값  : {}", memberId);
-            log.info("--- [/login2] 토큰값 : {}", authentication);
+
+
 
 
             model.addAttribute("auth", authentication);
@@ -84,7 +99,6 @@ public class MemberController {
     public void memberRegisterPost(MemberDto memberDto) {
         log.info("memberDetailDto : {}", memberDto);
 
-                // 값이 들어오는지 확인해야함
 
         memberService.memberRegister(memberDto);
 
@@ -95,23 +109,31 @@ public class MemberController {
 
     }
 
-    @GetMapping("/mypage/update")
-    public String updateGet(Model model, HttpServletRequest request) {
+    @GetMapping("/mypage/edit")
+    public String editGet(Model model, HttpServletRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         if(authentication instanceof AnonymousAuthenticationToken) { // 비로그인 상태
             return "/devroom/member/unlogined";
         } else {
             MemberDto memberInfo = memberService.memberInfoByAuthId(authId);
-            log.info("--- [mypage/update] --- {}", memberInfo);
+
             model.addAttribute("memberInfo", memberInfo);
-            return "/devroom/member/update";
+            return "/devroom/member/edit";
 
         }
 
 
+    }
+    @PostMapping("/mypage/edit")
+    public String editPost(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
+
+            memberService.updateMemberInfo(memberDto, memberNewPw, memberNewPwChk );
+
+        return "redirect:/devroom/member/mypage";
     }
 
 

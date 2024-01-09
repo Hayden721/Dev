@@ -16,6 +16,6 @@ public class CustomAuthenticationFailHandler implements AuthenticationFailureHan
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
-        response.sendRedirect(request.getContextPath() + "/member/login");
+        response.sendRedirect(request.getContextPath() + "/devroom/member/login");
     }
 }

@@ -13,6 +13,24 @@
             #{memberId}, #{memberEmail}, #{memberPw}, #{memberAuth},#{memberPhone}, #{memberName}
             , #{appendDate}, #{updateDate})
     </insert>
+    <update id="updateMemberInformation">
+
+        <choose>
+            <when test="memberPw != ''">
+                UPDATE member_tb
+                    SET member_pw = #{memberPw}, member_phone = #{memberPhone}, member_updatedate = #{updateDate}, member_email = #{memberEmail}
+                WHERE member_no = #{memberNo}
+            </when>
+            <otherwise>
+                UPDATE member_tb
+                SET member_phone = #{memberPhone}, member_updatedate = #{updateDate}, member_email = #{memberEmail}
+                WHERE member_no = #{memberNo}
+            </otherwise>
+        </choose>
+
+
+
+    </update>
 
 
     <select id="selectMemberByMemberNo" resultType="MemberDto">
@@ -20,20 +38,24 @@
         FROM member_tb
         WHERE member_id = #{memberId}
     </select>
-    <select id="getInfoById" resultType="MemberDetailsDto">
 
-
-    </select>
     <select id="selectMemberById" resultType="MemberDetailsDto">
         SELECT *
         FROM member_tb
         WHERE member_id = #{memberId}
     </select>
+
     <select id="selectMemberInfoById" resultType="com.dev.shop.member.dto.MemberDto">
-        SELECT *
+        SELECT member_no, member_id, member_email,member_auth, member_phone, member_name, member_appenddate, member_updatedate
         FROM member_tb
         WHERE member_id = #{authId}
 
+    </select>
+
+    <select id="selectMemberPw" resultType="String">
+        SELECT member_pw
+        FROM member_tb
+        WHERE member_no = #{memberNo};
     </select>
 
 

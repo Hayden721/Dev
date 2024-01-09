@@ -49,7 +49,7 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, long roomNo) {
+    public Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, Long roomNo, Long optionNo) {
         //start_time, end_time Map
         Map<String, ArrayList<Integer>> timeMap = new HashMap<String, ArrayList<Integer>>();
 
@@ -70,7 +70,7 @@ public class ReserveServiceImpl implements ReserveService {
 
         //----------------------------------------------------------
 
-        List<Map<String, Integer>> getReservationTime = reserveDao.getReservedAllTime(selectDate, roomNo);
+        List<Map<String, Integer>> getReservationTime = reserveDao.getReservedAllTime(selectDate, roomNo, optionNo);
 
         ArrayList<Integer> removeStartTimeValues = new ArrayList<>();
         ArrayList<Integer> removeEndTimeValues = new ArrayList<>();
@@ -108,6 +108,17 @@ public class ReserveServiceImpl implements ReserveService {
 
     }
 
+    @Override
+    public void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo) {
+        log.info("================================================================{}",selectDate);
+
+        reserveDao.insertReserveInfo(selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo);
+    }
+
+    @Override
+    public String memberNoByAuthId(String authId) {
+        return reserveDao.selectMemberNoByAuthId(authId);
+    }
 
 
 }

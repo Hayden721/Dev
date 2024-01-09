@@ -29,7 +29,6 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        //설계나 정책에 따라서 인증 메서드를 다양하게 구현할 수 있다. 아래는 가장 기본적인 예시이다.
 
         String memberId = (String) authentication.getPrincipal();
         String memberPw = (String) authentication.getCredentials();
@@ -58,8 +57,5 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
         return true;
     }
 
-//        private boolean matchPassword(String loginPwd, String password) {
-//            return loginPwd.equals(password);
-//        }
 
 }

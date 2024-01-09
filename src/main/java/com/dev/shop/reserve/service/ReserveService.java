@@ -17,5 +17,11 @@ public interface ReserveService {
 
     List<RoomOptionDto> findRoomOptionInfo(Long roomNo);
 
-    Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, long roomNo);
+    Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, Long roomNo, Long optionNo);
+
+
+
+    String memberNoByAuthId(String authId);
+
+    void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo);
 }
