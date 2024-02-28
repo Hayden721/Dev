@@ -15,14 +15,17 @@
     <link rel="stylesheet" th:href="@{/css/footer.css}">
 </head>
 <body>
-<!-- header fragment 사용 -->
-<th:block th:replace="fragments/header :: header"></th:block>
-<!-- content fragment 사용 -->
-<th:block layout:fragment="content"></th:block>
-<!-- js 사용-->
-<th:block layout:fragment="script"></th:block>
-<!-- footer fragment 사용 -->
-<th:block th:replace="fragments/footer :: footer"></th:block>
+<div th:class="wrap">
+    <!-- header fragment 사용 -->
+    <th:block th:replace="fragments/header :: header"></th:block>
 
+    <!-- content fragment 사용 -->
+    <th:block layout:fragment="content"></th:block>
+    <!-- js 사용-->
+    <th:block layout:fragment="script"></th:block>
+
+<!-- footer fragment 사용 -->
+    <th:block th:replace="fragments/footer :: footer"></th:block>
+</div>
 </body>
 </html>

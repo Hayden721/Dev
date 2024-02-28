@@ -58,5 +58,22 @@
         WHERE member_no = #{memberNo};
     </select>
 
+    <select id="selectMemberNo" resultType="java.lang.Long">
+        SELECT member_no
+        FROM member_tb
+        where member_id = #{authId}
+    </select>
+
+
+    <select id="selectReservationInfoByMemberNo" resultType="com.dev.shop.member.dto.getReserveInfoDto">
+        SELECT ROW_NUMBER() OVER (ORDER BY a.reservation_creation_date) AS row_num, a.reservation_no, a.reservation_date, a.reservation_creation_date, a.start_time, a.end_time, a.room_no, a.roption_no, b.room_title, c.roption_title
+        from reservation_tb a
+        left join room_tb b
+        on a.room_no = b.room_no
+        LEFT JOIN roomoption_tb c
+        ON a.roption_no = c.roption_no
+        WHERE member_no = #{memberNo};
+    </select>
+
 
 </mapper>

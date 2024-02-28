@@ -2,13 +2,18 @@ package com.dev.shop.member.service.impl;
 
 import com.dev.shop.member.dao.MemberDao;
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -58,6 +63,16 @@ public class MemberServiceImpl implements MemberService {
         }
 
 
+    }
+
+    @Override
+    public Long getMemberNoByAuthId(String authId) {
+        return memberDao.selectMemberNo(authId);
+    }
+
+    @Override
+    public List<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo) {
+        return memberDao.selectReservationInfoByMemberNo(memberNo);
     }
 
 }

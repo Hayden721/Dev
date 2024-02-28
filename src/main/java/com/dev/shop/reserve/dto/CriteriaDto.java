@@ -4,8 +4,6 @@ import com.dev.shop.utils.Pagination;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Getter @Setter @ToString
 public class CriteriaDto {

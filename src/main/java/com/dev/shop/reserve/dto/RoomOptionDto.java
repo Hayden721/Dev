@@ -16,4 +16,6 @@ public class RoomOptionDto {
     private String roptionContent;
 
     private Long roomNo; // foreign key
+
+
 }

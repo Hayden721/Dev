@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -51,7 +54,7 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, Long roomNo, Long optionNo) {
         //start_time, end_time Map
-        Map<String, ArrayList<Integer>> timeMap = new HashMap<String, ArrayList<Integer>>();
+        Map<String, ArrayList<Integer>> timeMap = new HashMap<>();
 
         ArrayList<Integer> startTimeValues = new ArrayList<>();
         ArrayList<Integer> endTimeValues = new ArrayList<>();
@@ -111,8 +114,12 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo) {
         log.info("================================================================{}",selectDate);
+        // 날짜 format변경, 형 변환
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+        LocalDate parsingDate = LocalDate.parse(selectDate, formatter);
 
-        reserveDao.insertReserveInfo(selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo);
+
+        reserveDao.insertReserveInfo(parsingDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo);
     }
 
     @Override

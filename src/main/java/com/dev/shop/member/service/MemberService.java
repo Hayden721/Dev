@@ -2,6 +2,9 @@ package com.dev.shop.member.service;
 
 
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.getReserveInfoDto;
+
+import java.util.List;
 
 public interface MemberService {
 
@@ -11,4 +14,12 @@ public interface MemberService {
     MemberDto memberInfoByAuthId(String authId);
 
     void updateMemberInfo(MemberDto memberDto, String memberNewPw, String memberNewPwChk);
+
+    Long getMemberNoByAuthId(String authId);
+
+    List<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo);
+
+//    List<String> getRoomNameByRoomNo(Long roomNo);
+//
+//    List<String> getRoomOptionNameByRoptionNo(Long roptionNo);
 }

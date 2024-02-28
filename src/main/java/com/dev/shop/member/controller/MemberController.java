@@ -2,6 +2,7 @@ package com.dev.shop.member.controller;
 
 
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Collection;
-
+import java.util.List;
 
 @Slf4j
 
@@ -45,16 +46,11 @@ public class MemberController {
 
         log.info("------------------ authorities : {}",authorities);
 
-
-
         if(authentication instanceof AnonymousAuthenticationToken) {
             log.info("--- [/member/login] 토큰값 : {}", authentication);
         } else {
             String memberId = principal.getName();
             log.info("멤버 아이디 값  : {}", memberId);
-
-
-
 
             model.addAttribute("auth", authentication);
         }
@@ -83,8 +79,6 @@ public class MemberController {
         return "redirect:/devroom/member/main";
     }
 
-
-
     @GetMapping("/register")
     public String memberRegisterGet() {
         log.info("--- [GET] member/register");
@@ -98,8 +92,6 @@ public class MemberController {
     @PostMapping("/register")
     public void memberRegisterPost(MemberDto memberDto) {
         log.info("memberDetailDto : {}", memberDto);
-
-
         memberService.memberRegister(memberDto);
 
     }
@@ -115,26 +107,40 @@ public class MemberController {
 
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-
         if(authentication instanceof AnonymousAuthenticationToken) { // 비로그인 상태
             return "/devroom/member/unlogined";
-        } else {
+        } else { // 로그인 상태
             MemberDto memberInfo = memberService.memberInfoByAuthId(authId);
 
             model.addAttribute("memberInfo", memberInfo);
             return "/devroom/member/edit";
 
         }
-
-
     }
     @PostMapping("/mypage/edit")
     public String editPost(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
 
-            memberService.updateMemberInfo(memberDto, memberNewPw, memberNewPwChk );
+        memberService.updateMemberInfo(memberDto, memberNewPw, memberNewPwChk );
 
         return "redirect:/devroom/member/mypage";
     }
 
+    @GetMapping("/mypage/reservation-info")
+    public String reserveCheckGet(Model model) {
+        String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long memberNo = memberService.getMemberNoByAuthId(authId);
+
+        List<getReserveInfoDto> reservationInfo = memberService.getReservationInfoByMemberNo(memberNo);
+        log.info("----------=-=-=--=- {}", reservationInfo);
+        model.addAttribute("reservationInfo", reservationInfo);
+
+        return "/devroom/member/reservation-info";
+    }
+
+    @GetMapping("/reservation/cancel")
+    public String reservationCancelGet(@RequestParam(required = false) Long reservationNo) {
+        log.info("====-=======-===-====={}",reservationNo);
+        return "redirect:/devroom/member/reservation-check";
+    }
 
 }

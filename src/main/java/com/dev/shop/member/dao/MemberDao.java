@@ -2,8 +2,12 @@ package com.dev.shop.member.dao;
 
 import com.dev.shop.member.dto.MemberDetailsDto;
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.getReserveInfoDto;
+import com.dev.shop.reserve.dto.reserveInfoDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 @Mapper
@@ -21,4 +25,8 @@ public interface MemberDao {
 
 
     String selectMemberPw(Long memberNo);
+
+    Long selectMemberNo(String authId);
+
+    List<getReserveInfoDto> selectReservationInfoByMemberNo(Long memberNo);
 }

@@ -27,7 +27,6 @@ public class ReserveController {
     @GetMapping("/list")
     public String listGet(@ModelAttribute("params") final CriteriaDto params, Model model) {
 
-
         PagingResponse<RoomDto> roomList = reserveService.findAllRoom(params);
 
         model.addAttribute("roomList", roomList);
@@ -35,7 +34,6 @@ public class ReserveController {
         log.info("--- reserveController --- 값 : {}", roomList);
 
         return "/devroom/reserve/list";
-
 
     }
 
@@ -53,19 +51,18 @@ public class ReserveController {
 
     }
 
-    @GetMapping("/detail/reserveOptionAjax")
+    @GetMapping("/detail/reserve-option-ajax")
     public String reserveOptionAjaxGet(Long optionNo, Long roomNo, Long sellerNo, Model model) {
 
         model.addAttribute("sellerNo", sellerNo);
         model.addAttribute("optionNo", optionNo);
         model.addAttribute("roomNo", roomNo);
 
-        return "/devroom/reserve/reserveOptionAjax";
+        return "/devroom/reserve/reserve-option-ajax";
     }
 
-    @GetMapping("/detail/reserveTimeAjax")
+    @GetMapping("/detail/reserve-time-ajax")
     public String reserveTimeAjaxGet(String selectDate, Long roomNo, Long optionNo, Long sellerNo ,Model model) {
-
 
         log.info("optionNo : {}", optionNo);
         Map<String, ArrayList<Integer>> availableReserveTimes = reserveService.getAvailableReservationTime(selectDate, roomNo, optionNo);
@@ -79,13 +76,12 @@ public class ReserveController {
         model.addAttribute("authId", authId);
         model.addAttribute("sellerNo", sellerNo);
 
-
-        return "/devroom/reserve/reserveTimeAjax";
+        return "/devroom/reserve/reserve-time-ajax";
     }
 
-    @PostMapping("/reserveinfo")
-    public String reserveInfoPost(@RequestParam(required = false) Integer reserveStartTime, @RequestParam(required = false) Integer reserveEndTime,
-            String authId,String selectDate, Long roomNo, Long optionNo, Long sellerNo, Model model) {
+    @PostMapping("/reserve-info")
+    public void reserveInfoPost(@RequestParam(required = false) Integer reserveStartTime, @RequestParam(required = false) Integer reserveEndTime,
+            String authId, String selectDate, Long roomNo, Long optionNo, Long sellerNo, Model model) {
 
         log.info("----------------------- startTime : {}, endTime : {} ", reserveStartTime, reserveEndTime);
         log.info("----------------------- selectDate : {}, roomNo : {}, optionNo : {}, authId : {}", selectDate, roomNo, optionNo, authId);
@@ -100,13 +96,13 @@ public class ReserveController {
         model.addAttribute("roomNo", roomNo);
         model.addAttribute("memberNo", memberNo);
 
-        return "/devroom/reserve/reserveinfo";
+
     }
 
-    @PostMapping("/reservepay")
+    @PostMapping("/reserve-pay")
     public void reservePayPost(Integer reserveStartTime, Integer reserveEndTime, Long optionNo, String selectDate, Long sellerNo, Long memberNo, Long roomNo) {
 
-        log.info("------------ /reservepay ------------ selectDate : {}, startTime : {}, endTime : {}, sellerNo : {}, memberNo : {}, roomNo : {}, optionNo : {}", selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo );
+        log.info("------------ /reserve-pay ------------ selectDate : {}, startTime : {}, endTime : {}, sellerNo : {}, memberNo : {}, roomNo : {}, optionNo : {}", selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo );
         reserveService.insertReservation(selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo );
 
     }

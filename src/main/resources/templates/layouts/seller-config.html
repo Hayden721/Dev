@@ -2,7 +2,6 @@
 <html lang="ko"
         xmlns:th="http://www.thymeleaf.org"
         xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-
         >
 <head>
     <meta charset="UTF-8">
@@ -14,15 +13,27 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/seller/seller-menu.css}">
 </head>
 <body>
+<div th:class="wrap">
 <!-- header fragment 사용 -->
 <th:block th:replace="fragments/seller-header :: seller-header"></th:block>
-<!-- content fragment 사용 -->
-<th:block layout:fragment="seller-content"></th:block>
+
+
+    <div th:class="seller-container">
+        <!-- 사이드 메뉴 -->
+        <th:block th:replace="fragments/seller-menu :: seller-menu"></th:block>
+        <div th:class="seller-container-wrapper">
+        <!-- content fragment 사용 -->
+            <th:block layout:fragment="seller-content"></th:block>
+            <th:block layout:fragment="script"></th:block>
+        </div>
+    </div>
+
+
 <!-- footer fragment 사용 -->
 <th:block th:replace="fragments/seller-footer :: seller-footer"></th:block>
-
-
+</div>
 </body>
 </html>

@@ -20,4 +20,102 @@
         FROM seller_tb
         WHERE seller_id = #{sellerId}
     </select>
+
+    <insert id="insertRoomInfoBySellerRoomDto" useGeneratedKeys="true" keyProperty="roomNo">
+        INSERT INTO room_tb(
+            room_no, room_title, room_div, room_content, postcode, address, detail_address, extra_address, room_delete, seller_no)
+        VALUES (
+            null, #{roomTitle}, #{roomDiv}, #{roomContent}, #{postCode}, #{address}, #{detailAddress}, #{extraAddress}, 0, 2)
+    </insert>
+
+    <select id="selectSellerNoByAuthId" resultType="java.lang.Long">
+        SELECT seller_no
+        FROM seller_tb
+        where seller_id = #{authId}
+    </select>
+
+
+    <insert id="insertRoomOptionInfoByOptions" parameterType="List">
+        INSERT INTO roomoption_tb(roption_title, roption_content, roption_price, roption_delete,room_no)
+        VALUES
+        <foreach collection="list" item="options" separator=",">
+            (#{options.roomOptionTitle}, #{options.roomOptionContent}, #{options.roomOptionPrice}, 0, #{options.roomNo})
+        </foreach>
+    </insert>
+
+    <select id="selectRoomListBySellerNo" resultType="com.dev.shop.seller.dto.RoomListDto">
+        select rm.room_no, rm.room_title, rm.room_div, COALESCE(ro.cnt, 0) as cnt
+        FROM room_tb rm
+        LEFT JOIN (
+            SELECT room_no, COUNT(*) cnt
+            FROM roomoption_tb
+            GROUP BY room_no
+        ) ro ON rm.room_no = ro.room_no
+        WHERE rm.seller_no = #{sellerNo}
+            AND rm.room_delete = 0;
+    </select>
+
+    <select id="selectRoomDetailByRoomNo" resultType="com.dev.shop.reserve.dto.RoomDto">
+        SELECT *
+        FROM room_tb
+        WHERE room_no = #{roomNo}
+    </select>
+
+    <select id="selectRoomOptionCountByRoomNo" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM roomoption_tb
+        WHERE room_no = #{roomNo}
+    </select>
+
+    <select id="selectRoomCountBySellerNo" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM room_tb
+        WHERE seller_no = #{sellerNo}
+    </select>
+    <select id="selectRoomOptionInfoByRoomNo" resultType="com.dev.shop.reserve.dto.RoomOptionDto">
+        select *
+        FROM roomoption_tb
+        WHERE room_no = #{roomNo};
+    </select>
+    <select id="selectRoomImageByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
+        SELECT *
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+    </select>
+    <select id="selectAdditionalImageByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
+        select * from roomimage_tb
+        where room_no = #{roomNo}
+            and thumbnail= 'N';
+    </select>
+    <select id="selectThumbnailByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
+        select * from roomimage_tb
+        where room_no = #{roomNo}
+        and thumbnail= 'Y';
+    </select>
+    <select id="selectReserveManageInfoBySellerNo" resultType="com.dev.shop.seller.dto.ReserveManageDto">
+        select a.*, IFNULL(cnt, 0) as cnt
+        FROM room_tb a
+        LEFT JOIN (
+            SELECT room_no, COUNT(*) cnt
+            FROM reservation_tb
+            group by room_no
+        ) b ON a.room_no = b.room_no
+        WHERE seller_no = #{sellerNo};
+    </select>
+    <select id="selectReservationInfoByRoomNo" resultType="com.dev.shop.seller.dto.ReservationDto">
+        SELECT a.reservation_no, a.reservation_date, a.start_time, a.end_time, b.member_id
+        FROM reservation_tb a
+        INNER JOIN member_tb b
+        ON a.member_no = b.member_no
+        WHERE a.room_no = #{roomNo};
+    </select>
+
+    <delete id="deleteRoomByRoomNo">
+        DELETE FROM room_tb
+        WHERE room_no = #{roomNo}
+    </delete>
+    <delete id="deleteRoomOptionByRoomNo">
+        DELETE FROM roomoption_tb
+        WHERE room_no = #{roomNo}
+    </delete>
 </mapper>
