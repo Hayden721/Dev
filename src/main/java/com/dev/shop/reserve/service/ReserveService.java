@@ -1,5 +1,6 @@
 package com.dev.shop.reserve.service;
 
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReserveService {
-    PagingResponse<RoomDto> findAllRoom(CriteriaDto roomDto);
+    PagingResponse<ReserveRoomListDto> findAllRoom(CriteriaDto roomDto);
 
     RoomDto findRoomInfo(Long roomNo);
 

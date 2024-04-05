@@ -19,4 +19,21 @@
 
 </div>
 
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            menuListColor();
+        });
+
+        function menuListColor() {
+            $('.home').css({
+                'background-color': '#F3EFF5',
+                'color': '#0D0A0B',
+                'border-radius': '5px'
+            });
+        }
+        
+    </script>
+</th:block>
+
 </html>

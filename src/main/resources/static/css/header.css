@@ -23,10 +23,10 @@
 }
 nav {
     width: auto;
-    height: 80px;
+    height: 90px;
     display: flex;
     align-items:center;
     justify-content: space-between;
-    background-color: grey;
+    background-color: white;
 
 }

@@ -1,9 +1,11 @@
 package com.dev.shop.reserve.controller;
 
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
 import com.dev.shop.reserve.service.ReserveService;
+import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -23,14 +26,24 @@ import java.util.Map;
 public class ReserveController {
 
     private final ReserveService reserveService;
+    private final FileUtils fileUtils;
 
     @GetMapping("/list")
     public String listGet(@ModelAttribute("params") final CriteriaDto params, Model model) {
 
-        PagingResponse<RoomDto> roomList = reserveService.findAllRoom(params);
+        List<String> searchDiv = params.getSearchDiv();
+        log.info("두 개로 받아 오는가? = {}", searchDiv);
 
+        List<String> searchLocation = params.getSearchLocation();
+        log.info("두 개로 받아 오는가? = {}", searchLocation);
+
+        String filePath = fileUtils.choosePath();
+
+        PagingResponse<ReserveRoomListDto> roomList = reserveService.findAllRoom(params);
+
+//        PagingResponse<>
         model.addAttribute("roomList", roomList);
-
+        model.addAttribute("filePath", filePath);
         log.info("--- reserveController --- 값 : {}", roomList);
 
         return "/devroom/reserve/list";

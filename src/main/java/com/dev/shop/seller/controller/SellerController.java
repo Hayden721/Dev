@@ -1,6 +1,7 @@
 package com.dev.shop.seller.controller;
 
 import com.dev.shop.item.dto.FileResponse;
+import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -101,11 +102,6 @@ public class SellerController {
         model.addAttribute("checkRoomCount", checkRoomCount);
     }
 
-    @PostMapping("/room/create-verification")
-    public void createRoomVerification() {
-
-    }
-
     @GetMapping("/room/create")
     public String roomCreateGet(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -201,23 +197,29 @@ public class SellerController {
     }
 
     @GetMapping("/room/detail")
-    public void roomListDetail(@RequestParam final Long roomNo, Model model) {
+    public void roomListDetail(@RequestParam final Long roomNo,  Model model) {
 
-       RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo);
-       List<RoomOptionDto> roomOptionInfo = sellerService.getRoomOptionInfoByRoomNo(roomNo);
-       int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
+        String filePath = fileUtils.choosePath(); // 파일 경로
 
-       FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-       List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-       String filePath = fileUtils.choosePath();
+        // 방 정보
+        RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo); // 방 정보
 
-       model.addAttribute("roomInfo", roomInfo);
-       model.addAttribute("roomOptionInfo", roomOptionInfo);
-       model.addAttribute("roomOptionCount", roomOptionCount);
-       model.addAttribute("roomNo", roomNo);
-       model.addAttribute("filePath", filePath);
-       model.addAttribute("additionalImage", additionalImage);
-       model.addAttribute("thumbnailImage", thumbnailImage);
+        int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
+
+        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+
+        // 방 옵션 정보
+        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
+
+
+        model.addAttribute("roomInfo", roomInfo);
+        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
+        model.addAttribute("roomOptionCount", roomOptionCount);
+        model.addAttribute("roomNo", roomNo);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("additionalImage", additionalImage);
+        model.addAttribute("thumbnailImage", thumbnailImage);
     }
 
     @GetMapping("/reserve/manage")
@@ -236,7 +238,6 @@ public class SellerController {
         log.info("/reserve/detail : {} ", roomNo);
 
         List<ReservationDto> reservationInfo = sellerService.getReservationInfoByRoomNo(roomNo);
-
 
         model.addAttribute("reservationInfo", reservationInfo);
     }

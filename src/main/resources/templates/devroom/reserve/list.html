@@ -13,41 +13,50 @@
 
 <div layout:fragment="content">
 
-
-    <!--  사이드옵션  -->
     <div id="sideOption-menu">
         <div class="container-fluid" style="margin-top: 10px">
             <form class="d-flex" id="searchForm" role="search" onsubmit="return false;" autocomplete="off">
                 <div class="option-box">
                     <div class="keywordSearch">
-                        <input class="form-control me-2" id="keyword" name="keyword" type="search" placeholder="Search" aria-label="Search">
+                        <input class="form-control me-2" id="keyword" name="keyword" type="search" placeholder="검색어를 입력하세요." aria-label="Search">
                     </div>
 
-                    <div class="divOptionSearch">
-                        <label><input name="checkDiv" type="checkbox" value="studyroom">스터디룸</label>
-                        <label><input name="checkDiv" type="checkbox" value="metting">회의룸</label>
-                        <label><input name="checkDiv" type="checkbox" value="office">오피스</label>
-                    </div>
+                <div class="divOptionSearch">
+                    <div>공간</div>
+                    <label class="form-check-label"><input name="checkDiv" type="checkbox" value="studyroom" class="form-check-input">스터디룸</label>
+                    <label class="form-check-label"><input name="checkDiv" type="checkbox" value="metting" class="form-check-input">회의룸</label>
+                    <label class="form-check-label"><input name="checkDiv" type="checkbox" value="office" class="form-check-input">오피스</label>
+                </div>
 
-                    <div class="locOptionSearch">
-                        <select class="locOption" name="locOption" >
-                            <option value="">=== 지역 ===</option>
-                            <option value="서울">서울</option>
-                            <option value="경기">경기</option>
-                            <option value="대전">대전</option>
-                            <option value="부산">부산</option>
-                        </select>
-                    </div>
+                <hr/>
 
-                    <button class="btn" onclick="movePage(1);" type="submit">적용</button>
+                <div class="location-option-search">
+                    <div>지역</div>
+                    <label class="form-check-label"><input name="locOption" type="checkbox" value="서울" class="form-check-input">서울</label>
+                    <label class="form-check-label"><input name="locOption" type="checkbox" value="경기" class="form-check-input">경기</label>
+                </div>
+
+
+<!--                    <div class="locOptionSearch">-->
+<!--                        <select class="locOption form-select" name="locOption" >-->
+<!--                            <option value="">=== 지역 ===</option>-->
+<!--                            <option value="서울">서울</option>-->
+<!--                            <option value="경기">경기</option>-->
+<!--                            <option value="대전">대전</option>-->
+<!--                            <option value="부산">부산</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+
+                    <button class="btn btn-primary option-button" onclick="movePage(1);" type="submit">적용</button>
 
                 </div>
             </form>
         </div>
     </div>
 
+
     <div id="list-container">
-        <div id="room-container" th:each="roomList : ${roomList.list}">
+        <div th:each="roomList : ${roomList.list}">
             <div id="item-container" th:onclick="|location.href='@{/devroom/reserve/detail(roomNo=${roomList.roomNo})}'|">
                 <img src="https://www.dummyimage.com/200x200/000/fff" alt="..." style="border-radius: 20px">
                 <div style="display: inline-block;">
@@ -59,7 +68,6 @@
                     </div>
                 </div>
             </div>
-
         </div> <!-- room-container -->
 
         <div class="pagination-container"></div>
@@ -80,10 +88,28 @@
 
             console.log(location.search);
 
-
+            sideOptionMovement();
             findAllList();
 
         });
+        
+        function sideOptionMovement() {
+            $(window).scroll(function () {
+                const containerFluid = $('.container-fluid');
+                const scrollPosition = $(window).scrollTop();
+                const maxTop = 20;
+                containerFluid.css('top', Math.max(20 - scrollPosition / 10, maxTop) + 'px');
+
+                const windowHeight = $(window).height();
+                const documentHeight = $(document).height();
+
+                if(scrollPosition + windowHeight >= documentHeight) {
+                    containerFluid.css('top', '20px');
+                } else if(scrollPosition === 0) {
+                    containerFluid.css('top', '110px');
+                }
+            })
+        }
 
         function setQueryStringParams() {
             if (!location.search) {
@@ -131,13 +157,13 @@
                 <div aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
 
-`;
+                `;
 
             if (pagination.prevPage) {
                 html += `
                 <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(1)">첫 페이지</a></li>
                 <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})">이전 페이지</a></li>
-          `;
+                `;
             }
 
             html += '<li class="page-item">';
@@ -160,30 +186,35 @@
             $('.pagination-container').html(html);
         }
 
-
-
         function movePage(page) {
 
             const keywordValue = $("#keyword").val();
-            const searchLocaValue = $("select[name=locOption] option:selected").val();
 
-            const chk_val = [];
-            const searTypeValue = $("input[name=checkDiv]:checked").each(function () {
-                const chk =$(this).val();
-                chk_val.push(chk);
+
+
+            const searchLocationValue = [];
+            const searLocationVal = $("input[name=locOption]:checked").each(function () {
+                const val = $(this).val();
+                searchLocationValue.push(val);
             })
 
-            console.log(chk_val);
+
+            const checkDivValue = [];
+            const searTypeValue = $("input[name=checkDiv]:checked").each(function () {
+                const chk = $(this).val();
+                checkDivValue.push(chk);
+            })
+
+
 
             // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
             const queryParams = {
                 page: (page) ? page : 1,
-                recordSize: 4,
+                recordSize: 10,
                 pageSize: 5,
                 keyword: keywordValue,
-                searchLocation: searchLocaValue,
-                searchDiv: chk_val
-
+                searchLocation: searchLocationValue,
+                searchDiv: checkDivValue
 
             }
             /*

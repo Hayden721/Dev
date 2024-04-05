@@ -1,6 +1,7 @@
 package com.dev.shop.seller.service.impl;
 
 import com.dev.shop.item.dto.FileResponse;
+import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -109,6 +110,12 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public List<ReservationDto> getReservationInfoByRoomNo(Long roomNo) {
         return sellerDao.selectReservationInfoByRoomNo(roomNo);
+    }
+
+
+    @Override
+    public List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo) {
+        return sellerDao.selectOptionInfoAndImageByRoomNo(roomNo);
     }
 
 

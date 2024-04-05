@@ -1,6 +1,7 @@
 package com.dev.shop.seller.service;
 
 import com.dev.shop.item.dto.FileResponse;
+import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -40,4 +41,7 @@ public interface SellerService {
 
     List<ReservationDto> getReservationInfoByRoomNo(Long roomNo);
 
+
+
+    List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo);
 }

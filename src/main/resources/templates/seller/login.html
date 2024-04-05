@@ -1,36 +1,47 @@
 <!DOCTYPE html>
-<html lang="ko"
-
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/seller-config}">
+<html lang="ko">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=1200">
-<!--    <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >-->
 
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{../css/seller/seller-login.css}">
+    <link rel="stylesheet" th:href="@{../css/common.css}">
     <title>Dev-room</title>
 </head>
 
 
-<div layout:fragment="seller-content">
 
-<a>Seller Page</a>
-    <form th:action="@{/seller/login}" method="post">
+<body>
+    <div class="seller-login-wrapper">
 
-        <label> Id
-            <input name="sellerId">
-        </label>
+        <div class="wrapper">
+            <!-- logo -->
+            <div class="logo-container">
+                <img class="logo-image" src="/images/logo/seller-spot-removebg.png" alt="logo">
+            </div>
 
-        <label> Pw
-            <input name="sellerPw">
-        </label>
-        <button>로그인</button>
-    </form>
+            <div class="seller-login-form">
+                <form action="/seller/login" method="post">
 
-    <a href="/seller/register">회원가입</a>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="ID" name="sellerId">
+                        <label for="floatingInput">ID</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="sellerPw">
+                        <label for="floatingPassword">Password</label>
+                    </div>
 
-</div>
+                    <button class="btn emphasize-btn login-style">로그인</button>
+                </form>
 
+                <button class="btn normal-btn register-style" onclick="location.href='/seller/register'">회원가입</button>
+            </div>
+
+        </div>
+    </div>
+</body>
 </html>

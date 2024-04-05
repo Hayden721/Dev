@@ -1,6 +1,13 @@
+@font-face {
+    font-family: 'GmarketSans';
+    src: url('../fonts/GmarketSansTTFMedium.ttf') format('truetype');
+}
+
 *{
     margin: 0;
     padding: 0;
+    font-family: 'GmarketSans', serif;
+
 }
 
 ul, ol {
@@ -9,28 +16,80 @@ ul, ol {
 
 a {
     text-decoration: none;
+    color: #0D0A0B;
 }
 
+body{
+
+}
 html, body {
-    height: 100vh;
+    height: 100%;
+    min-height: 100%;
+
 }
 
 .wrap {
-    min-height: 100vh;
-    position: relative;
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 100px;
 }
 
+
+/* seller */
+.seller-content{
+    height: 100%;
+    margin: 0 auto;
+
+}
+.seller-wrap {
+    height: auto;
+    min-height: 100%;
+    padding-bottom: 100px;
+}
 .seller-container {
     margin-top: 10px;
     display: flex;
 
+
 }
 
-.seller-container-wrapper {
-    display: flex;
-    justify-content: center;
-    flex-grow: 1;
-    height: 1080px;
-    overflow: auto;
+/* 공통 css */
+
+/* Emphasize button*/
+
+.emphasize-btn {
+    color: #F3EFF5;
+    background-color: #3f7d20;
+}
+.emphasize-btn:hover {
+    color: #F3EFF5;
+    background-color: #39721D;
 }
 
+.emphasize-btn[disabled] {
+    color: #F3EFF5;
+    background-color: #3f7d20;
+    border: none;
+}
+
+.normal-btn {
+    color: #F3EFF5;
+    background-color: #72B01D;
+
+}
+
+.normal-btn:hover {
+    background-color: #679F19;
+    color: #F3EFF5;
+}
+
+.normal-btn[disabled] {
+    color: #F3EFF5;
+    background-color: #72B01D;
+    border: none;
+}
+
+.charcoal-btn {
+    background-color: #454955;
+    color: #F3EFF5;
+}

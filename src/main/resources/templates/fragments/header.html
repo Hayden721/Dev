@@ -6,18 +6,13 @@
 
   <nav>
     <div class="header-logo">
-      <a href="/devroom/member/main">Dev-room</a>
+      <a href="/devroom/member/main"><img src="/images/logo/share-spot-removebg.png"></a>
     </div>
 
     <ul class="header-ul">
-
       <li sec:authorize="isAnonymous()"><a href="/devroom/member/login">로그인</a></li>
       <li sec:authorize="isAuthenticated()"><a href="/devroom/member/logout">로그아웃</a></li>
-
       <li sec:authorize="isAuthenticated()"><a href="/devroom/member/mypage">MYPAGE</a></li>
-
-
-      <li>3</li>
     </ul>
   </nav>
 

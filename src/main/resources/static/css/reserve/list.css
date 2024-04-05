@@ -1,30 +1,45 @@
 #sideOption-menu {
     width: 399px;
-    /*background-color: turquoise;*/
+
+    height: auto;
+    margin-top: 10px;
+
+}
+
+.container-fluid {
     position: fixed;
+    width: 399px;
+    top: 110px;
+    transition: top 0.3s ease; /* top 속성에 대한 부드러운 전환을 추가합니다. */
+}
+/* option form 검색어 입력창 */
+.divOptionSearch {
+    margin: 10px 10px 0 0;
+}
+/* option-form submit button */
+.option-button {
+
+}
+#searchForm {
+    width: 399px;
 }
 
 #list-container {
     margin-left: 400px;
-    height: 1100px;
-    background-color: tomato;
-
+    padding: 10px;
 }
 
 #room-container {
     padding: 20px 20px 0 20px;
 }
 #item-container {
-    border: solid grey;
+    background-color: #72B01D;
     border-radius: 10px;
     cursor: pointer;
+    margin: 15px 15px 0 0;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
-img {
-    padding: 10px;
-
-
-}
 #item-content > span {
     display: block;
 }

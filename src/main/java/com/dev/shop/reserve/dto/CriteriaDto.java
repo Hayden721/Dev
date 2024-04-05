@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Getter @Setter @ToString
 public class CriteriaDto {
     private int page;   // 현재 페이지 번호
@@ -12,14 +14,14 @@ public class CriteriaDto {
     private int pageSize; // 하단에 출력될 페이지 사이즈
 
     private String keyword; // 검색 키워드
-    private String searchLocation;  // 지역 검색
-    private String searchDiv; // 방 유형 검색
+    private List<String> searchLocation;  // 지역 검색
+    private List<String> searchDiv; // 방 유형 검색
 
     private Pagination pagination;
 
     public CriteriaDto() {
         this.page = 1;
-        this.recordSize = 4;
+        this.recordSize = 10;
         this.pageSize = 5;
     }
 

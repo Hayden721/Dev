@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter @Setter @AllArgsConstructor @ToString
 public class RoomDto {
 
@@ -16,6 +18,8 @@ public class RoomDto {
     private String address;
     private String detailAddress;
     private String extraAddress;
+    private int room_delete;
     private Long sellerNo;
+
 
 }

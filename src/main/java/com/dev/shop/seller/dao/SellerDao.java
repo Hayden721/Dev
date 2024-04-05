@@ -1,6 +1,7 @@
 package com.dev.shop.seller.dao;
 
 import com.dev.shop.item.dto.FileResponse;
+import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -42,4 +43,8 @@ public interface SellerDao {
     List<ReserveManageDto> selectReserveManageInfoBySellerNo(Long sellerNo);
 
     List<ReservationDto> selectReservationInfoByRoomNo(Long roomNo);
+
+
+
+    List<RequestRoomOptionDto> selectOptionInfoAndImageByRoomNo(Long roomNo);
 }

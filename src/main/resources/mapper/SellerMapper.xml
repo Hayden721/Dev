@@ -102,12 +102,22 @@
         ) b ON a.room_no = b.room_no
         WHERE seller_no = #{sellerNo};
     </select>
+
     <select id="selectReservationInfoByRoomNo" resultType="com.dev.shop.seller.dto.ReservationDto">
         SELECT a.reservation_no, a.reservation_date, a.start_time, a.end_time, b.member_id
         FROM reservation_tb a
         INNER JOIN member_tb b
         ON a.member_no = b.member_no
         WHERE a.room_no = #{roomNo};
+    </select>
+
+
+    <select id="selectOptionInfoAndImageByRoomNo" resultType="com.dev.shop.seller.dto.RequestRoomOptionDto">
+        select a.*, COALESCE(b.roptionimage_no, 0) as roptionimage_no, COALESCE(b.original_name, 'none') as original_name, COALESCE(b.save_name, 'none') as save_name, COALESCE(b.file_size, 0) as file_size, COALESCE(b.file_delete, 'N') as file_delete, COALESCE(b.created_date, '0101-01-01') as created_date
+        FROM roomoption_tb a
+        LEFT JOIN roomoptionimage_tb b
+        ON a.roption_no = b.roption_no
+        WHERE a.room_no = #{roomNo}
     </select>
 
     <delete id="deleteRoomByRoomNo">

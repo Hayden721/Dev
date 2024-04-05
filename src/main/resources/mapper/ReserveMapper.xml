@@ -5,111 +5,90 @@
 
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
 
-    <select id="selectRoomList" parameterType="CriteriaDto" resultType="RoomDto">
-        select rm.*, IFNULL(ro.cnt, 0) as cnt
-        FROM room_tb rm
+    <select id="selectRoomList" resultType="ReserveRoomListDto">
+        select a.*, IFNULL(b.cnt, 0) as cnt, IFNULL(c.created_date, '0101-01-01'), IFNULL(c.save_name, 'noImage'), IFNULL(c.original_name, 'noImage')
+        FROM room_tb a
         LEFT JOIN (
             SELECT room_no, COUNT(roption_no) cnt
             FROM roomoption_tb
             GROUP BY room_no
-        ) ro ON rm.room_no = ro.room_no
-        WHERE rm.room_delete = 0
-            AND ro.cnt != 0
-            <!-- 검색어가 존재할 때 -->
-            <if test="keyword != null and keyword != ''">
-                <choose>
-                    <!-- search -->
-                    <when test="searchDiv != null and searchDiv !=''">
-                        <choose>
-                            <when test="'studyroom'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                                AND rm.room_title LIKE CONCAT('%', #{keyword}, '%')
-                            </when>
-                            <when test="'office'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                                AND rm.room_title LIKE CONCAT('%', #{keyword}, '%')
-                            </when>
-                            <when test="'metting'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                                AND rm.room_title LIKE CONCAT('%', #{keyword}, '%')
-                            </when>
-                        </choose>
-                    </when>
+        ) b
+        ON a.room_no = b.room_no
+        LEFT JOIN roomImage_tb c
+        ON a.room_no = c.room_no
 
-                    <otherwise>
-                        AND rm.room_title LIKE CONCAT('%', #{keyword}, '%')
-                    </otherwise>
-                </choose>
-            </if>
+        WHERE a.room_delete = 0
+            AND b.cnt != 0
 
-                <choose>
-                    <when test="searchDiv != null and searchDiv != ''">
-                        <choose>
-                            <when test="'studyroom'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                            </when>
-                            <when test="'office'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                            </when>
-                            <when test="'metting'.equals(searchDiv)">
-                                AND rm.room_div = #{searchDiv}
-                            </when>
-                        </choose>
-                    </when>
-                </choose>
+        <!-- 공간 옵션값이 존재 할 때 -->
+        <if test="searchDiv != null and searchDiv.size() > 0">
+            AND a.room_div IN
+            <foreach collection="searchDiv" item="roomDiv" open="(" separator="," close=")">
+                #{roomDiv}
+            </foreach>
+        </if>
+        <!-- 검색어가 존재 할 때 -->
+        <if test="keyword != null and keyword != ''">
+            AND a.room_title LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+
+        <!-- 지역 옵션값이 존재 할 때 -->
+        <if test="searchLocation != null and searchLocation.size() > 0">
+            AND (
+            <foreach collection="searchLocation" item="location" separator="or">
+                a.address LIKE CONCAT(#{location}, '%')
+            </foreach>
+            )
+        </if>
 
 
-        ORDER BY rm.room_no DESC
+        ORDER BY a.room_no DESC
 
         LIMIT #{pagination.limitStart}, #{recordSize}
     </select>
 
-    <select id="countAllList" parameterType="CriteriaDto" resultType="int">
-        SELECT COUNT(*)
-        FROM room_tb
-        WHERE room_delete = 0
-        <!-- 검색어가 존재할 때 -->
-        <if test="keyword != null and keyword != ''">
-            <choose>
-                <!-- sear -->
-                <when test="searchDiv != null and searchDiv !=''">
-                    <choose>
-                        <when test="'studyroom'.equals(searchDiv)">
-                            AND room_div = #{searchDiv}
-                            AND room_title LIKE CONCAT('%', #{keyword}, '%')
-                        </when>
-                        <when test="'office'.equals(searchDiv)">
-                            AND room_div = #{searchDiv}
-                            AND room_title LIKE CONCAT('%', #{keyword}, '%')
-                        </when>
-                        <when test="'metting'.equals(searchDiv)">
-                            AND room_div = #{searchDiv}
-                            AND room_title LIKE CONCAT('%', #{keyword}, '%')
-                        </when>
-                    </choose>
-                </when>
+    <select id="countAllList" resultType="int">
+        select COUNT(*) as room_count
+        from (
+        select a.*, IFNULL(b.cnt, 0) as cnt
+        FROM room_tb a
 
-                <otherwise>
-                    AND room_title LIKE CONCAT('%', #{keyword}, '%')
-                </otherwise>
-            </choose>
+        LEFT JOIN (
+        SELECT room_no, COUNT(roption_no) cnt
+        FROM roomoption_tb
+        GROUP BY room_no
+        ) b
+        ON a.room_no = b.room_no
+
+        LEFT JOIN roomimage_tb c
+        ON a.room_no = c.room_no
+
+        WHERE a.room_delete = 0
+        AND b.cnt != 0
+
+        <!-- 공간 옵션값이 존재 할 때 -->
+        <if test="searchDiv != null and searchDiv.size() > 0">
+            AND a.room_div IN
+            <foreach collection="searchDiv" item="roomDiv" open="(" separator="," close=")">
+                #{roomDiv}
+            </foreach>
+        </if>
+        <!-- 검색어가 존재 할 때 -->
+        <if test="keyword != null and keyword != ''">
+            AND a.room_title LIKE CONCAT('%', #{keyword}, '%')
         </if>
 
-        <choose>
-            <when test="searchDiv != null and searchDiv != ''">
-                <choose>
-                    <when test="'studyroom'.equals(searchDiv)">
-                        AND room_div = #{searchDiv}
-                    </when>
-                    <when test="'office'.equals(searchDiv)">
-                        AND room_div = #{searchDiv}
-                    </when>
-                    <when test="'metting'.equals(searchDiv)">
-                        AND room_div = #{searchDiv}
-                    </when>
-                </choose>
-            </when>
-        </choose>
+        <!-- 지역 옵션값이 존재 할 때 -->
+        <if test="searchLocation != null and searchLocation.size() > 0">
+            AND (
+            <foreach collection="searchLocation" item="location" separator="or">
+                a.address LIKE CONCAT(#{location}, '%')
+            </foreach>
+            )
+        </if>
+
+        ) as subquery_result
+
     </select>
 
     <select id="selectRoomInfoByRoomNo" resultType="RoomDto">
@@ -158,6 +137,8 @@
         FROM member_tb
         WHERE member_id = #{memberId}
     </select>
+
+
 
     <insert id="insertReserveInfo">
         INSERT INTO reservation_tb (

@@ -1,5 +1,6 @@
 package com.dev.shop.reserve.dao;
 
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 public interface ReserveDao {
 
 
-    List<RoomDto> selectRoomList(CriteriaDto criteriaDto);
+    List<ReserveRoomListDto> selectRoomList(CriteriaDto criteriaDto);
 
 
     int countAllList(CriteriaDto criteriaDto);
@@ -37,7 +37,7 @@ public interface ReserveDao {
     List<Map<String, Integer>> getReservedAllTime(@Param("selectDate") String selectDate, @Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo);
 
     void insertReserveInfo(@Param("parsingDate") LocalDate parsingDate, @Param("reserveStartTime") Integer reserveStartTime, @Param("reserveEndTime") Integer reserveEndTime, @Param("sellerNo") Long sellerNo,
-                           @Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo);
+            @Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo);
 
     String selectMemberNoByAuthId(String authId);
 
