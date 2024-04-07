@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" th:href="@{/css/seller/room-image.css}">
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+
+
+    <form id="defaultForm" method="post" autocomplete="off" enctype="multipart/form-data">
+        <input name="roomNo" th:value="${roomNo}">
+        <!-- 저장했던 데이터들 image-upload에 가져오기 -->
+
+
+        <div class="mb-3 thumbnail-image">
+            <label for="formFile" class="form-label">추가 이미지</label>
+            <input class="form-control" type="file" id="formFile" name="thumbnailImage">
+            <button type="button" class="thumbnail-del-btn"><span>삭제</span></button>
+        </div>
+
+        <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">추가 이미지</label>
+            <input class="form-control" type="file" id="formFileMultiple" name="files" multiple>
+            <button type="button" class="thumbnail-del-btn"><span>삭제</span></button>
+        </div>
+
+        <!-- 옵션 이미지 넣기 -->
+        <hr>
+        <div class="option-image-container">
+            <div th:each="roomOptionInfo : ${roomOptionInfo}">
+                <input th:value="${roomOptionInfo.roptionNo}"  th:class="roption-input + ${roomOptionInfo.roptionNo} ">
+                <label> 옵션 이미지
+                    <input type="file" name="optionImage" th:class="option-image + ${roomOptionInfo.roptionNo}"/>
+                </label>
+
+                <p th:text="${roomOptionInfo.roptionTitle}"></p>
+                <p th:text="${roomOptionInfo.roptionPrice}"></p>
+                <p th:text="${roomOptionInfo.roptionContent}"></p>
+                <button type="button" class="thumbnail-del-btn"><span>삭제</span></button>
+            </div>
+        </div>
+        <button class="image-transfer-button">전송</button>
+    </form>
+
+<!-- 옵션 이미지 -->
+<!-- 생성된 옵션 개수 받은만큼 div를 생성해서 옵션을 나열하고 이미지    -->
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            imageDeleteButton();
+            thumbnailImageDeleteButton();
+            optionImageTransfer();
+
+            console.log($('.option-image').val());
+        });
+
+        function thumbnailImageDeleteButton() {
+            $(".thumbnail-del-btn").click(function () {
+                $("input[name='files']").val('');
+            })
+        }
+
+        function imageDeleteButton() {
+            $(".image-del-btn").click(function () {
+                $("input[name='files']").val('');
+            })
+        }
+
+        function optionImageTransfer() {
+            $('input[type="file"]').change(function() {
+                var inputName = $(this).attr('class').replace('option-image', 'roption-input');
+                if (this.files.length > 0) {
+                    // 파일이 선택된 경우
+                    $('.' + inputName).attr('name', 'roptionNo');
+                } else {
+                    // 파일이 선택되지 않은 경우
+                    $('.' + inputName).removeAttr('name');
+                }
+            });
+        }
+
+    </script>
+</th:block>
+</html>
+

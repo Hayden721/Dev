@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=1200">
+    <link rel="stylesheet" th:href="@{/css/seller/room-list.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="seller-content">
+    <div class="room-list-container">
+        <!--  roomList 3x3 box  -->
+        <div class="room-list-grid">
+            <div class="list-item" th:each="reserveManage : ${reserveManage}" th:onclick="|location.href='@{/seller/reserve/detail(roomNo=${reserveManage.roomNo})}'|">
+                <div class="list-item-inner">
+                    <p th:text="${reserveManage.roomNo}"></p>
+                    <p th:text="${reserveManage.roomTitle}"></p>
+                    <p th:text="${reserveManage.roomDiv}"></p>
+                    <p th:text="${reserveManage.cnt} + '개'"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+            menuListColor();
+
+        });
+
+        function menuListColor() {
+            $('.reserve-manage').css({
+                'background-color': '#F3EFF5',
+                'color': '#0D0A0B',
+                'border-radius': '5px'
+            })
+        }
+
+    </script>
+</th:block>
+</html>

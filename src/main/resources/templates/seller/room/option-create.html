@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>1</title>
+    <link rel="stylesheet" th:href="@{/css/seller/room-create.css}" >
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+</head>
+
+<div layout:fragment="seller-content">
+    <div class="option-container">
+        <div class="option-form-container">
+            <input th:value="${session.generatedRoomNo}" name="generatedRoomNo" type="hidden">
+
+            <label> 옵션 개수
+            <select name="optionSelection" id="option-selection" class="form-select">
+                <option value="0">개수 선택</option>
+            </select>
+
+            </label>
+            <!-- 옵션의 개수에 따라 옵션 input 생성 -->
+            <div id="generateInputForm"></div>
+        </div>
+        <button id="create-room-button" class="btn emphasize-btn create-room-btn " disabled>등록</button>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+            generateOptions();
+            generateOptionForm();
+
+        });
+
+        function generateOptions() {
+            let createCount = 6;
+            let select = $("#option-selection");
+
+            for (let i=1; i<= createCount; i++){
+                let option = $("<option></option>").val(i).text(i);
+                select.append(option);
+            }
+        }
+        // 옵션 개수에 따라 입력칸 생성
+        function generateOptionForm() {
+            $("#option-selection").change(function (){
+
+                let selectValue = $(this).val();
+                console.log(selectValue);
+
+                let inputForm = $("#generateInputForm");
+
+                let html= "";
+
+                if(selectValue === "0") {
+                    html += "";
+                    inputForm.html(html);
+                }else {
+                    for (let i = 1; i <= selectValue; i++) {
+                        html += "<div class='input-form'>" +
+                                "<fieldset class='fieldset-style'>"+
+                                    "<legend>옵션" +selectValue + "</legend>" +
+                                    "<label class='option-label'> 옵션이름" +
+                                        "<input name='roomOptionTitle" + i + "' class='value-check form-control'>" +
+                                    "</label>" +
+                                    "<label class='option-label'> 옵션 내용" +
+                                        "<input name='roomOptionContent" + i + "' class='value-check form-control'>" +
+                                    "</label>" +
+
+                                    "<lable class='option-label'>옵션 가격" +
+                                        "<div class='input-group option-price'>" +
+                                            "<input name='roomOptionPrice" + i + "' class='value-check form-control'>" +
+                                            "<span class='input-group-text' id='basic-addon2'>₩</span>"+
+                                        "</div>" +
+                                    "</lable>" +
+                                "</fieldset>" +
+                            "</div>";
+                    }
+                    inputForm.html(html);
+                    checkInput();
+                }
+            });
+        }
+
+        // 옵션 입력칸 빈칸 검사
+        function checkInput() {
+            // .value-check 클래스를 가진 입력란에 대해 input 이벤트를 감지
+            $('.value-check').on('input', function() {
+                // 빈 칸 여부 확인
+                var valueCheck = false;
+                $('.value-check').each(function() {
+                    if ($(this).val().trim() === '') {
+                        valueCheck = true;
+                        return false; // 빈 칸 발견 시 반복 중단
+                    }
+                });
+
+                // 빈 칸이 없으면 버튼 활성화, 빈 칸이 있으면 비활성화
+                if (valueCheck) {
+                    $('#create-room-button').prop('disabled', true); // 비활성화
+                } else {
+                    $('#create-room-button').prop('disabled', false); // 활성화
+                }
+            });
+        }
+
+        // 등록 버튼 클릭했을 때
+        $("#create-room-button").click(function () {
+            let options = [];
+
+            for (let i = 1; i <= $("#option-selection").val(); i++) {
+                let option = {
+                    roomOptionTitle: $("input[name='roomOptionTitle" + i + "']").val(),
+                    roomOptionContent: $("input[name='roomOptionContent" + i + "']").val(),
+                    roomOptionPrice: $("input[name='roomOptionPrice" + i + "']").val(),
+                    roomNo : [[ ${session.generatedRoomNo} ]]
+                };
+                options.push(option);
+            }
+
+            console.log(options);
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: "/seller/room/option-create",
+                data: JSON.stringify(options),
+                success: function () {
+                    window.location.href="/seller/room/image-upload";
+                },
+                error: function () {
+                    console.error("Error inserting options");
+                }
+            });
+        });
+
+    </script>
+</th:block>
+</html>

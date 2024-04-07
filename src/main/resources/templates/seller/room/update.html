@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" th:href="@{/css/seller/room-detail.css}">
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+    <!--    <button><a th:href="@{/room/create/image(roomNo = ${roomNo}, roomOptionNo = {})}">이미지 수정</a></button>-->
+    <div class="">
+        <div th:object="${roomInfo}" class="room-info">
+            <label>방 이름
+                <input type="text" th:value="*{roomTitle}">
+            </label>
+            <label> 업체 구분
+                <select name="roomDiv" id="room-div">
+                    <option value="studyroom">스터디룸</option>
+                    <option value="metting">회의실</option>
+                    <option value="office">사무실</option>
+                </select>
+            </label>
+            <label>방 내용
+                <input type="text" th:value="*{roomContent}">
+            </label>
+            <label>방 내용
+                <input type="text" th:value="*{roomContent}">
+            </label>
+        </div>
+    </div>
+
+    <div class="room-option-container">
+
+        <div th:each=" roomOptionInfo : ${roomOptionInfo}" th:if="${roomOptionCount != 0} ">
+            <label>
+                <input type="text" th:value="${roomOptionInfo.roptionTitle}">
+            </label>
+            <label>
+                <input type="text" th:value="${roomOptionInfo.roptionPrice}">
+            </label>
+            <label>
+                <input type="text" th:value="${roomOptionInfo.roptionContent}">
+            </label>
+        </div>
+        <div th:unless="${roomOptionCount != 0}">
+            <span>null이야</span>
+        </div>
+    </div>
+    <button><a th:href="@{/seller/room/detail/update(room=${roomNo})}">수정하기</a></button>
+    <button><a th:href="@{/seller/room/image-upload(roomNo=${roomNo})}">이미지 수정</a></button>
+    <button class="room-delete-button">방 삭제</button>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            deleteRoomButton();
+            controllerDivValue();
+        });
+
+
+        function controllerDivValue() {
+            const roomDivValue = [[ ${roomInfo.roomDiv}]];
+            console.log(roomDivValue);
+            $(".room-div").val();
+        }
+
+        function deleteRoomButton() {
+            $(".room-delete-button").click(function (){
+                if(confirm("방을 삭제하시겠습니까?")) {
+                    $.ajax({
+                        type: "POST",           // 타입 (get, post, put 등등)
+                        url: "/seller/room/delete",  // 요청할 서버url
+                        dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                        data: {
+                            roomNo: [[${roomNo}]]
+                        },
+                        success: function (result) { // 결과 성공 콜백함수
+                            window.location.href = "/seller/room/list";
+                        },
+                        error: function (request, status, error) {
+                            console.log("get error Fail")
+                        }
+                    })
+                }
+            })
+        }
+
+    </script>
+</th:block>
+</html>

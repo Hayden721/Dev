@@ -1,0 +1,32 @@
+.seller-menu {
+    margin: 0 0 20px 20px;
+    background-color: #72B01D;
+    width: 300px;
+    height: 100%;
+    padding: 10px;
+    border-radius: 15px;
+
+}
+
+.menu-container {
+    margin: 5px -20px 5px 0;
+
+}
+.menu-list > a{
+    color: #F3EFF5;
+    font-size: 20px;
+}
+
+.menu-list > a > div {
+    margin: 5px 0 5px 0;
+}
+.menu-list > a > div:hover {
+    width: 100%;
+    background-color: #F3EFF5;
+    transition: 0.7s;
+    color: #0D0A0B;
+    border-radius: 5px;
+}
+
+
+

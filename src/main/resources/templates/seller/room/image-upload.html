@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" th:href="@{/css/seller/room-create.css}">
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+
+
+    <form class="image-form-container" id="defaultForm" method="post" autocomplete="off" enctype="multipart/form-data">
+
+        <h1>방 이미지 설정</h1>
+
+        <input name="roomNo" th:value="${roomNo}" type="hidden">
+
+        <!-- 방 이미지 -->
+        <div class="mb-3 thumbnail-image">
+            <label for="thumbnailImage" class="form-label">대표 이미지</label>
+            <div class="image-wrap">
+                <input class="form-control" type="file" id="thumbnailImage" name="thumbnailImage">
+                <button type="button" class="btn charcoal-btn images-del-btn" ><i class="bi bi-x-lg"></i></button>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="extraImages" class="form-label">추가 이미지</label>
+            <div class="image-wrap">
+                <input class="form-control" type="file" id="extraImages" name="files" multiple >
+                <button type="button" class="btn charcoal-btn images-del-btn" ><i class="bi bi-x-lg"></i></button>
+            </div>
+        </div>
+
+        <!-- 옵션 이미지 -->
+        <hr>
+
+
+
+        <div th:each="roomOptionInfo : ${roomOptionInfo}" style="margin-bottom: 10px;">
+
+
+            <fieldset class="fieldset-style" style="margin-top: 16px";>
+                <legend th:text="${roomOptionInfo.roptionTitle}"></legend>
+                <input class="option-no" th:value="${roomOptionInfo.roptionNo}" type="hidden">
+                <div class="mb-3">
+                    <label th:for="option-image + ${roomOptionInfo.roptionNo}" class="form-label" style="font-size: 20px;">옵션 이미지</label>
+                    <div class="image-wrap">
+                        <input class="form-control image-check" type="file" th:id="option-image + ${roomOptionInfo.roptionNo}" name="optionImage">
+                        <button type="button" class="btn charcoal-btn images-del-btn" th:id="option-image-del-btn + ${roomOptionInfo.roptionNo}"><i class="bi bi-x-lg"></i></button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+
+        <button class="btn emphasize-btn" id="image-submit-btn" style="margin-top: 20px;">완료</button>
+    </form>
+
+<!-- 옵션 이미지 -->
+<!-- 생성된 옵션 개수 받은만큼 div를 생성해서 옵션을 나열하고 이미지    -->
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+            imageDeleteButton();
+            optionImageTransfer();
+        });
+        // thumbnail image 삭제
+        function imageDeleteButton() {
+            $('.images-del-btn').on('click', function () {
+                $(this).prev('input[type="file"]').val('');
+            })
+
+        }
+
+        function optionImageTransfer() {
+
+            $('.image-check').on('change', function () {
+                if(this.files.length > 0) {
+                    $('.option-no').attr('name', 'roptionNo');
+                }else {
+                    $('.option-no').removeAttr('name');
+                }
+            })
+            
+            $('.images-del-btn').on('click', function () {
+                const thisFieldSet = $(this).closest('.fieldset-style');
+
+                thisFieldSet.find('.option-no').removeAttr('name');
+                thisFieldSet.find('.image-check').val('');
+            })
+
+        }
+
+    </script>
+</th:block>
+</html>
+

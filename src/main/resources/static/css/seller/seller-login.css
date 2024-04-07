@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'GmarketSans';
+    src: url("/fonts/GmarketSansTTFMedium.ttf") format('truetype');
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'GmarketSans', serif;
+
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.wrapper {
+    display: flex;
+    justify-content: center; /* 내부 요소들을 수직 가운데로 정렬 */
+    align-items: center; /* 내부 요소들을 수평 가운데로 정렬 */
+    height: 100%;
+
+}
+
+.seller-login-wrapper {
+    width: 900px;
+    height: 500px;
+
+}
+
+.logo-container {
+    width: 275px;
+    height: 275px;
+    margin: 0 5px 0 0;
+
+
+}
+
+.logo-image {
+    width: 275px;
+    height: 275px;
+}
+
+.seller-login-form {
+    width: 275px;
+    height: 275px;
+    text-align: center;
+    margin: 0 0 0 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-style {
+    width: 275px;
+    height: 45px;
+    margin: 10px 0 5px 0;
+}
+
+.register-style {
+    width: 275px;
+    height: 45px;
+    margin: 5px 0 5px 0;
+}
+
+

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<div th:fragment="seller-menu" sec:authorize="isAuthenticated()" class="seller-menu">
+
+
+    <div class="menu-list">
+        <a th:href="@{/seller/main}"><div class="home">홈</div></a>
+        <a th:href="@{/seller/room/create-verification}"><div class="room-create">방등록</div></a>
+        <a th:href="@{/seller/room/list}"><div class="room-manage">방관리/삭제</div></a>
+        <a th:href="@{/seller/reserve/manage}"><div class="reserve-manage">예약 관리</div></a>
+    </div>
+
+
+</div>
+
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<form action="/devroom/reserve/reserve-info" method="post" class="time-form">
+    <input th:name="roomNo" th:value="${roomNo}">
+    <input th:name="optionNo" th:value="${optionNo}">
+    <input th:name="selectDate" th:value="${selectDate}">
+    <input th:name="authId" th:value="${authId}">
+    <input th:name="sellerNo" th:value="${sellerNo}">
+
+    <div>
+        <label>시작시간</label>
+    </div>
+    <div th:each="startTime : ${availableReserveTimes['start_time']}" class="radio-sort">
+
+            <input type="radio" th:value="${startTime}" th:name="reserveStartTime">
+            <label th:text="${startTime}"></label>
+
+    </div>
+    <div>
+    <label>종료시간</label>
+    </div>
+    <div th:each="endTime : ${availableReserveTimes['end_time']}" class="radio-sort">
+
+            <input type="radio" th:value="${endTime}" th:name="reserveEndTime">
+            <label th:text="${endTime}"></label>
+
+    </div>
+
+    <button sec:authorize="isAuthenticated()">예약하기</button>
+
+</form>
+
+</body>
+</html>

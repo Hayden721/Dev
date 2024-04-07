@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dev.shop.item.dao.ItemDao">
+
+    <insert id="insertImageFilesByRoomNo" parameterType="list">
+        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, file_delete,created_date, room_no)
+        VALUES
+        <foreach collection="list" item="file" separator=",">
+            ( null, #{file.originalName}, #{file.saveName}, #{file.fileSize}, #{file.thumbnail}, 'N', NOW(), #{file.roomNo} )
+        </foreach>
+    </insert>
+    <insert id="insertOptionImageSaveByRefindOptionImage">
+        INSERT INTO roomoptionimage_tb (
+            roptionimage_no, original_name, save_name, file_size, file_delete, created_date, roption_no
+        )
+        VALUES
+        <foreach collection="list" item="image" separator=",">
+            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, 'N', NOW(), #{image.roptionNo})
+        </foreach>
+    </insert>
+
+    <select id="selectFileInfoByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
+        SELECT *
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+    </select>
+
+    <select id="selectRoomOptionByRoomNo" resultType="com.dev.shop.reserve.dto.RoomOptionDto">
+        SELECT *
+        FROM roomoption_tb
+        WHERE room_no = #{roomNo}
+    </select>
+
+</mapper>

@@ -1,0 +1,64 @@
+.detail-wrap {
+    width: 1000px;
+    height: auto;
+    border-radius: 20px;
+    padding: 30px;
+    background-color: #F3EFF5;
+}
+
+
+.option-detail-container {
+    width: 940px;
+    height: auto;
+    background-color: #BCBFC8;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    margin: 0 0 15px 0;
+}
+
+.thumbnail-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+}
+
+.additional-images {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.all-image-container {
+    display: flex;
+
+}
+.room-image-container {
+    display: flex;
+}
+.extra-images-container {
+    margin: 0 0 0 5px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 10px;
+
+}
+.extra-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+}
+.image-style {
+    border-radius: 10px;
+}
+
+.option-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+}
+.option-info-container {
+    margin: 0 0 0 15px;
+    width: 100%;
+}
+

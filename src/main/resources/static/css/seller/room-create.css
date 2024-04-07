@@ -1,0 +1,127 @@
+label {
+    font-size: 25px;
+}
+
+
+/* create-verification.html*/
+.input-form {
+    margin: 10px;
+}
+
+.verification-container {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.verification-btn-style {
+    width: 150px;
+    height: 150px;
+    font-size: 30px;
+    border-radius: 20px;
+    margin-top: 10px
+}
+
+.room-count {
+    font-size: 20px;
+}
+
+
+/* create.html */
+.create-form-container {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.room-content {
+    resize: none;
+}
+
+.next-btn-style {
+    margin: 0 auto;
+    width: 100px;
+
+}
+
+.address-find-sort {
+    display: flex;
+    margin-bottom: 3px;
+}
+
+.text-count-container {
+    text-align: right;
+}
+
+
+/* option-create.html */
+.option-container {
+    display: flex;
+    flex-direction: column;
+}
+#room-option-form-container {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+#option-selection {
+    margin-bottom: 10px;
+}
+.input-form > fieldset > label {
+    font-size: 16px;
+
+}
+
+.fieldset-style {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #F3EFF5;
+    border-radius: 20px;
+
+}
+
+.option-label {
+    margin: 5px 0 10px 0;
+}
+.option-price {
+    width: 200px;
+}
+
+/* image-upload, image-update */
+
+.image-form-container {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+
+}
+#image-submit-btn {
+    width: 170px;
+    display: block;
+    margin: 0 auto;
+}
+
+.image-wrap {
+    display: flex;
+    align-items: center;
+
+}
+
+.image-wrap > input {
+    width: 540px;
+    height: 38px;
+}
+
+.image-wrap > button {
+    display: flex;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    margin: 0 0 0 5px;
+}
+
+
+

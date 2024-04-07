@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <link rel="stylesheet" th:href="@{/css/member/reservation-info.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="content">
+예약 정보 확인
+    <table style="border: black solid 1px;">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>방이름</th>
+                <th>옵션이름</th>
+                <th>예약 날짜</th>
+                <th>입실 시간</th>
+                <th>퇴실 시간</th>
+                <th>예약 취소</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reserveInfo : ${reservationInfo}">
+                <td th:text="${reserveInfo.rowNum}"></td>
+                <td th:text="${reserveInfo.roomTitle}"></td>
+                <td th:text="${reserveInfo.roomOptionTitle}"></td>
+                <td th:text="${reserveInfo.reservationDate}"></td>
+                <td th:text="${reserveInfo.startTime}"></td>
+                <td th:text="${reserveInfo.endTime}"></td>
+                <td><button><a th:href="@{/devroom/member/reservationcancle(reservationNo=${reserveInfo.reservationNo})}">예약취소</a></button></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=1200">
+    <link rel="stylesheet" th:href="@{/css/seller/room-list.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="seller-content">
+    <div th:each=" reservationInfo : ${reservationInfo}">
+        <table>
+            <tr>
+                <th>예약 날짜</th>
+                <th>시작 시간</th>
+                <th>종료 시간</th>
+                <th>예약자</th>
+                <th>삭제</th>
+            </tr>
+            <tr>
+                <td th:text="${reservationInfo.reservationDate}"></td>
+                <td th:text="${reservationInfo.startTime}"></td>
+                <td th:text="${reservationInfo.endTime}"></td>
+                <td th:text="${reservationInfo.memberId}"></td>
+                <td><button th:onclick="|window.open('/seller/reserve/detail/delete?reservationNo=${reservationInfo.reservationNo})', '_blank', 'width=700, height=1000', 'resizable=no', 'scrollbars=yes')|">삭제</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+        });
+
+    </script>
+</th:block>
+</html>

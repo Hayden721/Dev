@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+
+    <link rel="stylesheet" th:href="@{/css/seller/room-list.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+    <div class="null-container">
+        <span>등록된 방이 없어요.</span>
+    </div>
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            menuListColor();
+        });
+
+        function menuListColor() {
+            $('.room-manage').css({
+                'background-color': '#F3EFF5',
+                'color': '#0D0A0B',
+                'border-radius': '5px'
+            });
+        }
+
+    </script>
+</th:block>
+
+</html>
+

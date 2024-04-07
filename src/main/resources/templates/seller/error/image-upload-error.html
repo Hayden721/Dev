@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >
+
+    <title>error</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+
+    <h1>잘못된 접근입니다.</h1>
+
+    <button th:onclick="|location.href='@{/seller/main}'|">돌아가기</button>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+        });
+
+    </script>
+
+</html>
