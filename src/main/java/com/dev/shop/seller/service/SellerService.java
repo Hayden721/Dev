@@ -11,9 +11,17 @@ import java.util.List;
 public interface SellerService {
     void sellerRegister(SellerDto sellerDto);
 
-
+    /**
+     *
+     * @param options - seller 유저가 입력한 옵션 정보
+     */
     void insertRoomOptionInfoByOptions(List<PostRoomOptionDto> options);
 
+    /**
+     *
+     * @param postRoomDto
+     * @return roomNo
+     */
     Long insertRoomInfoByPostRoomDto(SellerRoomDto postRoomDto);
 
     Long getSellerNoByAuthId(String authId);
@@ -26,8 +34,6 @@ public interface SellerService {
     int getRoomOptionCountByRoomNo(Long roomNo);
 
     int getRoomCountBySellerNo(Long sellerNo);
-
-    void removeRoomOptionByRoomNo(Long roomNo);
 
     void removeRoomByRoomNo(Long roomNo);
 

@@ -32,6 +32,10 @@ public interface SellerDao {
 
     int selectRoomCountBySellerNo(Long sellerNo);
 
+    /**
+     * 선택한 방을 삭제하는 메서드
+     * @param roomNo - 삭제 하려는 방 번호
+     */
     void deleteRoomByRoomNo(Long roomNo);
 
     void deleteRoomOptionByRoomNo(Long roomNo);
@@ -47,4 +51,14 @@ public interface SellerDao {
 
 
     List<RequestRoomOptionDto> selectOptionInfoAndImageByRoomNo(Long roomNo);
+
+    List<Long> selectRoomOptionNoByRoomNo(Long roomNo);
+
+
+
+
+
+    void deleteRoomOptionImageByRoomOptionNo(List<Long> roomOptionNo);
+
+    void deleteRoomImageByRoomNo(Long roomNo);
 }

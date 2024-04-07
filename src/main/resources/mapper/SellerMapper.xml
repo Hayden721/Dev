@@ -119,6 +119,11 @@
         ON a.roption_no = b.roption_no
         WHERE a.room_no = #{roomNo}
     </select>
+    <select id="selectRoomOptionNoByRoomNo" resultType="java.lang.Long">
+        SELECT roption_no
+        FROM roomoption_tb
+        WHERE room_no = #{roomNo}
+    </select>
 
     <delete id="deleteRoomByRoomNo">
         DELETE FROM room_tb
@@ -128,4 +133,19 @@
         DELETE FROM roomoption_tb
         WHERE room_no = #{roomNo}
     </delete>
+
+    <delete id="deleteRoomOptionImageByRoomOptionNo">
+        DELETE FROM roomoptionimage_tb
+        WHERE roption_no IN(
+        <foreach collection="list" item="roomNo" separator=",">
+            #{roomNo}
+        </foreach>
+        )
+
+    </delete>
+    <delete id="deleteRoomImageByRoomNo">
+        DELETE FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+    </delete>
+
 </mapper>

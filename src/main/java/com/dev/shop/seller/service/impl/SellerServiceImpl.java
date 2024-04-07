@@ -8,6 +8,7 @@ import com.dev.shop.seller.dto.*;
 import com.dev.shop.seller.dao.SellerDao;
 import com.dev.shop.seller.service.SellerService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SellerServiceImpl implements SellerService {
     private final SellerDao sellerDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -54,7 +56,7 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void insertRoomOptionInfoByOptions(List<PostRoomOptionDto> options) {
 
-         sellerDao.insertRoomOptionInfoByOptions(options);
+        sellerDao.insertRoomOptionInfoByOptions(options);
     }
 
     @Override
@@ -82,14 +84,40 @@ public class SellerServiceImpl implements SellerService {
     public int getRoomCountBySellerNo(Long sellerNo) {
         return sellerDao.selectRoomCountBySellerNo(sellerNo);
     }
-    @Override
-    public void removeRoomOptionByRoomNo(Long roomNo) {
-        sellerDao.deleteRoomOptionByRoomNo(roomNo);
-    }
 
     @Override
     public void removeRoomByRoomNo(Long roomNo) {
-        sellerDao.deleteRoomByRoomNo(roomNo);
+
+        int countRoomOption = sellerDao.selectRoomOptionCountByRoomNo(roomNo);
+
+        // 옵션이 존재 할 때
+        if(countRoomOption > 0) {
+            // 1. roomOptionNo값 조회
+            List<Long> roomOptionNo = sellerDao.selectRoomOptionNoByRoomNo(roomNo);
+            log.debug("--- SellerServiceImpl room/detail roomOptionNo : {}", roomOptionNo);
+            // 2. roomOptionNo로 roomOptionImage delete
+            sellerDao.deleteRoomOptionImageByRoomOptionNo(roomOptionNo);
+
+            // 3. roomOption 삭제
+            sellerDao.deleteRoomOptionByRoomNo(roomNo);
+
+            // 4. roomImage 사제
+            sellerDao.deleteRoomImageByRoomNo(roomNo);
+
+            // 5. room 삭제
+            sellerDao.deleteRoomByRoomNo(roomNo);
+        }else {
+            //옵션이 존재 하지 않을 때
+
+            // 1. roomImage 삭제
+            sellerDao.deleteRoomImageByRoomNo(roomNo);
+            // 2. room 삭제
+            sellerDao.deleteRoomByRoomNo(roomNo);
+        }
+
+
+
+
     }
 
     @Override

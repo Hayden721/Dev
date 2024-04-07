@@ -37,7 +37,7 @@
     display: flex;
 }
 .extra-images-container {
-    margin: 0 0 0 5px;
+    margin: 0 0 0 10px;
     display: grid;
     grid-template-columns: repeat(3,1fr);
     grid-gap: 10px;
