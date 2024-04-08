@@ -169,7 +169,6 @@ public class SellerController {
         return "/seller/room/update";
     }
 
-    // 04/07 수정 중
     @PostMapping("/room/delete")
     public String roomDelete(@RequestParam("roomNo") Long roomNo) {
 

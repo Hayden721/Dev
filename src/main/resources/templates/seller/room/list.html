@@ -19,9 +19,30 @@
         <div class="room-list-grid">
             <div class="list-item" th:each="roomList : ${roomList}" th:onclick="|location.href='@{/seller/room/detail(roomNo=${roomList.roomNo})}'|">
                 <div class="list-item-inner">
-                    <p th:text="${roomList.roomTitle}"></p>
-                    <p th:text="${roomList.roomDiv}"></p>
-                    <p th:text="${roomList.cnt} + '개'"></p>
+                    <div>
+                        <span>방 제목 :
+                            <span th:text="${roomList.roomTitle}"></span>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span>방 종류 :
+                            <span th:switch="${roomList.roomDiv}">
+                                <span th:case="'studyroom'">스터디룸</span>
+                                <span th:case="'meeting'">회의실</span>
+                                <span th:case="'office'">개인 오피스</span>
+                            </span>
+                        </span>
+                    </div>
+
+
+
+                    <div>
+                        <span>옵션 개수 :
+                            <span th:text="${roomList.cnt} + '개'"></span>
+                        </span>
+                    </div>
+
                 </div>
             </div>
         </div>

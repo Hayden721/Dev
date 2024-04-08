@@ -1,5 +1,8 @@
 server:
   port: 8888
+  servlet:
+    session:
+      timeout: 300m
 
 spring:
   devtools:
@@ -44,6 +47,3 @@ logging:
       audit: off
       connection: off
       resultset: off
-
-
-
