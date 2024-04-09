@@ -8,13 +8,15 @@
 
     <link rel="stylesheet" th:href="@{/css/reserve/list.css}" >
 
-    <title>Dev-room</title>
+    <title>ShareSpot</title>
 </head>
 
 <div layout:fragment="content">
 
+    <div class="list-wrapper">
     <div id="sideOption-menu">
         <div class="container-fluid" style="margin-top: 10px">
+
             <form class="d-flex" id="searchForm" role="search" onsubmit="return false;" autocomplete="off">
                 <div class="option-box">
                     <div class="keywordSearch">
@@ -54,26 +56,25 @@
         </div>
     </div>
 
-
     <div id="list-container">
-        <div th:each="roomList : ${roomList.list}">
-            <div id="item-container" th:onclick="|location.href='@{/devroom/reserve/detail(roomNo=${roomList.roomNo})}'|">
-                <img src="https://www.dummyimage.com/200x200/000/fff" alt="..." style="border-radius: 20px">
-                <div style="display: inline-block;">
-                    <div id="item-content">
-                        <span th:text="${roomList.roomTitle}"></span>
-                        <span th:text="${roomList.roomDiv}"></span>
-                        <span th:text="${roomList.address} + ${roomList.detailAddress}"></span>
-                        <span th:text="${roomList.sellerNo}"></span>
-                    </div>
-                </div>
+        <div th:each="roomList : ${roomList.list}" id="item-container" th:onclick="|location.href='@{/devroom/reserve/detail(roomNo=${roomList.roomNo})}'|">
+            <img src="https://www.dummyimage.com/200x200/000/fff" alt="..." style="border-radius: 20px; padding: 10px; width: 250px; height: 250px;">
+            <div id="item-content">
+                <span th:text="${roomList.roomTitle}" style="font-size: 28px;"></span>
+                <span th:switch="${roomList.roomDiv}" style="font-size: 17px;">
+                    <span th:case="'studyroom'">스터디룸</span>
+                    <span th:case="'meeting'">회의실</span>
+                    <span th:case="'office'">개인오피스</span>
+                </span>
+                <span th:text="${roomList.address} + ${roomList.detailAddress}" style="font-size: 17px;"></span>
+
             </div>
         </div> <!-- room-container -->
 
         <div class="pagination-container"></div>
 
     </div> <!-- list-container end -->
-
+    </div>
 </div> <!-- content end -->
 
 <th:block layout:fragment="script">

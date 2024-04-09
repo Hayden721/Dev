@@ -6,28 +6,41 @@
 <head>
     <link rel="stylesheet" th:href="@{/css/reserve/detail.css}" >
 
-
-    <title>Dev-room</title>
+    <title>ShareSpot</title>
 </head>
 
 
 <div layout:fragment="content">
+    <div class="detail-wrap">
+        <div class="title-container">
+            <span th:text="${roomInfo.roomTitle}" class="title-style"></span>
+            <span th:switch="${roomInfo.roomDiv}">
+                <span th:case="'studyroom'">스터디룸</span>
+                <span th:case="'meeting'">회의실</span>
+                <span th:case="'office'">개인오피스</span>
+            </span>
 
-<div id="wrap">
-    <div id="div1-container">
-    <!-- 설명-->
-        <div id="div1-inner-content">
-            <span th:text="${roomInfo.getRoomTitle}"></span>
-            <span th:text="${roomInfo.getRoomNo}"></span>
+            <!-- 방 설명 칸 -->
+            <div class="contnent-container">
+                <p th:text="${roomInfo.roomContent}"></p>
+            </div>
+        </div> <!-- title-container END -->
 
+
+
+        <div class="images-map-container">
+            <div class="images-container">
+
+            </div>
+
+            <div class="address-map-container">
+
+            </div>
         </div>
-    <!--지도 -->
-        <div id="div1-inner-map">
-            지도
-        </div>
-    </div>
 
-        <div id="div2-container">
+
+
+        <div id="option-wrap">
             <div class="option-title">
                 <h2>옵션</h2>
             </div>
@@ -36,10 +49,15 @@
                 <div id="option-container">
                     <div th:each="optionList : ${roomOptionInfo}" class="option-list">
                         <input th:value="${optionList.roptionNo}" type="hidden">
-                        <span th:text="${optionList.roptionTitle}"></span>
-                        <span th:text="${optionList.roptionPrice}"></span>
-    <!--                    <span th:text="${optionList.roptionContent}"></span>-->
-                        <img src="https://www.dummyimage.com/90x90/000/fff" alt="none">
+                        <div class="image-container">
+                            <img src="https://www.dummyimage.com/90x90/000/fff" alt="none">
+                        </div>
+
+                        <div>
+                            <span th:text="${optionList.roptionTitle}"></span>
+                            <span th:text="${optionList.roptionPrice}"></span>
+                        </div>
+
                     </div>
                 </div>
 
@@ -47,11 +65,10 @@
             </div>
         </div>
 
+    </div> <!-- detail-wrap END -->
+</div> <!-- layout:fragment="content" END -->
 
 
-</div>
-
-</div>
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
 

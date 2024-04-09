@@ -1,8 +1,11 @@
 #sideOption-menu {
     width: 399px;
-
     height: auto;
     margin-top: 10px;
+
+}
+.list-wrapper {
+    margin: 0 10% 0 10%;
 
 }
 
@@ -22,22 +25,33 @@
 }
 #searchForm {
     width: 399px;
+    justify-content: center;
 }
 
 #list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-left: 400px;
-    padding: 10px;
 }
 
 #room-container {
     padding: 20px 20px 0 20px;
 }
 #item-container {
+    width: 78%;
+    display: flex;
     background-color: #72B01D;
     border-radius: 10px;
     cursor: pointer;
     margin: 15px 15px 0 0;
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+#item-content {
+    width: 100%;
+    padding: 11px;
+    margin: 5px 0 0 0;
 }
 
 #item-content > span {

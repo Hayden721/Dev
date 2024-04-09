@@ -1,3 +1,23 @@
+.detail-wrap {
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;*/
+    width: 1000px;
+    height: 100%;
+    margin: 0 auto;
+    background-color: wheat;
+}
+
+.title-container {
+
+    display: flex;
+    flex-direction: column;
+}
+
+.title-style {
+    font-size: 50px;
+}
+
 #div1-container {
     width: 100%;
     height: 400px;
@@ -6,59 +26,66 @@
     justify-content: center;
 }
 
-#div1-inner-content{
-    width: 900px;
-    height: 400px;
-    background-color: tomato;
-    padding: 10px;
-    border: 1px solid;
+.images-map-container {
+    display: flex;
+    justify-content: center;
+
+
 }
 
-#div1-inner-map{
+.images-container {
+    width: 500px;
+    height: 400px;
+    padding: 5px;
+    margin: 0 5px 0 0;
+    background-color: thistle;
+}
+
+.address-map-container {
     width: 400px;
     height: 400px;
     background-color: yellowgreen;
-    padding: 10px;
-    border: 1px solid;
+    padding: 5px;
+    margin: 0 0 0 5px;
 }
+
 
 #div2-container {
     width: 100%;
-    height: 700px;
-    background-color: tan;
+    height: auto;
+    background-color: grey;
 }
 
-.option-title {
-    flex-direction: column;
-}
 
 .reserveOptionAjax{
     float: left;
 }
 #option-container {
     width: 400px;
-    border-right: 1px solid black;
+
     margin: 10px;
 }
 
 .option-sort {
-    height: 680px;
+    height: auto;
     display: flex;
 }
 
 .option-list {
+    width: 400px;
+    height: 130px;
     position: relative;
+    display: flex;
     margin-bottom: 15px;
-    height: 110px;
     cursor: pointer;
-
+    background-color: #72b01d;
 }
 .option-list img {
-    position: absolute;
+    width: 120px;
+    height: 120px;
     margin-top: 10px;
     left: 280px;
-    align-items: center;
-    justify-content: center;
+
 }
 
 #calendar {
