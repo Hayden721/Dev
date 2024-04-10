@@ -29,4 +29,6 @@ public interface MemberDao {
     Long selectMemberNo(String authId);
 
     List<getReserveInfoDto> selectReservationInfoByMemberNo(Long memberNo);
+
+    void deleteReservationByReservationNo(Long reservationNo);
 }

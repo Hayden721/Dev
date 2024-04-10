@@ -36,12 +36,23 @@
                 <td th:text="${reserveInfo.reservationDate}"></td>
                 <td th:text="${reserveInfo.startTime}"></td>
                 <td th:text="${reserveInfo.endTime}"></td>
-                <td><button><a th:href="@{/devroom/member/reservationcancle(reservationNo=${reserveInfo.reservationNo})}">예약취소</a></button></td>
+                <td><button></button></td>
             </tr>
         </tbody>
     </table>
-
-
 </div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function () {
+
+        })
+
+        // $.ajax({
+        //     type:
+        // })
+
+    </script>
+</th:block>
 
 </html>

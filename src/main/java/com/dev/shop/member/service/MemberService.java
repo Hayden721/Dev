@@ -19,6 +19,9 @@ public interface MemberService {
 
     List<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo);
 
+    void cancelReservation(Long reservationNo);
+
+
 //    List<String> getRoomNameByRoomNo(Long roomNo);
 //
 //    List<String> getRoomOptionNameByRoptionNo(Long roptionNo);

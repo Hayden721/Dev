@@ -137,10 +137,13 @@ public class MemberController {
         return "/devroom/member/reservation-info";
     }
 
-    @GetMapping("/reservation/cancel")
+    @PostMapping("/reservation/cancel")
     public String reservationCancelGet(@RequestParam(required = false) Long reservationNo) {
         log.info("====-=======-===-====={}",reservationNo);
-        return "redirect:/devroom/member/reservation-check";
+
+        memberService.cancelReservation(reservationNo);
+
+        return "redirect:/devroom/member/mypage/reservation-info";
     }
 
 }

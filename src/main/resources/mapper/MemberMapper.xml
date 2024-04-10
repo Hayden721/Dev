@@ -31,6 +31,10 @@
 
 
     </update>
+    <delete id="deleteReservationByReservationNo">
+        DELETE FROM reservation
+        WHERE reservation_no = #{reservationNo}
+    </delete>
 
 
     <select id="selectMemberByMemberNo" resultType="MemberDto">
