@@ -32,7 +32,7 @@
 
     </update>
     <delete id="deleteReservationByReservationNo">
-        DELETE FROM reservation
+        DELETE FROM reservation_tb
         WHERE reservation_no = #{reservationNo}
     </delete>
 

@@ -137,7 +137,7 @@ public class MemberController {
         return "/devroom/member/reservation-info";
     }
 
-    @PostMapping("/reservation/cancel")
+    @PostMapping("/mypage/reservation/cancel")
     public String reservationCancelGet(@RequestParam(required = false) Long reservationNo) {
         log.info("====-=======-===-====={}",reservationNo);
 

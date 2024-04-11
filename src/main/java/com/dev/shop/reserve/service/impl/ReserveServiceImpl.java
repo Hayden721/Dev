@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -118,12 +120,22 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo) {
         log.info("================================================================{}",selectDate);
-        // 날짜 format변경, 형 변환
+
+        // 날짜 format변경, 형 변환 ex) xxxx/xx/xx
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d");
+        // 날짜
         LocalDate parsingDate = LocalDate.parse(selectDate, formatter);
 
+        // end_date_time insert
+        // 시간
+        LocalTime parsingEndTime = LocalTime.of(reserveEndTime, 0);
 
-        reserveDao.insertReserveInfo(parsingDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo);
+        // 날짜 + 시간
+        LocalDateTime endDateTime = LocalDateTime.of(parsingDate, parsingEndTime);
+        log.debug("/reserveServiceImpl endDateTime : {}", endDateTime);
+
+
+        reserveDao.insertReserveInfo(parsingDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo, endDateTime);
     }
 
     @Override

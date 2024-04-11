@@ -142,10 +142,10 @@
 
     <insert id="insertReserveInfo">
         INSERT INTO reservation_tb (
-            reservation_date, reservation_creation_date, start_time, end_time, seller_no, member_no, room_no, roption_no
+            reservation_date, reservation_creation_date, start_time, end_time, seller_no, member_no, room_no, roption_no, end_date_time
             )
         VALUES (
-            #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}
+            #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, #{endDateTime}
             )
 
     </insert>
