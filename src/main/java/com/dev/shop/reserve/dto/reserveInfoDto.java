@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,4 +21,6 @@ public class reserveInfoDto {
     private Long memberNo;
     private Long roomNo;
     private Long roptionNo;
+    private char reservationStatus;
+    private LocalDateTime endDateTime;
 }

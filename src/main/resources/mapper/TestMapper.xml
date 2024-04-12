@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dev.shop.test.dao.TestDao">
+
+
+    <select id="selectEndDateTime" resultType="java.time.LocalDateTime">
+        select coalesce(end_date_time, '0101-01-01 01:00:00')as end_time
+        from reservation_tb
+        where member_no = #{memberNo}
+    </select>
+</mapper>

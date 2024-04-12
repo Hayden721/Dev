@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko"
 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/config}">
+      layout:decorate="~{layouts/config}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >
-
+    <link rel="stylesheet" th:href="@{/css/member/mypage.css}">
 
 
     <title>Test</title>
@@ -21,8 +20,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
 
-        $(document).ready(function(){
-
+        $(document).ready(function () {
         });
 
     </script>
