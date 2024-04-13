@@ -19,7 +19,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public void updateReservationStatus(Date currentTime) {
 
-        List<LocalDateTime> endDateTime = testDao.selectEndDateTime();
+//        List<LocalDateTime> endDateTime = testDao.selectEndDateTime();
 
     }
 }

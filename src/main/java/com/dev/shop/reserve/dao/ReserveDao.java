@@ -43,4 +43,5 @@ public interface ReserveDao {
     String selectMemberNoByAuthId(String authId);
 
 
+    void updateReservationStatus();
 }

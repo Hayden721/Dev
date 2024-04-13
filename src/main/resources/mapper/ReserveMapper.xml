@@ -4,6 +4,16 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
+    <update id="updateReservationStatus">
+        UPDATE reservation_tb r
+        INNER JOIN (
+        SELECT reservation_no, end_date_time, reservation_status
+        FROM reservation_tb
+        WHERE end_date_time &lt;= CURRENT_TIMESTAMP
+        AND reservation_status = 1
+        ) t ON r.reservation_no = t.reservation_no
+        SET r.reservation_status = 2
+    </update>
 
     <select id="selectRoomList" resultType="ReserveRoomListDto">
         select a.*, IFNULL(b.cnt, 0) as cnt, IFNULL(c.created_date, '0101-01-01'), IFNULL(c.save_name, 'noImage'), IFNULL(c.original_name, 'noImage')

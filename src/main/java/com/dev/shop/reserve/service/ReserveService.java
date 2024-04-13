@@ -25,4 +25,6 @@ public interface ReserveService {
     String memberNoByAuthId(String authId);
 
     void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo);
+
+    void updateReservationStatus();
 }

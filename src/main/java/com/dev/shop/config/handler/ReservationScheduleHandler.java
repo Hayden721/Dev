@@ -1,24 +1,27 @@
 package com.dev.shop.config.handler;
 
+import com.dev.shop.member.service.MemberService;
+import com.dev.shop.reserve.service.ReserveService;
 import com.dev.shop.test.service.TestService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ReservationScheduleHandler {
 
-    private final TestService testService;
+    private final ReserveService reserveService;
 
-    @Scheduled(fixedDelay = 3600000)
+    @Scheduled(cron = "0/10 * * * * *")
     public void updateReservationStatus() {
 
-        Date currentTime = new Date();
-        testService.updateReservationStatus(currentTime);
+        reserveService.updateReservationStatus();
+
+        log.debug("-------- ReservationHandler 확인 dubug");
+        log.info("-------- ReservationHandler 확인 dubug");
     }
 
 }

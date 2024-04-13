@@ -139,6 +139,11 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
+    public void updateReservationStatus() {
+        reserveDao.updateReservationStatus();
+    }
+
+    @Override
     public String memberNoByAuthId(String authId) {
         return reserveDao.selectMemberNoByAuthId(authId);
     }
