@@ -15,12 +15,12 @@ public class ReservationScheduleHandler {
 
     private final ReserveService reserveService;
 
-    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 0 0/1 * * *")
     public void updateReservationStatus() {
 
         reserveService.updateReservationStatus();
 
-        log.debug("-------- ReservationHandler 확인 dubug");
+
         log.info("-------- ReservationHandler 확인 dubug");
     }
 

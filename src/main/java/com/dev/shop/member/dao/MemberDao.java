@@ -30,5 +30,5 @@ public interface MemberDao {
 
     List<getReserveInfoDto> selectReservationInfoByMemberNo(Long memberNo);
 
-    void deleteReservationByReservationNo(Long reservationNo);
+    void updateReservationByReservationNo(Long reservationNo);
 }

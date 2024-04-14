@@ -77,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void cancelReservation(Long reservationNo) {
-        memberDao.deleteReservationByReservationNo(reservationNo);
+        memberDao.updateReservationByReservationNo(reservationNo);
     }
 
 }

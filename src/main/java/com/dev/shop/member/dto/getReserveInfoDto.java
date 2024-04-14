@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -16,11 +17,14 @@ public class getReserveInfoDto {
     private Date reservationCreationDate;
     private int startTime;
     private int endTime;
+    private char reservationStatus;
+
     private Long roomNo;
     private Long roomOptionNo;
 
     private String roomTitle;
     private String roomOptionTitle;
+
 
 }
 
