@@ -28,34 +28,33 @@ public class MemberSecurityConfig {
     @Bean
     public SecurityFilterChain MemberFilterChain(HttpSecurity http) throws Exception {
 
-        http. authorizeRequests().antMatchers( "/devroom/member/main","/devroom/member/login", "/devroom/member/register",
-                "/css/**","/js/**", "/devroom/reserve/**", "/test/**").permitAll();
+        http.authorizeRequests().antMatchers("/devroom/member/main", "/devroom/member/login", "/devroom/member/register", "/css/**", "/js/**", "/images/**", "/devroom/reserve/**", "/test/**").permitAll();
 
         http
                 .authenticationProvider(memberAuthenticationProvider)
                 .csrf().disable(); //일반 사용자에 대해 Session을 저장하지 않으므로 csrf을 disable 처리함.
 
         http.antMatcher("/devroom/**")
-                .authorizeRequests().anyRequest().hasAuthority("USER")
-                .and()
-                .formLogin()
-                .loginPage("/devroom/member/login")
-                .loginProcessingUrl("/devroom/member/login")
-                .usernameParameter("memberId")
-                .passwordParameter("memberPw")
-                .failureHandler(customAuthenticationFailHandler)
-                .defaultSuccessUrl("/devroom/member/main")
-                .permitAll()
-                .and()
-                .logout() // 로그아웃 관련 처리
-                .logoutUrl("/devroom/member/logout") // 로그아웃 URL 설정\
-                .logoutSuccessUrl("/devroom/member/main")
-                .invalidateHttpSession(true) // 로그아웃 후 세션 초기화 설정
-                .deleteCookies("JSESSIONID")
-                .and()
-                .sessionManagement()
-                .maximumSessions(1) // -1 무제한
-                .maxSessionsPreventsLogin(false); // true:로그인 제한 false(default):기존 세션 만료
+            .authorizeRequests().anyRequest().hasAuthority("USER")
+            .and()
+            .formLogin()
+            .loginPage("/devroom/member/login") // 개발자가 설정한 로그인 페이지
+            .loginProcessingUrl("/devroom/member/login")
+            .usernameParameter("memberId")
+            .passwordParameter("memberPw")
+            .failureHandler(customAuthenticationFailHandler)
+            .defaultSuccessUrl("/devroom/member/main", true) // 로그인 성공 시 리다이렉트할 페이지
+            .permitAll() //
+            .and()
+            .logout() // 로그아웃 관련 처리
+            .logoutUrl("/devroom/member/logout") // 로그아웃 URL 설정\
+            .logoutSuccessUrl("/devroom/member/main")
+            .invalidateHttpSession(true) // 로그아웃 후 세션 초기화 설정
+            .deleteCookies("JSESSIONID");
+        http
+            .sessionManagement()
+            .maximumSessions(1) // -1 무제한
+            .maxSessionsPreventsLogin(false); // true:로그인 제한 false(default):기존 세션 만료
 
         return http.build();
     }

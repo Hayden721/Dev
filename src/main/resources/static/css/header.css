@@ -30,3 +30,9 @@ nav {
     background-color: white;
 
 }
+
+#spotBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

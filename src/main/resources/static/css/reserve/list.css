@@ -5,7 +5,7 @@
 
 }
 .list-wrapper {
-    margin: 0 10% 0 10%;
+    margin: 0 13% 0 13%;
 
 }
 
@@ -41,7 +41,7 @@
 #item-container {
     width: 78%;
     display: flex;
-    background-color: #72B01D;
+    background-color: #72b01d;
     border-radius: 10px;
     cursor: pointer;
     margin: 15px 15px 0 0;

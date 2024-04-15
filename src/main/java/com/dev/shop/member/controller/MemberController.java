@@ -139,7 +139,6 @@ public class MemberController {
 
     @PostMapping("/mypage/reservation/cancel")
     public String reservationCancelGet(@RequestParam(required = false) Long reservationNo) {
-        log.info("====-=======-===-====={}",reservationNo);
 
         memberService.cancelReservation(reservationNo);
 

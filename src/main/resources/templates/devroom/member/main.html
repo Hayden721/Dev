@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
-<!--    <link rel="stylesheet" th:href="@{/css/member/reservation-info.css}" >-->
+    <link rel="stylesheet" th:href="@{/css/member/main.css}" >
 
 
     <title>Dev-room</title>
@@ -17,26 +17,51 @@
 
 <div layout:fragment="content">
 
-    <div class="">
+    <div class="main-wrap">
 
-    </div>
+        <div id="carouselExampleIndicators" class="carousel slide" style="width: 1300px; height: 300px;">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="/images/test-image.png" class="d-block" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/test-image.png" class="d-block" alt="...">
+                </div>
+                <div class="carousel-item">
+                    <img src="/images/test-image.png" class="d-block" alt="...">
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
 
-    <div class="main-container">
-
-        <div class="navbar">
-            <div class="container-fluid">
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn" type="submit">Search</button>
-                </form>
+        <div class="card-slide">
+            <div class="room-card">
+                <img src="/images/test-image.png"  alt="...">
+                <div class="room-card-content">
+                    <h3>테스트1</h3>
+                    <p>서울시 강남구 테헤란로 999-999</p>
+                    <p>스터디룸</p>
+                </div>
             </div>
         </div>
 
+    </div>
 
-    </div>
-    <div>
-        <a th:href="@{/devroom/reserve/list}">리스트</a>
-    </div>
+
+
+
 
 
 </div>

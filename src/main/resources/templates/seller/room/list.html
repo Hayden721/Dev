@@ -20,17 +20,17 @@
             <div class="list-item" th:each="roomList : ${roomList}" th:onclick="|location.href='@{/seller/room/detail(roomNo=${roomList.roomNo})}'|">
                 <div class="list-item-inner">
                     <div>
-                        <span>방 제목 :
-                            <span th:text="${roomList.roomTitle}"></span>
+                        <span>
+                            <span th:text="${roomList.roomTitle}" style="font-size: 35px;"></span>
                         </span>
                     </div>
 
                     <div>
-                        <span>방 종류 :
+                        <span>
                             <span th:switch="${roomList.roomDiv}">
-                                <span th:case="'studyroom'">스터디룸</span>
-                                <span th:case="'meeting'">회의실</span>
-                                <span th:case="'office'">개인 오피스</span>
+                                <span th:case="'studyroom'" style="font-size: 20px;">스터디룸</span>
+                                <span th:case="'meeting'" style="font-size: 20px;">회의실</span>
+                                <span th:case="'office'" style="font-size: 20px;">개인 오피스</span>
                             </span>
                         </span>
                     </div>
@@ -38,8 +38,8 @@
 
 
                     <div>
-                        <span>옵션 개수 :
-                            <span th:text="${roomList.cnt} + '개'"></span>
+                        <span style="font-size: 20px;">옵션 개수 :
+                            <span th:text="${roomList.cnt} + '개'" style="font-size: 20px;"></span>
                         </span>
                     </div>
 
