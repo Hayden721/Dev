@@ -6,9 +6,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/member/main.css}" >
-
 
     <title>Dev-room</title>
 </head>
@@ -19,7 +23,7 @@
 
     <div class="main-wrap">
 
-        <div id="carouselExampleIndicators" class="carousel slide" style="width: 1300px; height: 300px;">
+        <div id="carouselExampleIndicators" class="carousel slide" style="width: 1200px; height: 250px;">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -46,16 +50,63 @@
             </button>
         </div>
 
-        <div class="card-slide">
-            <div class="room-card">
-                <img src="/images/test-image.png"  alt="...">
-                <div class="room-card-content">
-                    <h3>테스트1</h3>
-                    <p>서울시 강남구 테헤란로 999-999</p>
-                    <p>스터디룸</p>
+
+        <div class="empty-space"></div>
+
+        <div class="swiper-container">
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">
+                        <img src="/images/test-image.png" alt="Room 1" >
+                        <div class="content">
+                            <h3>1</h3>
+                            <p>11,000 원/시간</p>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img src="/images/test-image.png" alt="Room 1" >
+                        <div class="content">
+                            <h3>2</h3>
+                            <p>11,000 원/시간</p>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img src="/images/test-image.png" alt="Room 1" >
+                        <div class="content">
+                            <h3>3</h3>
+                            <p>11,000 원/시간</p>
+                            <p></p>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <img src="/images/test-image.png" alt="Room 1" >
+                        <div class="content">
+                            <h3>4</h3>
+                            <p>11,000 원/시간</p>
+                            <p></p>
+                        </div>
+                    </div>
+
                 </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
             </div>
         </div>
+
+
+
 
     </div>
 
@@ -63,7 +114,34 @@
 
 
 
-
 </div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+
+        $(document).ready(function(){
+            swiper();
+        });
+
+        function swiper() {
+
+
+            const mySwiper = new Swiper('.swiper', {
+                slidesPerView: 3,
+                slidesPerGroup: 1,
+                observer: true,
+                observeParents: true,
+                loop:true,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: 'swiper-container .swiper-button-next',
+                    prevEl: 'swiper-container .swiper-button-prev',
+                }
+            });
+        }
+
+    </script>
+</th:block>
+
 
 </html>
