@@ -53,44 +53,68 @@
 
         <div class="empty-space"></div>
 
+        <div class="category-container">
+            <div class="category-box">
+
+            </div>
+
+            <div class="category-box">
+
+            </div>
+
+            <div class="category-box">
+
+            </div>
+        </div>
+
+
         <div class="swiper-container">
+            <h2>새로 등록된 SPOT</h2>
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
                     <div class="swiper-slide">
-                        <img src="/images/test-image.png" alt="Room 1" >
-                        <div class="content">
-                            <h3>1</h3>
-                            <p>11,000 원/시간</p>
-                            <p></p>
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>1</h3>
+                                <p>11,000 원/시간</p>
+                                <p>스터디룸</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="swiper-slide">
-                        <img src="/images/test-image.png" alt="Room 1" >
-                        <div class="content">
-                            <h3>2</h3>
-                            <p>11,000 원/시간</p>
-                            <p></p>
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>2</h3>
+                                <p>11,000 원/시간</p>
+                                <p>개인오피스</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="swiper-slide">
-                        <img src="/images/test-image.png" alt="Room 1" >
-                        <div class="content">
-                            <h3>3</h3>
-                            <p>11,000 원/시간</p>
-                            <p></p>
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>3</h3>
+                                <p>11,000 원/시간</p>
+                                <p>회의실</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="swiper-slide">
-                        <img src="/images/test-image.png" alt="Room 1" >
-                        <div class="content">
-                            <h3>4</h3>
-                            <p>11,000 원/시간</p>
-                            <p></p>
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>4</h3>
+                                <p>11,000 원/시간</p>
+                                <p>스터디룸</p>
+                            </div>
                         </div>
                     </div>
 
@@ -105,7 +129,66 @@
             </div>
         </div>
 
+        <div class="swiper-container">
+            <h2>인기 SPOT</h2>
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    <div class="swiper-slide">
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>1</h3>
+                                <p>11,000 원/시간</p>
+                                <p>스터디룸</p>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div class="swiper-slide">
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>2</h3>
+                                <p>11,000 원/시간</p>
+                                <p>개인오피스</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>3</h3>
+                                <p>11,000 원/시간</p>
+                                <p>회의실</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="swiper-slide">
+                        <div class="room-card">
+                            <img src="/images/test-image.png" alt="Room 1" >
+                            <div class="content">
+                                <h3>4</h3>
+                                <p>11,000 원/시간</p>
+                                <p>스터디룸</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+            </div>
+        </div>
 
 
     </div>
@@ -132,10 +215,10 @@
                 observer: true,
                 observeParents: true,
                 loop:true,
-                spaceBetween: 10,
+                spaceBetween: 15,
                 navigation: {
-                    nextEl: 'swiper-container .swiper-button-next',
-                    prevEl: 'swiper-container .swiper-button-prev',
+                    nextEl: '.swiper-container .swiper-button-next',
+                    prevEl: '.swiper-container .swiper-button-prev',
                 }
             });
         }
