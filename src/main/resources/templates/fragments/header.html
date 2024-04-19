@@ -14,9 +14,10 @@
     </div>
 
     <ul class="header-ul">
-      <li sec:authorize="isAnonymous()"><a href="/devroom/member/login">로그인</a></li>
-      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/logout">로그아웃</a></li>
+
       <li sec:authorize="isAuthenticated()"><a href="/devroom/member/mypage">MYPAGE</a></li>
+      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/logout">로그아웃</a></li>
+      <li sec:authorize="isAnonymous()"><a href="/devroom/member/login">로그인</a></li>
     </ul>
   </nav>
 

@@ -2,26 +2,22 @@
 <html lang="ko"
 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/config}">
+      layout:decorate="~{layouts/mypage-config}">
 <head>
     <link rel="stylesheet" th:href="@{/css/member/mypage.css}" >
-
-
-
-    <title>리스트 페이지</title>
+    <title>ShareSpot</title>
 </head>
 
 
 <div layout:fragment="content">
 
-mypage
-    <div>
-        <a th:href="@{/devroom/member/mypage/edit}">정보 수정</a>
+
+    <div class="quick-check-box-container">
+        <div class="quick-check-box">1</div>
+        <div class="quick-check-box">2</div>
+        <div class="quick-check-box">3</div>
     </div>
 
-    <div><a th:href="@{/devroom/member/mypage/reservation-info}">예약 정보</a></div>
-    <div><a th:href="@{/}">찜 목록</a></div>
-
-</div>
+</div> <!-- layout:fragment="content" END -->
 
 </html>
