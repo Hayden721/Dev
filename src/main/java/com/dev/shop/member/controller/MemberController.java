@@ -2,8 +2,11 @@ package com.dev.shop.member.controller;
 
 
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.ReservationCriteriaDto;
 import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
+import com.dev.shop.seller.dto.ReservationDto;
+import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -126,11 +129,11 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/reservation-info")
-    public String reserveCheckGet(Model model) {
+    public String reserveCheckGet(@ModelAttribute("params") final ReservationCriteriaDto params, Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long memberNo = memberService.getMemberNoByAuthId(authId);
 
-        List<getReserveInfoDto> reservationInfo = memberService.getReservationInfoByMemberNo(memberNo);
+        PagingResponse<getReserveInfoDto> reservationInfo = memberService.getReservationInfoByMemberNo(memberNo, params);
         log.info("----------=-=-=--=- {}", reservationInfo);
         model.addAttribute("reservationInfo", reservationInfo);
 

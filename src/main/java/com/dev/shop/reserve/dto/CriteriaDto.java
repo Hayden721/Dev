@@ -21,7 +21,7 @@ public class CriteriaDto {
 
     public CriteriaDto() {
         this.page = 1;
-        this.recordSize = 10;
+        this.recordSize = 9;
         this.pageSize = 5;
     }
 

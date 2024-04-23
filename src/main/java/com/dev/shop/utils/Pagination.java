@@ -2,6 +2,7 @@ package com.dev.shop.utils;
 
 
 
+import com.dev.shop.member.dto.ReservationCriteriaDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,7 +29,6 @@ public class Pagination {
             calculation(params);
         }
     }
-
 
     private void calculation(CriteriaDto params) {
 
@@ -60,7 +60,44 @@ public class Pagination {
         // 다음 페이지 존재 여부 확인
         nextPage = (endPage * params.getRecordSize()) < totalRecordCount;
 
+    }
 
+    public Pagination(int totalRecordCount, ReservationCriteriaDto params) {
+        if (totalRecordCount > 0) {
+            this.totalRecordCount = totalRecordCount;
+            calculation(params);
+        }
+    }
+
+    private void calculation(ReservationCriteriaDto params) {
+
+        // 전체 페이지 수 계산
+        totalPageCount = ((totalRecordCount - 1) / params.getRecordSize()) + 1;
+
+        // 현재 페이지 번호가 전체 페이지 수보다 큰 경우, 현재 페이지 번호에 전체 페이지 수 저장
+        if (params.getPage() > totalPageCount) {
+            params.setPage(totalPageCount);
+        }
+
+        // 첫 페이지 번호 계산
+        startPage = ((params.getPage() - 1) / params.getPageSize()) * params.getPageSize() + 1;
+
+        // 끝 페이지 번호 계산
+        endPage = startPage + params.getPageSize() - 1;
+
+        // 끝 페이지가 전체 페이지 수보다 큰 경우, 끝 페이지 전체 페이지 수 저장
+        if (endPage > totalPageCount) {
+            endPage = totalPageCount;
+        }
+
+        // LIMIT 시작 위치 계산
+        limitStart = (params.getPage() - 1) * params.getRecordSize();
+
+        // 이전 페이지 존재 여부 확인
+        prevPage = startPage != 1;
+
+        // 다음 페이지 존재 여부 확인
+        nextPage = (endPage * params.getRecordSize()) < totalRecordCount;
 
     }
 

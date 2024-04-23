@@ -2,7 +2,11 @@ package com.dev.shop.member.service;
 
 
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.ReservationCriteriaDto;
 import com.dev.shop.member.dto.getReserveInfoDto;
+import com.dev.shop.seller.dto.ReservationDto;
+import com.dev.shop.utils.PagingResponse;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ public interface MemberService {
 
     Long getMemberNoByAuthId(String authId);
 
-    List<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo);
+    PagingResponse<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo, ReservationCriteriaDto params);
 
     void cancelReservation(Long reservationNo);
 

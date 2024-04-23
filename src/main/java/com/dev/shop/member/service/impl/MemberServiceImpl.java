@@ -2,8 +2,12 @@ package com.dev.shop.member.service.impl;
 
 import com.dev.shop.member.dao.MemberDao;
 import com.dev.shop.member.dto.MemberDto;
+import com.dev.shop.member.dto.ReservationCriteriaDto;
 import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
+import com.dev.shop.seller.dto.ReservationDto;
+import com.dev.shop.utils.Pagination;
+import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +31,11 @@ public class MemberServiceImpl implements MemberService {
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:sss");
     Date time = new Date();
     String localTime = format.format(time);
+
+    /**
+     * 회원가입
+     * @param memberDto
+     */
     @Override
     public void memberRegister(MemberDto memberDto) {
 
@@ -65,19 +75,46 @@ public class MemberServiceImpl implements MemberService {
 
     }
 
+    /**
+     * memberNo 조회
+     * @param authId
+     * @return memberNo
+     */
     @Override
     public Long getMemberNoByAuthId(String authId) {
         return memberDao.selectMemberNo(authId);
     }
 
+    /**
+     * 게시글 리스트 조회
+     * @param memberNo
+     * @return
+     */
     @Override
-    public List<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo) {
-        return memberDao.selectReservationInfoByMemberNo(memberNo);
+    public PagingResponse<getReserveInfoDto> getReservationInfoByMemberNo(Long memberNo, final ReservationCriteriaDto params) {
+        int count = memberDao.countReservationInfo(memberNo, params);
+        if(count < 1) {
+            return new PagingResponse<>(Collections.emptyList(), null);
+        }
+
+        Pagination pagination = new Pagination(count, params);
+
+        params.setPagination(pagination);
+
+        List<getReserveInfoDto> list = memberDao.selectReservationInfoByMemberNo(memberNo, params);
+
+        return new PagingResponse<>(list, pagination);
     }
 
+    /**
+     * 예약 삭제
+     * @param reservationNo - 삭제할 예약 번호
+     */
     @Override
     public void cancelReservation(Long reservationNo) {
         memberDao.updateReservationByReservationNo(reservationNo);
     }
+
+
 
 }

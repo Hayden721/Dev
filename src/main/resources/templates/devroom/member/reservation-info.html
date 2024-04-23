@@ -11,34 +11,57 @@
 
 <div layout:fragment="mypage-content">
 
-    <div class="mypage-container">
-        예약 정보 확인
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">번호</th>
-                <th scope="col">방이름</th>
-                <th scope="col">옵션이름</th>
-                <th scope="col">예약 날짜</th>
-                <th scope="col">예약 시간</th>
-                <th scope="col">예약 취소</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="reserveInfo : ${reservationInfo}">
-                <td th:text="${reserveInfo.rowNum}"></td>
-                <td th:text="${reserveInfo.roomTitle}"></td>
-                <td th:text="${reserveInfo.roomOptionTitle}"></td>
-                <td th:text="${reserveInfo.reservationDate}"></td>
-                <td th:text="${reserveInfo.startTime} + '시' + ' ~ ' + ${reserveInfo.endTime} +'시'"></td>
-                <td th:switch="${reserveInfo.reservationStatus}">
-                    <button th:case="'0'" class="btn btn-danger" disabled>예약 취소</button>
-                    <button th:case="'1'" class="btn btn-danger" th:data-reservation-no="${reserveInfo.reservationNo}" data-bs-toggle="modal" data-bs-target="#reservationCancelModal">예약 취소</button>
-                    <button th:case="'2'" class="btn btn-danger" disabled>예약 종료</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="mypage-paging-container">
+        <h1>예약 정보 확인</h1>
+
+        <div class="search-container" style="float: right;">
+            <form role="search" style="display: flex;">
+                <label style="margin: 0 5px 5px 0">
+                    <select class="form-select" style="width: 120px; text-align-last: center;">
+                        <option value="">전체</option>
+                        <option value="1">예약</option>
+                        <option value="0">예약 취소</option>
+                        <option value="2">예약 종료</option>
+                    </select>
+                </label>
+
+                <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="margin: 0 0 5px 0;">
+                <button class="btn btn-outline-success" type="submit" style="margin: 0 0 5px 5px;">Search</button>
+            </form>
+        </div>
+
+        <div class="paging-container">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">방이름</th>
+                    <th scope="col">옵션이름</th>
+                    <th scope="col">예약 날짜</th>
+                    <th scope="col">예약 시간</th>
+                    <th scope="col">예약 취소</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="reserveInfo : ${reservationInfo.list}" class="list-tr">
+                    <td th:text="${reserveInfo.rowNum}"></td>
+                    <td th:text="${reserveInfo.roomTitle}"></td>
+                    <td th:text="${reserveInfo.roomOptionTitle}"></td>
+                    <td th:text="${reserveInfo.reservationDate}"></td>
+                    <td th:text="${reserveInfo.startTime} + '시' + ' ~ ' + ${reserveInfo.endTime} +'시'"></td>
+                    <td th:switch="${reserveInfo.reservationStatus}">
+                        <button th:case="'0'" class="btn btn-danger" disabled>예약 취소</button>
+                        <button th:case="'1'" class="btn btn-danger" th:data-reservation-no="${reserveInfo.reservationNo}" data-bs-toggle="modal" data-bs-target="#reservationCancelModal">예약 취소</button>
+                        <button th:case="'2'" class="btn btn-danger" disabled>예약 종료</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="paging-box"></div>
+
+
+        </div>
 
     </div>
 
@@ -71,7 +94,111 @@
             sendReservationDataToModal();
             reservationCancelBtn();
 
+            findAllList();
+
         })
+
+        function findAllList() {
+            const list = [[ ${reservationInfo.list} ]];
+
+            if( !list.length ) {
+                $(".list-tr").html("<td colspan='6'><div>확인된 예약이 없어요!</div></td>");
+                drawPage();
+            }
+
+            const pagination = [[ ${reservationInfo.pagination} ]];
+            console.log(pagination);
+
+            // @ModelAttribute를 사용했기 때문에 html에서 불러올 수 있음
+            const params = [[ ${params} ]];
+            console.log("파람스" , params);
+
+
+            drawPage(pagination, params);
+        }
+
+        function drawPage(pagination, params) {
+
+
+
+            // 필수 파라미터가 없으면 html 제거
+            if(!pagination || ! params) {
+                $('.paging-box').html('');
+                throw new Error('Missing required parameters...');
+            }
+
+            let html = `
+                <div aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item page-start"><a class="page-link" href="javascript:void(0);" onclick="movePage(1)"><i class="bi bi-chevron-double-left"></i></a></li>
+                    <li class="page-item page-prev"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})"><i class="bi bi-chevron-left"></i></a></li>
+            `;
+
+            html += '<li class="page-item">';
+            for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+                html += (i !== params.page)
+                    ? `<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${i});">${i}</a></li>`
+                    : `<li class="page-item active"><span class="page-link">${i}</span></li>`
+            }
+            html += '</li>';
+
+
+
+            html += `
+                    <li class="page-item page-next"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.endPage} + 1);" class="page_bt next"><i class="bi bi-chevron-right"></i></a></li>
+                    <li class="page-item page-end"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.totalPageCount});" class="page_bt last"><i class="bi bi-chevron-double-right"></i></a></li>
+                </ul>
+                </div>
+                `;
+            // if (pagination.startPage) {
+            //     $('.page-start .page-prev').css("pointer-events", "none");
+            //
+            // }
+            //
+            // if (pagination.endPage) {
+            //     $('.page-end .page-next').css("pointer-events", "none");
+            // }
+
+
+            $('.paging-box').html(html);
+        }
+
+        function movePage(page) {
+            const keywordValue = $("#keyword").val();
+
+            // const searchLocationValue = [];
+            // const searLocationVal = $("input[name=locOption]:checked").each(function () {
+            //     const val = $(this).val();
+            //     searchLocationValue.push(val);
+            // })
+            //
+            //
+            // const checkDivValue = [];
+            // const searTypeValue = $("input[name=checkDiv]:checked").each(function () {
+            //     const chk = $(this).val();
+            //     checkDivValue.push(chk);
+            // })
+
+            // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
+            const queryParams = {
+                page: (page) ? page : 1,
+                recordSize: 9,
+                pageSize: 3,
+                keyword: keywordValue,
+                // searchLocation: searchLocationValue,
+                // searchDiv: checkDivValue
+
+            }
+            /*
+             * 2. location.pathname : 리스트 페이지의 URI("/post/list.do")를 의미
+             *    new URLSearchParams(queryParams).toString() : queryParams의 모든 프로퍼티(key-value)를 쿼리 스트링으로 변환
+             *    URI + 쿼리 스트링에 해당하는 주소로 이동
+             *    (해당 함수가 리턴해주는 값을 브라우저 콘솔(console)에 찍어보시면 쉽게 이해하실 수 있습니다.)
+             */
+            location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
+        }
+
+
         function sendReservationDataToModal() {
             $('#reservationCancelModal').on('show.bs.modal', function (event) {
                 const button = $(event.relatedTarget);
@@ -98,8 +225,12 @@
 
                 })
             })
-
         }
+
+
+
+
+
 
     </script>
 </th:block>

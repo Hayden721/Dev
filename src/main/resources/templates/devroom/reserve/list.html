@@ -38,16 +38,6 @@
                 </div>
 
 
-<!--                    <div class="locOptionSearch">-->
-<!--                        <select class="locOption form-select" name="locOption" >-->
-<!--                            <option value="">=== 지역 ===</option>-->
-<!--                            <option value="서울">서울</option>-->
-<!--                            <option value="경기">경기</option>-->
-<!--                            <option value="대전">대전</option>-->
-<!--                            <option value="부산">부산</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-
                     <button class="btn btn-primary option-button" onclick="movePage(1);" type="submit">적용</button>
 
                 </div>
@@ -147,6 +137,7 @@
 
         // 페이징
         function drawPage(pagination, params) {
+
             // 필수 파라미터가 없는 경우 html을 제거
             if(!pagination || !params) {
                 $('.pagination-container').html('');
@@ -187,10 +178,7 @@
         }
 
         function movePage(page) {
-
             const keywordValue = $("#keyword").val();
-
-
 
             const searchLocationValue = [];
             const searLocationVal = $("input[name=locOption]:checked").each(function () {
@@ -205,13 +193,11 @@
                 checkDivValue.push(chk);
             })
 
-
-
             // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
             const queryParams = {
                 page: (page) ? page : 1,
-                recordSize: 10,
-                pageSize: 5,
+                recordSize: 9,
+                pageSize: 3,
                 keyword: keywordValue,
                 searchLocation: searchLocationValue,
                 searchDiv: checkDivValue
