@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<div th:fragment="mypage-menu" sec:authorize="isAuthenticated()">
+
+
+  <div class="mypage-side-menu">
+
+    <ol>
+      <li class="li-style">
+        <span class="li-header-style">예약 정보</span>
+        <ol>
+          <li><a href="/devroom/member/mypage/reservation-info">예약 내역</a></li>
+        </ol>
+      </li>
+
+      <li class="li-style">
+        <span class="li-header-style">활동 정보</span>
+        <ol>
+          <li>
+            <a href="/devroom/member/mypage/reservation-info">찜 목록</a>
+          </li>
+        </ol>
+      </li>
+
+      <li class="li-style">
+        <span class="li-header-style">회원정보 관리</span>
+        <ol>
+          <li>
+            <a href="/devroom/member/mypage/edit">회원정보 수정</a>
+          </li>
+        </ol>
+      </li>
+
+    </ol>
+
+  </div>
+
+
+</div>
+</html>

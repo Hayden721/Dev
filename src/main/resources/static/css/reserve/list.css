@@ -1,38 +1,39 @@
-#sideOption-menu {
-    width: 399px;
-    height: auto;
-    margin-top: 10px;
-
-}
 .list-wrapper {
-    margin: 0 13% 0 13%;
-
-}
-
-.container-fluid {
-    position: fixed;
-    width: 399px;
-    top: 110px;
-    transition: top 0.3s ease; /* top 속성에 대한 부드러운 전환을 추가합니다. */
-}
-/* option form 검색어 입력창 */
-.divOptionSearch {
-    margin: 10px 10px 0 0;
-}
-/* option-form submit button */
-.option-button {
-
-}
-#searchForm {
-    width: 399px;
-    justify-content: center;
-}
-
-#list-container {
     display: flex;
     flex-direction: column;
+    margin: 0 13% 0 13%;
+    justify-content: center;
     align-items: center;
-    margin-left: 400px;
+}
+/* option css*/
+.option-container{
+    width: 1300px;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.option-form {
+    width: 300px;
+}
+
+.option-button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* option css END*/
+
+/* list css */
+#list-container {
+    width: 1300px;
+    display: grid;
+    grid-template-columns: repeat(3, 0fr);
+    gap: 20px;
+    padding: 5px;
+    justify-content: center;
 }
 
 #room-container {
@@ -64,4 +65,33 @@
 
 .option-box {
     flex-direction: column;
+}
+
+
+/* 카드 css */
+.room-card {
+    width: 350px;
+    height: 350px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    background-color: #F3EFF5;
+}
+
+.room-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+}
+
+.room-card .content {
+    padding: 10px;
+}
+
+.room-card p {
+    margin-bottom: 10px;
+}
+.pagination-container {
+
+    justify-content: center;
 }
