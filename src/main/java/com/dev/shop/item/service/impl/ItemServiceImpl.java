@@ -74,6 +74,9 @@ public class ItemServiceImpl implements ItemService {
         }
 
         log.info("----------------- itemServiceImpl refinedOptionImage2 : {} ", refinedOptionImage);
-        itemDao.insertOptionImageSaveByRefindOptionImage(refinedOptionImage);
+
+        if(!refinedOptionImage.isEmpty()) {
+            itemDao.insertOptionImageSaveByRefindOptionImage(refinedOptionImage);
+        }
     }
 }

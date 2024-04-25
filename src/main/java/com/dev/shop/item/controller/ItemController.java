@@ -29,11 +29,12 @@ public class ItemController {
 
     }
 
+
     @GetMapping("/seller/room/image-upload")
     public String roomImageUpload(Model model, HttpSession session) {
 
-//        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
-        Long roomNo = 42L;
+        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
+
         log.info("/seller/room/image-upload GET roomNo : {}", roomNo);
         // session에서 넘어온 roomNo가 null일 때 비정상적인 접근 오류 사이트로 redirect시키기
 
@@ -80,14 +81,19 @@ public class ItemController {
         log.info("/image-upload ------------ optionImage : {}", optionImage);
         log.info("/image-upload ------------ roptionNo : {}", roptionNo);
 
-//        itemService.saveImagesByRoomNo(roomNo, images, thumbnailImage);
-//        itemService.saveOptionImageByRoomOptionNo(optionImage, roptionNo);
+        itemService.saveImagesByRoomNo(roomNo, images, thumbnailImage);
+        itemService.saveOptionImageByRoomOptionNo(optionImage, roptionNo);
 
-        return "redirect:/seller/main";
+        return "redirect:/seller/room/list";
     }
 
     @GetMapping("/seller/room/image-update")
-    public void sellerRoomImageUpdate(@RequestParam("roomNo") Long roomNo) {
+    public void sellerRoomImageUpdateGet(@RequestParam("roomNo") Long roomNo) {
+
+
+    }
+    @PostMapping("/seller/room/image-update")
+    public void sellerRoomImageUpdatePost(@RequestParam("roomNo") Long roomNo) {
 
     }
 

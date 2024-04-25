@@ -1,3 +1,6 @@
 .search-container {
     display: flex;
 }
+.paging-container {
+    padding: 10px;
+}

@@ -92,14 +92,27 @@ public class SellerController {
 
     }
 
+    @GetMapping("/room/create-error")
+    public void roomCreateError() {
+
+    }
     @GetMapping("/room/create-verification")
-    public void createRoomVerification(Model model) {
+    public String createRoomVerification(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long sellerNo = sellerService.getSellerNoByAuthId(authId);
 
         int checkRoomCount = sellerService.getRoomCountBySellerNo(sellerNo);
 
+
+
         model.addAttribute("checkRoomCount", checkRoomCount);
+
+        if (checkRoomCount == 12) {
+            return "redirect:/seller/room/create-error";
+        }else {
+            return "/seller/room/create-verification";
+        }
+
     }
 
     @GetMapping("/room/create")
@@ -111,7 +124,7 @@ public class SellerController {
 
         model.addAttribute("sellerNo", sellerNo);
 
-        if (checkRoomCount >= 12) {
+        if (checkRoomCount == 12) {
             return "/seller/room/create-error";
         } else {
             return "/seller/room/create";
@@ -152,19 +165,58 @@ public class SellerController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/room/detail")
+    public void roomListDetail(@RequestParam final Long roomNo,  Model model) {
+
+        String filePath = fileUtils.choosePath(); // 파일 경로
+
+        // 방 정보
+        RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo); // 방 정보
+        // 룸 옵션 카운트
+        int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
+
+        // 썸네일 이미지
+        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+
+        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+
+        // 방 옵션 정보
+        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
+
+
+        model.addAttribute("roomInfo", roomInfo);
+        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
+        model.addAttribute("roomOptionCount", roomOptionCount);
+        model.addAttribute("roomNo", roomNo);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("additionalImage", additionalImage);
+        model.addAttribute("thumbnailImage", thumbnailImage);
+    }
+
     @GetMapping("/room/detail/update")
     public String roomUpdateGet(@RequestParam("roomNo") Long roomNo, Model model) {
         log.info("/room/detail/update roomNo : {}", roomNo);
 
         RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo);
         List<RoomOptionDto> roomOptionInfo = sellerService.getRoomOptionInfoByRoomNo(roomNo);
-        int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
+        String filePath = fileUtils.choosePath(); // 파일 경로
+        // 썸네일 이미지
+        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+
+        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+
+        // 방 옵션 정보
+        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
 
 
         model.addAttribute("roomInfo", roomInfo);
         model.addAttribute("roomOptionInfo", roomOptionInfo);
-        model.addAttribute("roomOptionCount", roomOptionCount);
         model.addAttribute("roomNo", roomNo);
+
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("additionalImage", additionalImage);
+        model.addAttribute("thumbnailImage", thumbnailImage);
+        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
 
         return "/seller/room/update";
     }
@@ -195,31 +247,7 @@ public class SellerController {
 
     }
 
-    @GetMapping("/room/detail")
-    public void roomListDetail(@RequestParam final Long roomNo,  Model model) {
 
-        String filePath = fileUtils.choosePath(); // 파일 경로
-
-        // 방 정보
-        RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo); // 방 정보
-
-        int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
-
-        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-
-        // 방 옵션 정보
-        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
-
-
-        model.addAttribute("roomInfo", roomInfo);
-        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
-        model.addAttribute("roomOptionCount", roomOptionCount);
-        model.addAttribute("roomNo", roomNo);
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("additionalImage", additionalImage);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-    }
 
     @GetMapping("/reserve/manage")
     public void sellerReserveManage(Model model) {

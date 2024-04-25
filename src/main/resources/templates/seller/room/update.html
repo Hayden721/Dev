@@ -14,49 +14,83 @@
 
 
 <div layout:fragment="seller-content">
-    <!--    <button><a th:href="@{/room/create/image(roomNo = ${roomNo}, roomOptionNo = {})}">이미지 수정</a></button>-->
-    <div class="">
-        <div th:object="${roomInfo}" class="room-info">
-            <label>방 이름
-                <input type="text" th:value="*{roomTitle}">
-            </label>
-            <label> 업체 구분
-                <select name="roomDiv" id="room-div">
-                    <option value="studyroom">스터디룸</option>
-                    <option value="metting">회의실</option>
-                    <option value="office">사무실</option>
-                </select>
-            </label>
-            <label>방 내용
-                <input type="text" th:value="*{roomContent}">
-            </label>
-            <label>방 내용
-                <input type="text" th:value="*{roomContent}">
-            </label>
+
+    <div class="detail-wrap">
+
+        <h2>방 정보</h2>
+        <form>
+        <div class="room-container">
+            <div class="room-info-container">
+                <label> 방 이름 :
+                    <input th:value="${roomInfo.roomTitle}" name="roomTitle">
+                </label>
+
+                <label> 방 설명 :
+                    <input th:value="${roomInfo.roomContent}" name="roomContent">
+                </label>
+
+                <label> 업체 구분
+                    <select name="roomDiv" id="room-div">
+                        <option value="studyroom">스터디룸</option>
+                        <option value="metting">회의실</option>
+                        <option value="office">사무실</option>
+                    </select>
+                </label>
+
+                <label>주소 :
+                    <span th:text="${roomInfo.address + ' ' +roomInfo.detailAddress}"></span>
+                </label>
+            </div> <!-- room-container END -->
+
+            <div class="room-image-container">
+                <div class="thumbnail-image-container">
+                    <input type="file" accept="images/*">
+                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image">
+                    <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+
+                </div>
+
+                <!-- 썸네일 아닌 이미지 -->
+                <div class="extra-images-container">
+                    <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none">
+                </div>
+            </div> <!-- room-image-container END -->
+
+        </div> <!-- room-container END -->
+
+        <hr>
+
+        <h2>옵션 정보</h2>
+        <div class="option-container">
+            <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
+                <div class="option-image-container">
+                    <img class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
+                    <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionInfoAndImage.originalName}" th:unless="${optionInfoAndImage.roptionImageNo} != 0">
+                </div>
+
+                <div class="option-info-container">
+                    <label>옵션 이름 :
+                        <input th:value="${optionInfoAndImage.roptionTitle}" name="roptionTitle">
+                    </label>
+
+                    <label>옵션 설명 :
+                        <input th:value="${optionInfoAndImage.roptionContent}" name="roptionContent">
+                    </label>
+
+                    <label>옵션 가격 :
+                        <input th:value="${optionInfoAndImage.roptionPrice}" name="roptionPrice">
+                    </label>
+                </div>
+            </div>
         </div>
+
+
+    <div style="float: right; margin: 10px 0 0 0;">
+
+        <button class="btn btn-danger room-delete-button">방 삭제</button>
+        <button class="btn emphasize-btn">수정완료</button>
     </div>
-
-    <div class="room-option-container">
-
-        <div th:each=" roomOptionInfo : ${roomOptionInfo}" th:if="${roomOptionCount != 0} ">
-            <label>
-                <input type="text" th:value="${roomOptionInfo.roptionTitle}">
-            </label>
-            <label>
-                <input type="text" th:value="${roomOptionInfo.roptionPrice}">
-            </label>
-            <label>
-                <input type="text" th:value="${roomOptionInfo.roptionContent}">
-            </label>
-        </div>
-        <div th:unless="${roomOptionCount != 0}">
-            <span>null이야</span>
-        </div>
-    </div>
-    <button><a th:href="@{/seller/room/detail/update(room=${roomNo})}">수정하기</a></button>
-    <button><a th:href="@{/seller/room/image-upload(roomNo=${roomNo})}">이미지 수정</a></button>
-    <button class="room-delete-button">방 삭제</button>
-
+    </form>
 </div>
 
 <th:block layout:fragment="script">

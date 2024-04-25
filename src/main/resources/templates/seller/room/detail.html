@@ -37,17 +37,13 @@
 
             <div class="room-image-container">
                 <div class="thumbnail-image-container">
-                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${roomInfo.createDate} + '/' + ${roomInfo.saveName}" th:alt="${roomInfo.originalName}" class="thumbnail-image">
+                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image">
                     <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
                 </div>
 
+                <!-- 썸네일 아닌 이미지 -->
                 <div class="extra-images-container">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-                    <img class="extra-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+                    <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none">
                 </div>
             </div> <!-- room-image-container END -->
 
@@ -84,7 +80,7 @@
 
     <div style="float: right; margin: 10px 0 0 0;">
         <button class="btn emphasize-btn" th:onclick="|location.href='@{/seller/room/detail/update(roomNo=${roomNo})}'|">수정하기</button>
-        <button class="btn btn-danger room-delete-button">방 삭제</button>
+
     </div>
 </div> <!-- layout:fragment="seller-content" end -->
 
@@ -92,7 +88,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
         $(document).ready(function() {
-            deleteRoomButton();
+
             controllerDivValue();
         });
 
@@ -103,26 +99,6 @@
             $(".room-div").val();
         }
 
-        function deleteRoomButton() {
-            $(".room-delete-button").click(function (){
-                if(confirm("방을 삭제하시겠습니까?")) {
-                    $.ajax({
-                        type: "POST",           // 타입 (get, post, put 등등)
-                        url: "/seller/room/delete",  // 요청할 서버url
-                        dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                        data: {
-                            roomNo: [[${roomNo}]]
-                        },
-                        success: function (result) { // 결과 성공 콜백함수
-                            window.location.href = "/seller/room/list";
-                        },
-                        error: function (request, status, error) {
-                            console.log("get error Fail")
-                        }
-                    })
-                }
-            })
-        }
 
     </script>
 </th:block>

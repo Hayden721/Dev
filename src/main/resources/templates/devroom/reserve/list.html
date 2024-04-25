@@ -49,7 +49,9 @@
 
         <div id="list-container">
             <div th:each="roomList : ${roomList.list}" class="room-card" th:onclick="|location.href='@{/devroom/reserve/detail(roomNo=${roomList.roomNo})}'|">
-                <img src="/images/test-image.png" alt="Room 1">
+
+                <img th:if="${roomList.originalName} != noImage" th:src="${filePath} + '/' + ${roomList.createdDate} + '/' + ${roomList.saveName}" th:alt="${roomList.originalName}">
+                <img th:unless="${roomList.originalName} != noImage" src="/images/test-image.png" alt="images">
                 <div class="content">
                     <h3 th:text="${roomList.roomTitle}"></h3>
 

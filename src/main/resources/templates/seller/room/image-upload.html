@@ -26,7 +26,7 @@
         <div class="mb-3 thumbnail-image">
             <label for="thumbnailImage" class="form-label">대표 이미지</label>
             <div class="image-wrap">
-                <input class="form-control" type="file" id="thumbnailImage" name="thumbnailImage">
+                <input class="form-control" type="file" id="thumbnailImage" name="thumbnailImage" accept="image/*">
                 <button type="button" class="btn charcoal-btn images-del-btn" ><i class="bi bi-x-lg"></i></button>
             </div>
         </div>
@@ -34,7 +34,7 @@
         <div class="mb-3">
             <label for="extraImages" class="form-label">추가 이미지</label>
             <div class="image-wrap">
-                <input class="form-control" type="file" id="extraImages" name="files" multiple >
+                <input class="form-control" type="file" id="extraImages" name="files" multiple accept="image/*" >
                 <button type="button" class="btn charcoal-btn images-del-btn" ><i class="bi bi-x-lg"></i></button>
             </div>
         </div>
@@ -53,7 +53,7 @@
                 <div class="mb-3">
                     <label th:for="option-image + ${roomOptionInfo.roptionNo}" class="form-label" style="font-size: 20px;">옵션 이미지</label>
                     <div class="image-wrap">
-                        <input class="form-control image-check" type="file" th:id="option-image + ${roomOptionInfo.roptionNo}" name="optionImage">
+                        <input class="form-control image-check" type="file" th:id="option-image + ${roomOptionInfo.roptionNo}" name="optionImage" accept="image/*">
                         <button type="button" class="btn charcoal-btn images-del-btn" th:id="option-image-del-btn + ${roomOptionInfo.roptionNo}"><i class="bi bi-x-lg"></i></button>
                     </div>
                 </div>
