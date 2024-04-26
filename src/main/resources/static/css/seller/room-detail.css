@@ -6,6 +6,10 @@
     background-color: #F3EFF5;
 }
 
+.room-info-container {
+    display: flex;
+    flex-direction: column;
+}
 
 .option-detail-container {
     width: 940px;
@@ -62,3 +66,38 @@
     width: 100%;
 }
 
+/* detail/update */
+.thumbnail-image-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.thumbnail-image-container > img {
+    width: 250px;
+    height: 250px;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+
+}
+.overlay {
+    height: 51px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+
+}

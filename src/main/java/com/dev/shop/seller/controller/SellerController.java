@@ -247,8 +247,6 @@ public class SellerController {
 
     }
 
-
-
     @GetMapping("/reserve/manage")
     public void sellerReserveManage(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
