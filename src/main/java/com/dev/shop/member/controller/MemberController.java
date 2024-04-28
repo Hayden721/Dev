@@ -105,7 +105,7 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/edit")
-    public String editGet(Model model, HttpServletRequest request) {
+    public String editGet(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

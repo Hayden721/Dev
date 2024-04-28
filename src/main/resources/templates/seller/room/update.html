@@ -19,18 +19,18 @@
 
         <h2>방 수정</h2>
 
-        <form>
+        <form action="/seller/room/detail/update" method="post" autocomplete="off" enctype="multipart/form-data">
             <div class="room-container">
                 <div class="room-info-container">
-                    <label for="room-title"> 방 이름
+                    <label for="room-title">방 이름
                         <input id="room-title" class="form-control" th:value="${roomInfo.roomTitle}" name="roomTitle">
                     </label>
 
-                    <label for="room-content"> 방 설명
+                    <label for="room-content">방 설명
                         <input id="room-content" class="form-control" th:value="${roomInfo.roomContent}" name="roomContent">
                     </label>
 
-                    <label for="room-div"> 업체 구분
+                    <label for="room-div">업체 구분
                         <select class="form-select" name="roomDiv" id="room-div">
                             <option value="studyroom">스터디룸</option>
                             <option value="metting">회의실</option>
@@ -44,16 +44,21 @@
                 </div> <!-- room-container END -->
 
                 <div class="room-image-container">
-                    <input id="thumbnail-input" type="file" accept="images/*" hidden>
+
                     <div class="thumbnail-image-container">
                         <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image" th:data-thumbnail-image="${thumbnailImage.roomImageNo}">
                         <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
                         <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
+                        <button type="button" class="btn-close img-delete-btn" aria-label="Close" style="left: 91%; top: 1%;"></button>
+                        <input id="thumbnail-input" type="file" accept="images/*" hidden>
                     </div>
 
-                    <!-- 썸네일 아닌 이미지 -->
+                    <!-- 추가 이미지 -->
                     <div class="extra-images-container">
-                        <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-addimage-no="${addImage.roomImageNo}">
+                        <div class="extra-image-div" th:each="addImage : ${additionalImage}">
+                            <img  class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-addimage-no="${addImage.roomImageNo}">
+                            <button type="button" class="btn-close img-delete-btn" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
+                        </div>
                     </div>
                 </div> <!-- room-image-container END -->
             </div> <!-- room-container END -->
@@ -63,33 +68,46 @@
             <h2>옵션 정보</h2>
             <div class="option-container">
                 <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
+                    <input th:value="${optionInfoAndImage.roptionNo}" hidden>
+
+                    <!-- 옵션 이미지 -->
                     <div class="option-image-container">
-                        <img class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
+                        <img th:data-roption-image-no="${optionInfoAndImage.roptionImageNo}" class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
                         <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionInfoAndImage.originalName}" th:unless="${optionInfoAndImage.roptionImageNo} != 0">
                     </div>
 
                     <div class="option-info-container">
-                        <label>옵션 이름
-                            <input class="form-control" th:value="${optionInfoAndImage.roptionTitle}" name="roptionTitle">
-                        </label>
+                        <div class="option-name-price-container">
+                            <label>옵션 이름
+                                <input class="form-control" th:value="${optionInfoAndImage.roptionTitle}" name="roptionTitle" style="width: 300px">
+                            </label>
 
-                        <label>옵션 설명
-                            <input class="form-control" th:value="${optionInfoAndImage.roptionContent}" name="roptionContent">
-                        </label>
+                            <label>옵션 가격
+                                <div class='input-group option-price' style="width: 150px;">
+                                    <input th:value="${optionInfoAndImage.roptionPrice}" name='roptionPrice' class='form-control'>
+                                    <span class='input-group-text' id='basic-addon2'>₩</span>
+                                </div>
+                            </label>
+                        </div>
 
-                        <label>옵션 가격
-                            <input class="form-control" th:value="${optionInfoAndImage.roptionPrice}" name="roptionPrice">
-                        </label>
+                        <div class="option-content-container">
+                            <label>옵션 설명
+                                <textarea class="form-control" maxlength="100" th:value="${optionInfoAndImage.roptionContent}" name="roptionContent" style="resize: none; width: 300px; height: 100px"></textarea>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div style="float: right; margin: 40px 0 0 0;">
+                <button class="btn btn-danger room-delete-button">방 삭제</button>
+                <button class="btn emphasize-btn">수정완료</button>
+            </div>
+
         </form>
     </div>
 
-    <div style="float: right; margin: 10px 0 0 0;">
-        <button class="btn btn-danger room-delete-button">방 삭제</button>
-        <button class="btn emphasize-btn">수정완료</button>
-    </div>
+
 
 </div>
 
@@ -113,7 +131,7 @@
             $(".room-delete-button").click(function (){
                 if(confirm("방을 삭제하시겠습니까?")) {
                     $.ajax({
-                        type: "POST",           // 타입 (get, post, put 등등)
+                        type: "delete",           // 타입 (get, post, put 등등)
                         url: "/seller/room/delete",  // 요청할 서버url
                         dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                         data: {

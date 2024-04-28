@@ -221,7 +221,17 @@ public class SellerController {
         return "/seller/room/update";
     }
 
-    @PostMapping("/room/delete")
+    @PostMapping("/room/detail/update")
+    public String roomUpdatePost(@RequestBody UpdateRoomInfoDto updateRoomInfoDto, @RequestParam Long roomNo) {
+        log.info("/seller/room/detail/update updateRoom {}", updateRoomInfoDto);
+        log.info("/seller/room/detail/update {}", roomNo);
+
+
+        return "redirect:/seller/room/detail";
+    }
+
+
+        @PostMapping("/room/delete")
     public String roomDelete(@RequestParam("roomNo") Long roomNo) {
 
         sellerService.removeRoomByRoomNo(roomNo);
