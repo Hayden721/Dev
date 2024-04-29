@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -222,12 +223,13 @@ public class SellerController {
     }
 
     @PostMapping("/room/detail/update")
-    public String roomUpdatePost(@RequestBody UpdateRoomInfoDto updateRoomInfoDto, @RequestParam Long roomNo) {
+    public String roomUpdatePost(@ModelAttribute UpdateRoomInfoDto updateRoomInfoDto, @RequestParam("thumbnailImage") MultipartFile thumbnailImage,
+                                 @ModelAttribute ExtraImageDto extraImageDto) {
         log.info("/seller/room/detail/update updateRoom {}", updateRoomInfoDto);
-        log.info("/seller/room/detail/update {}", roomNo);
+        log.info("/seller/room/detail/update extraImage {}", extraImageDto);
+        log.info("/seller/room/detail/update thumbnailImage {}", thumbnailImage);
 
-
-        return "redirect:/seller/room/detail";
+        return "redirect:/seller/room/list";
     }
 
 

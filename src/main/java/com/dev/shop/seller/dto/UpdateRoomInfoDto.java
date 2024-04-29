@@ -15,4 +15,7 @@ public class UpdateRoomInfoDto {
     private String roomTitle;
     private String roomContent;
     private String roomDiv;
+    private String roomAddress;
+    private String roomDetailAddr;
+    private String roomExtraAddr;
 }

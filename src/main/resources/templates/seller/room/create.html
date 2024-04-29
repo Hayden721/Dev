@@ -75,7 +75,6 @@
             roomContentTextCount();
             nextButtonClick();
             nextButtonActivate();
-
         });
         // 메뉴 리스트 색상 변경
         function menuListColor() {
@@ -95,12 +94,10 @@
             $('#text-count').text(findMaxLength);
             $('#text-maxlength').text(findMaxLength);
 
-
             // room-content에 입력 이벤트가 발생했을 때
             roomContent.on('input', function (){
 
                 let currentLength = $(this).val().length; //현재 글자 수
-
 
                 // 현재 글자수가 최대 글자 수를 넘지 않았을 경우
                 if(currentLength <= findMaxLength) {
