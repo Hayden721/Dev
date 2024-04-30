@@ -19,4 +19,7 @@ public interface ItemDao {
     List<RoomOptionDto> selectRoomOptionByRoomNo(Long roomNo);
 
     void insertOptionImageSaveByRefindOptionImage(List<OptionImageRequest> refinedOptionImage);
+
+
+    void updateRoomImageByImageNo(Long imageNo);
 }

@@ -21,6 +21,12 @@
             ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, 'N', NOW(), #{image.roptionNo})
         </foreach>
     </insert>
+    <update id="updateRoomImageByImageNo">
+        UPDATE roomimage_tb
+        SET file_delete = 'Y'
+        WHERE roomimage_no = #{imageNo}
+    </update>
+
 
     <select id="selectFileInfoByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
         SELECT *

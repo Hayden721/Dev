@@ -85,12 +85,14 @@
     <select id="selectAdditionalImageByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
         select * from roomimage_tb
         where room_no = #{roomNo}
-            and thumbnail= 'N';
+            and thumbnail= 'N'
+            and file_delete = 'N';
     </select>
     <select id="selectThumbnailByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
         select * from roomimage_tb
         where room_no = #{roomNo}
-        and thumbnail= 'Y';
+        and thumbnail= 'Y'
+        and file_delete = 'N';
     </select>
     <select id="selectReserveManageInfoBySellerNo" resultType="com.dev.shop.seller.dto.ReserveManageDto">
         select a.*, IFNULL(cnt, 0) as cnt

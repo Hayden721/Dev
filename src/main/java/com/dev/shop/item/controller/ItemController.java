@@ -97,4 +97,13 @@ public class ItemController {
 
     }
 
+    @PostMapping("/room/image/delete")
+    @ResponseBody
+    public String sellerRoomImageDelete(@RequestParam("imageNo") Long imageNo) {
+
+        itemService.deleteRoomImageByImageNo(imageNo);
+        log.info("imageNo : {}", imageNo);
+        return "이미지 삭제 완료";
+    }
+
 }

@@ -7,7 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-    <link rel="stylesheet" th:href="@{/css/seller/room-detail.css}">
+
+    <link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
 
     <title>Dev-room</title>
 </head>
@@ -20,7 +21,9 @@
         <h2>방 수정</h2>
 
         <form action="/seller/room/detail/update" method="post" autocomplete="off" enctype="multipart/form-data">
+            <!-- 방 번호 -->
             <input th:value="${roomInfo.roomNo}" name="roomNo">
+
             <div class="room-container">
                 <div class="room-info-container">
                     <label for="room-title">방 이름
@@ -60,23 +63,40 @@
                 <div class="room-image-container">
 
                     <div class="thumbnail-image-container">
-                        <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image" th:data-thumbnail-image="${thumbnailImage.roomImageNo}">
-                        <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+                        <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
+
+                        <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
+                        <img th:unless="${thumbnailImage} != null" class="image-input image-js" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+
                         <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
-                        <button type="button" class="btn-close img-delete-btn" aria-label="Close" style="left: 91%; top: 1%;"></button>
-                        <input id="thumbnail-input" type="file" accept="images/*" name="thumbnailImage" hidden>
+
+                        <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
+
                     </div>
 
                     <!-- 추가 이미지 -->
-                    <div class="extra-images-container">
-                        <div class="extra-image-div" th:each="addImage : ${additionalImage}">
-                            <img class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-addimage-no="${addImage.roomImageNo}">
+                    <div class="extra-images-wrap">
+                        <div class="extra-image-container" th:each="addImage : ${additionalImage}">
                             <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
-                            <input id="extra-input" type="file" accept="images/*" name="extraImage" hidden>
-                            <button type="button" class="btn-close img-delete-btn" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
+                            <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+
+                            <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
+                            <!-- overlay -->
+                            <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
+
+                            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
                         </div>
                     </div>
+
                 </div> <!-- room-image-container END -->
+
+                <div>
+                    <label> 이미지 추가
+                        <input type="file" name="extraImage" multiple>
+                        <button class="image-post">이미지 등록(Ajax)</button>
+                    </label>
+                </div>
+
             </div> <!-- room-container END -->
 
             <hr>
@@ -124,6 +144,27 @@
     </div>
 
 
+    <!-- Modal -->
+    <div class="modal fade" id="image-delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input value="" name="click-image-no" hidden>
+                    <p>* 바로 삭제 됩니다 *</p>
+                    <p>사진을 삭제하시겠습니까?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary image-delete-click" data-bs-dismiss="modal">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 
@@ -134,9 +175,10 @@
         $(document).ready(function() {
             deleteRoomButton();
             controllerDivValue();
-            thumbnailImageClick();
-            extraImageClick();
+            imageClick();
+            deleteImageBtnConfirm();
             mouseHoverImageBlur();
+            deleteImage();
         });
 
 
@@ -167,41 +209,82 @@
             })
         }
 
-        function mouseHoverImageBlur() {
-            const thumbnailImage = $('.thumbnail-image');
-            const overlay = $('.overlay');
+        //0430 수정 중
+        // function imageUploadAjax() {
+        //     $('.image-post').click(function () {
+        //         var imageData = new FormData();
+        //         $.each($('input[name="extraImage"]'))
+        //     })
+        // }
+        function deleteImageBtnConfirm() {
+            $('.img-delete-btn').click(function () {
+                const imageContainer = $(this).closest('.thumbnail-image-container, .extra-image-container').find('.image-js');
+                const imageNo = imageContainer.data('imageNo');
 
-            thumbnailImage.on('mouseenter', function () {
-                thumbnailImage.css('filter', 'blur(3px)');
-                overlay.css('opacity', '1');
-            })
-
-            thumbnailImage.on('mouseleave', function () {
-                thumbnailImage.css('filter', 'blur(0px)');
-                overlay.css('opacity', '0');
+                $('input[name=click-image-no]').val(imageNo);
+                
             })
         }
-        function thumbnailImageClick() {
-            $('.thumbnail-image').click(function () {
-                $('#thumbnail-input').click();
+        function deleteImage() {
+
+            $('.image-delete-click').click(function () {
+                const imageNo = $('input[name=click-image-no]').val();
+                console.log(imageNo);
+
+                $.ajax({
+                    type: "post",           // 타입 (get, post, put 등등)
+                    url: "/room/image/delete",  // 요청할 서버url
+                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                    data: {
+                        imageNo: imageNo
+                    },
+                    success: function (result) { // 결과 성공 콜백함수
+                        $(`img[data-image-no="${imageNo}"]`).remove();
+                    },
+                    error: function (request, status, error) {
+                        console.log("get error Fail")
+                    }
+                })
+
+            })
+        }
+        
+
+        function mouseHoverImageBlur() {
+            // extraImage
+            const image = $('.image-js');
+
+            image.on('mouseenter', function () {
+                $(this).css('filter', 'blur(3px');
+                $(this).siblings('.overlay').css('opacity', '1');
             })
 
-            $('#thumbnail-input').change(function () {
-                var thumbnail = this.files[0];
-                if(thumbnail) {
+            image.on('mouseleave', function () {
+                $(this).css('filter', 'blur(0px');
+                $(this).siblings('.overlay').css('opacity', '0');
+            })
+
+        }
+        function imageClick() {
+
+            const image = $('.image-js');
+
+            image.click(function () {
+                $(this).siblings('.image-input').trigger('click');
+            })
+
+            const input = $('.image-input');
+
+            input.change(function () {
+                const file = this.files[0];
+                if(file) {
                     let render = new FileReader();
                     render.onload = function (e) {
-                        $('.thumbnail-image').attr('src', e.target.result);
-                    }
+                        $(this).siblings('.image-js').attr('src', e.target.result);
+                    }.bind(this);
 
-                    render.readAsDataURL(thumbnail);
+                    render.readAsDataURL(file);
                 }
-            })
-        }
-
-        function extraImageClick() {
-            $('.extra-image').click(function () {
-                $(this).closest('.extra-image-div').find('input[type=file]').click();
             })
         }
 

@@ -79,4 +79,9 @@ public class ItemServiceImpl implements ItemService {
             itemDao.insertOptionImageSaveByRefindOptionImage(refinedOptionImage);
         }
     }
+
+    @Override
+    public void deleteRoomImageByImageNo(Long imageNo) {
+        itemDao.updateRoomImageByImageNo(imageNo);
+    }
 }

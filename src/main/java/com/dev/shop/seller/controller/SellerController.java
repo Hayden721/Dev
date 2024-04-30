@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/seller")
@@ -227,13 +229,19 @@ public class SellerController {
                                  @ModelAttribute ExtraImageDto extraImageDto) {
         log.info("/seller/room/detail/update updateRoom {}", updateRoomInfoDto);
         log.info("/seller/room/detail/update extraImage {}", extraImageDto);
-        log.info("/seller/room/detail/update thumbnailImage {}", thumbnailImage);
 
+        List<MultipartFile> extraImage = extraImageDto.getExtraImage();
+
+
+        log.info("/seller/room/detail/update thumbnailImage {}", thumbnailImage);
+//        Map<Long, MultipartFile> extraImageMap = new HashMap<>();
+//
+//        extraImageMap.put(extraImageDto.getExtraImageNo(), extraImageDto.getExtraImage());
         return "redirect:/seller/room/list";
     }
 
 
-        @PostMapping("/room/delete")
+    @PostMapping("/room/delete")
     public String roomDelete(@RequestParam("roomNo") Long roomNo) {
 
         sellerService.removeRoomByRoomNo(roomNo);

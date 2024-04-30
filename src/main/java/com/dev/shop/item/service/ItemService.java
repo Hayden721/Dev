@@ -18,4 +18,6 @@ public interface ItemService{
     List<RoomOptionDto> getRoomOptionByRoomNo(Long roomNo);
 
     void saveOptionImageByRoomOptionNo(List<MultipartFile> optionImage, List<Long> roptionNo);
+
+    void deleteRoomImageByImageNo(Long imageNo);
 }
