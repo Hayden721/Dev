@@ -21,6 +21,14 @@
             ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, 'N', NOW(), #{image.roptionNo})
         </foreach>
     </insert>
+    <insert id="insertRoomImages">
+        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, file_delete,created_date, room_no)
+        VALUES
+        <foreach collection="list" item="image" separator=",">
+            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, #{image.thumbnail}, 'N', NOW(), #{image.roomNo} )
+        </foreach>
+
+    </insert>
     <update id="updateRoomImageByImageNo">
         UPDATE roomimage_tb
         SET file_delete = 'Y'

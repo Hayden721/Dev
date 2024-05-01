@@ -87,18 +87,19 @@ public class ItemController {
         return "redirect:/seller/room/list";
     }
 
-    @GetMapping("/seller/room/image-update")
-    public void sellerRoomImageUpdateGet(@RequestParam("roomNo") Long roomNo) {
-
-
-    }
-    @PostMapping("/seller/room/image-update")
-    public void sellerRoomImageUpdatePost(@RequestParam("roomNo") Long roomNo) {
-
-    }
-
-    @PostMapping("/room/image/delete")
     @ResponseBody
+    @PostMapping("/seller/room/detail/update/image")
+    public String sellerRoomImageUpdatePost(@RequestPart("extraImages") List<MultipartFile> extraImages,
+                                            @RequestParam("roomNo") Long roomNo) {
+
+        log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
+        log.info("/seller/room/detail/update/image imageData : {}", extraImages);
+        itemService.sellerUpdateSaveImagesByRoomNo(roomNo, extraImages);
+        return "성공";
+    }
+
+    @ResponseBody
+    @PostMapping("/room/image/delete")
     public String sellerRoomImageDelete(@RequestParam("imageNo") Long imageNo) {
 
         itemService.deleteRoomImageByImageNo(imageNo);

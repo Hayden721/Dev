@@ -20,4 +20,8 @@ public interface ItemService{
     void saveOptionImageByRoomOptionNo(List<MultipartFile> optionImage, List<Long> roptionNo);
 
     void deleteRoomImageByImageNo(Long imageNo);
+
+
+
+    void sellerUpdateSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
 }

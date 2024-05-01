@@ -93,7 +93,7 @@
                 <div>
                     <label> 이미지 추가
                         <input type="file" name="extraImage" multiple>
-                        <button class="image-post">이미지 등록(Ajax)</button>
+                        <button class="image-post" type="button">이미지 등록(Ajax)</button>
                     </label>
                 </div>
 
@@ -164,8 +164,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 <th:block layout:fragment="script">
@@ -179,6 +177,7 @@
             deleteImageBtnConfirm();
             mouseHoverImageBlur();
             deleteImage();
+            imageUploadAjax();
         });
 
 
@@ -209,19 +208,51 @@
             })
         }
 
-        //0430 수정 중
-        // function imageUploadAjax() {
-        //     $('.image-post').click(function () {
-        //         var imageData = new FormData();
-        //         $.each($('input[name="extraImage"]'))
-        //     })
-        // }
+        function imageUploadAjax() {
+            $('.image-post').click(function () {
+                var imageData = new FormData();
+                // roomNo
+                const roomNo = $('input[name=roomNo]').val();
+                console.log("roomNo : ", roomNo);
+
+                $.each($('input[name="extraImage"]')[0].files, function (i, file) {
+                    imageData.append('extraImages', file);
+                });
+
+                console.log(imageData.get('extraImages'));
+
+                imageData.append('roomNo', roomNo);
+
+                $.ajax({
+                    type: "post", // 타입 (get, post, put 등등)
+                    url: "/seller/room/detail/update/image",  // 요청할 서버url
+                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                    data: imageData,
+                    contentType: false, // 필수 옵션
+                    processData: false, // 필수 옵션
+                    success: function (result) { // 결과 성공 콜백함수
+
+                    },
+                    error: function (request, status, error) {
+                        console.log("get error Fail")
+                    }
+                })
+            })
+            
+            function imagePosting() {
+                
+            }
+        }
+
+
         function deleteImageBtnConfirm() {
             $('.img-delete-btn').click(function () {
                 const imageContainer = $(this).closest('.thumbnail-image-container, .extra-image-container').find('.image-js');
                 const imageNo = imageContainer.data('imageNo');
 
                 $('input[name=click-image-no]').val(imageNo);
+
+
                 
             })
         }

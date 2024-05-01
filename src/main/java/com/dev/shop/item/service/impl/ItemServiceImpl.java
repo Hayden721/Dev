@@ -55,6 +55,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public void sellerUpdateSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
+        List<FileRequest> refinedImages = fileUtils.uploadFiles(extraImages);
+        log.info("refinedImage {} ", refinedImages);
+
+        for(FileRequest imageFile : refinedImages) {
+            imageFile.setThumbnail('N');
+            imageFile.setRoomNo(roomNo);
+        }
+
+        itemDao.insertRoomImages(refinedImages);
+
+
+
+    }
+
+    @Override
     public List<FileResponse> getFileInfoByRoomNo(Long roomNo) {
         return itemDao.selectFileInfoByRoomNo(roomNo);
     }
@@ -84,4 +100,6 @@ public class ItemServiceImpl implements ItemService {
     public void deleteRoomImageByImageNo(Long imageNo) {
         itemDao.updateRoomImageByImageNo(imageNo);
     }
+
+
 }

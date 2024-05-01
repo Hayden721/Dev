@@ -22,4 +22,6 @@ public interface ItemDao {
 
 
     void updateRoomImageByImageNo(Long imageNo);
+
+    void insertRoomImages(List<FileRequest> refinedImages);
 }
