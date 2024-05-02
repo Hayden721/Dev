@@ -89,13 +89,13 @@ public class ItemController {
 
     @ResponseBody
     @PostMapping("/seller/room/detail/update/image")
-    public String sellerRoomImageUpdatePost(@RequestPart("extraImages") List<MultipartFile> extraImages,
+    public void sellerRoomImageUpdatePost(@RequestPart("extraImages") List<MultipartFile> extraImages,
                                             @RequestParam("roomNo") Long roomNo) {
 
         log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
         log.info("/seller/room/detail/update/image imageData : {}", extraImages);
         itemService.sellerUpdateSaveImagesByRoomNo(roomNo, extraImages);
-        return "성공";
+
     }
 
     @ResponseBody
