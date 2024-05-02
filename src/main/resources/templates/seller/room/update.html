@@ -92,7 +92,7 @@
 
                 <div>
                     <label> 이미지 추가
-                        <input type="file" name="extraImage" multiple>
+                        <input type="file" name="extraImages" multiple>
                         <button class="image-post" type="button">이미지 등록(Ajax)</button>
                     </label>
                 </div>
@@ -140,6 +140,11 @@
                 <button class="btn emphasize-btn">수정완료</button>
             </div>
 
+            <div class="extra-images-wrap">
+                <div class="test-img-get"></div>
+
+            </div>
+
         </form>
     </div>
 
@@ -169,7 +174,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <script th:inline="javascript" type="text/javascript">
-
+        /*<![CDATA[*/
         $(document).ready(function() {
             deleteRoomButton();
             controllerDivValue();
@@ -178,6 +183,7 @@
             mouseHoverImageBlur();
             deleteImage();
             imageUploadAjax();
+
         });
 
 
@@ -215,7 +221,7 @@
                 const roomNo = $('input[name=roomNo]').val();
                 console.log("roomNo : ", roomNo);
 
-                $.each($('input[name="extraImage"]')[0].files, function (i, file) {
+                $.each($('input[name="extraImages"]')[0].files, function (i, file) {
                     imageData.append('extraImages', file);
                 });
 
@@ -230,20 +236,57 @@
                     data: imageData,
                     contentType: false, // 필수 옵션
                     processData: false, // 필수 옵션
-                    success: function (result) { // 결과 성공 콜백함수
-
+                    success: function (response) { // 결과 성공 콜백함수
+                        addImages(response);
                     },
                     error: function (request, status, error) {
                         console.log("get error Fail")
                     }
                 })
-            })
-            
-            function imagePosting() {
-                
-            }
-        }
 
+                function addImages(imagePaths) {
+                    var imagesWrap = $('.extra-images-wrap');
+
+                    // 이미지 경로를 하나씩 처리하면서 extra-images-wrap에 이미지를 추가합니다.
+                    imagePaths.forEach(function(imagePath) {
+                        var imageContainer = $('<div class="extra-image-container"></div>');
+
+                        var img = $('<img class="extra-image image-js" alt="none">');
+                        img.attr('src', imagePath);
+
+                        var overlay = $('<div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>');
+
+                        var deleteBtn = $('<button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal"></button>');
+                        deleteBtn.css({'top': '3%', 'left': '82%', 'width': '13px', 'height': '13px'});
+
+                        imageContainer.append(img);
+                        imageContainer.append(overlay);
+                        imageContainer.append(deleteBtn);
+
+                        imagesWrap.append(imageContainer);
+                    });
+                }
+            })
+
+
+
+
+        }
+        // 이미지 업로드했을 때 이미지 띄우는 함수
+        // function imagePosting(images) {
+        //     // 파일 경로
+        //     const filePath = [[${filePath}]];
+        //     //이미지 데이터
+        //     let getImages = [[ ${additionalImage}]];
+        //     console.log("test", getImages);
+        //
+        //     const imagesWrap = $('.extra-images-wrap');
+        //     $('.test-img-get').each(function () {
+        //         const container = $(this);
+        //         const
+        //     })
+        //
+        // }
 
         function deleteImageBtnConfirm() {
             $('.img-delete-btn').click(function () {
@@ -251,13 +294,10 @@
                 const imageNo = imageContainer.data('imageNo');
 
                 $('input[name=click-image-no]').val(imageNo);
-
-
                 
             })
         }
         function deleteImage() {
-
             $('.image-delete-click').click(function () {
                 const imageNo = $('input[name=click-image-no]').val();
                 console.log(imageNo);
@@ -270,7 +310,7 @@
                         imageNo: imageNo
                     },
                     success: function (result) { // 결과 성공 콜백함수
-                        $(`img[data-image-no="${imageNo}"]`).remove();
+                        $(`img[data-image-no="${imageNo}"]`).closest('.extra-image-container').remove();
                     },
                     error: function (request, status, error) {
                         console.log("get error Fail")
@@ -279,7 +319,6 @@
 
             })
         }
-        
 
         function mouseHoverImageBlur() {
             // extraImage
@@ -366,7 +405,7 @@
                 }
             }).open();
         }
-
+    /*]]>*/
     </script>
 </th:block>
 </html>
