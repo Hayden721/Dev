@@ -87,14 +87,21 @@ public class ItemController {
         return "redirect:/seller/room/list";
     }
 
+
     @ResponseBody
-    @PostMapping("/seller/room/detail/update/image")
-    public void sellerRoomImageUpdatePost(@RequestPart("extraImages") List<MultipartFile> extraImages,
+    @PostMapping("/seller/room/detail/upload/image")
+    public void sellerRoomImageUploadPost(@RequestPart("extraImages") List<MultipartFile> extraImages,
                                             @RequestParam("roomNo") Long roomNo) {
 
         log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
         log.info("/seller/room/detail/update/image imageData : {}", extraImages);
         itemService.sellerUpdateSaveImagesByRoomNo(roomNo, extraImages);
+
+    }
+
+    @ResponseBody
+    @PostMapping("/seller/room/detail/update/image")
+    public void sellerRoomImageUpdatePost() {
 
     }
 
@@ -106,5 +113,8 @@ public class ItemController {
         log.info("imageNo : {}", imageNo);
         return "이미지 삭제 완료";
     }
+
+
+
 
 }

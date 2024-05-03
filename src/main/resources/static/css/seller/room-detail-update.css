@@ -135,3 +135,24 @@
     justify-content: center;
 }
 
+.input-image-custom {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    background-color: aquamarine;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+}
+.input-image-custom:hover {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    background-color: #255ae8;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 10px;
+}
+

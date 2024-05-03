@@ -196,6 +196,23 @@ public class SellerController {
         model.addAttribute("thumbnailImage", thumbnailImage);
     }
 
+    // 이미지 추가했을 때 이미지 ajax
+    @GetMapping("/room/detail/images")
+    public String sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
+
+        String filePath = fileUtils.choosePath();
+
+        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+
+
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("additionalImage", additionalImage);
+
+
+        return "/seller/room/update-images-ajax";
+    }
+
+
     @GetMapping("/room/detail/update")
     public String roomUpdateGet(@RequestParam("roomNo") Long roomNo, Model model) {
         log.info("/room/detail/update roomNo : {}", roomNo);
@@ -224,6 +241,8 @@ public class SellerController {
         return "/seller/room/update";
     }
 
+//    수정 중
+
     @PostMapping("/room/detail/update")
     public String roomUpdatePost(@ModelAttribute UpdateRoomInfoDto updateRoomInfoDto, @RequestParam("thumbnailImage") MultipartFile thumbnailImage,
                                  @ModelAttribute ExtraImageDto extraImageDto) {
@@ -239,6 +258,9 @@ public class SellerController {
 //        extraImageMap.put(extraImageDto.getExtraImageNo(), extraImageDto.getExtraImage());
         return "redirect:/seller/room/list";
     }
+
+
+
 
 
     @PostMapping("/room/delete")

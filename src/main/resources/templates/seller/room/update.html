@@ -60,8 +60,10 @@
                     </label>
                 </div> <!-- room-container END -->
 
-                <div class="room-image-container">
 
+
+                <div class="room-image-container">
+                    <p>* 이미지는 바로 변경됩니다 *</p>
                     <div class="thumbnail-image-container">
                         <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
 
@@ -71,31 +73,14 @@
                         <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
 
                         <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
-
                     </div>
 
                     <!-- 추가 이미지 -->
-                    <div class="extra-images-wrap">
-                        <div class="extra-image-container" th:each="addImage : ${additionalImage}">
-                            <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
-                            <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
-
-                            <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
-                            <!-- overlay -->
-                            <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
-
-                            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
-                        </div>
-                    </div>
+                    <div class="images-ajax"></div>
 
                 </div> <!-- room-image-container END -->
 
-                <div>
-                    <label> 이미지 추가
-                        <input type="file" name="extraImages" multiple>
-                        <button class="image-post" type="button">이미지 등록(Ajax)</button>
-                    </label>
-                </div>
+
 
             </div> <!-- room-container END -->
 
@@ -140,12 +125,8 @@
                 <button class="btn emphasize-btn">수정완료</button>
             </div>
 
-            <div class="extra-images-wrap">
-                <div class="test-img-get"></div>
-
-            </div>
-
         </form>
+
     </div>
 
 
@@ -176,183 +157,31 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
         $(document).ready(function() {
-            deleteRoomButton();
-            controllerDivValue();
-            imageClick();
-            deleteImageBtnConfirm();
-            mouseHoverImageBlur();
-            deleteImage();
-            imageUploadAjax();
+
+            const roomNo = $('input[name=roomNo]').val();
+            $.ajax({
+                type: "get", // 타입 (get, post, put 등등)
+                url: "/seller/room/detail/images",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: {
+                    roomNo: roomNo
+                },
+                success:  function(result) {
+                    console.log("imagePosting2 성공!");
+                    $('.images-ajax').html(result);
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail");
+                }
+            })
 
         });
-
 
         function controllerDivValue() {
             const roomDivValue = [[ ${roomInfo.roomDiv}]];
             console.log(roomDivValue);
             $(".room-div").val();
-        }
-
-        function deleteRoomButton() {
-            $(".room-delete-button").click(function (){
-                if(confirm("방을 삭제하시겠습니까?")) {
-                    $.ajax({
-                        type: "delete",           // 타입 (get, post, put 등등)
-                        url: "/seller/room/delete",  // 요청할 서버url
-                        dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                        data: {
-                            roomNo: [[${roomNo}]]
-                        },
-                        success: function (result) { // 결과 성공 콜백함수
-                            window.location.href = "/seller/room/list";
-                        },
-                        error: function (request, status, error) {
-                            console.log("get error Fail")
-                        }
-                    })
-                }
-            })
-        }
-
-        function imageUploadAjax() {
-            $('.image-post').click(function () {
-                var imageData = new FormData();
-                // roomNo
-                const roomNo = $('input[name=roomNo]').val();
-                console.log("roomNo : ", roomNo);
-
-                $.each($('input[name="extraImages"]')[0].files, function (i, file) {
-                    imageData.append('extraImages', file);
-                });
-
-                console.log(imageData.get('extraImages'));
-
-                imageData.append('roomNo', roomNo);
-
-                $.ajax({
-                    type: "post", // 타입 (get, post, put 등등)
-                    url: "/seller/room/detail/update/image",  // 요청할 서버url
-                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                    data: imageData,
-                    contentType: false, // 필수 옵션
-                    processData: false, // 필수 옵션
-                    success: function (response) { // 결과 성공 콜백함수
-                        addImages(response);
-                    },
-                    error: function (request, status, error) {
-                        console.log("get error Fail")
-                    }
-                })
-
-                function addImages(imagePaths) {
-                    var imagesWrap = $('.extra-images-wrap');
-
-                    // 이미지 경로를 하나씩 처리하면서 extra-images-wrap에 이미지를 추가합니다.
-                    imagePaths.forEach(function(imagePath) {
-                        var imageContainer = $('<div class="extra-image-container"></div>');
-
-                        var img = $('<img class="extra-image image-js" alt="none">');
-                        img.attr('src', imagePath);
-
-                        var overlay = $('<div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>');
-
-                        var deleteBtn = $('<button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal"></button>');
-                        deleteBtn.css({'top': '3%', 'left': '82%', 'width': '13px', 'height': '13px'});
-
-                        imageContainer.append(img);
-                        imageContainer.append(overlay);
-                        imageContainer.append(deleteBtn);
-
-                        imagesWrap.append(imageContainer);
-                    });
-                }
-            })
-        }
-        // 이미지 업로드했을 때 이미지 띄우는 함수
-
-        function imagePosting(images) {
-            // 파일 경로
-            const filePath = [[${filePath}]];
-            //이미지 데이터
-            let getImages = [[ ${additionalImage}]];
-            console.log("test", getImages);
-
-            const imagesWrap = $('.extra-images-wrap');
-            $('.test-img-get').each(function () {
-                const container = $(this);
-
-            })
-
-        }
-
-        function deleteImageBtnConfirm() {
-            $('.img-delete-btn').click(function () {
-                const imageContainer = $(this).closest('.thumbnail-image-container, .extra-image-container').find('.image-js');
-                const imageNo = imageContainer.data('imageNo');
-
-                $('input[name=click-image-no]').val(imageNo);
-                
-            })
-        }
-        function deleteImage() {
-            $('.image-delete-click').click(function () {
-                const imageNo = $('input[name=click-image-no]').val();
-                console.log(imageNo);
-
-                $.ajax({
-                    type: "post",           // 타입 (get, post, put 등등)
-                    url: "/room/image/delete",  // 요청할 서버url
-                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                    data: {
-                        imageNo: imageNo
-                    },
-                    success: function (result) { // 결과 성공 콜백함수
-                        $(`img[data-image-no="${imageNo}"]`).closest('.extra-image-container').remove();
-                    },
-                    error: function (request, status, error) {
-                        console.log("get error Fail")
-                    }
-                })
-
-            })
-        }
-
-        function mouseHoverImageBlur() {
-            // extraImage
-            const image = $('.image-js');
-
-            image.on('mouseenter', function () {
-                $(this).css('filter', 'blur(3px');
-                $(this).siblings('.overlay').css('opacity', '1');
-            })
-
-            image.on('mouseleave', function () {
-                $(this).css('filter', 'blur(0px');
-                $(this).siblings('.overlay').css('opacity', '0');
-            })
-
-        }
-        function imageClick() {
-
-            const image = $('.image-js');
-
-            image.click(function () {
-                $(this).siblings('.image-input').trigger('click');
-            })
-
-            const input = $('.image-input');
-
-            input.change(function () {
-                const file = this.files[0];
-                if(file) {
-                    let render = new FileReader();
-                    render.onload = function (e) {
-                        $(this).siblings('.image-js').attr('src', e.target.result);
-                    }.bind(this);
-
-                    render.readAsDataURL(file);
-                }
-            })
         }
 
         function sample6_execDaumPostcode() {
