@@ -34,6 +34,11 @@
         SET file_delete = 'Y'
         WHERE roomimage_no = #{imageNo}
     </update>
+    <update id="UpdateRoomImage">
+        UPDATE roomImage_tb
+        SET original_name = #{refinedImage.originalName}, save_name = #{refinedImage.saveName}, created_date =#{refinedImage.createdDate}
+        WHERE roomimage_no = #{imageNo}
+    </update>
 
 
     <select id="selectFileInfoByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">

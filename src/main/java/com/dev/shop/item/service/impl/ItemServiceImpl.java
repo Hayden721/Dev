@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -55,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void sellerUpdateSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
+    public void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
         List<FileRequest> refinedImages = fileUtils.uploadFiles(extraImages);
         log.info("refinedImage {} ", refinedImages);
 
@@ -69,6 +71,16 @@ public class ItemServiceImpl implements ItemService {
 
 
     }
+
+    @Override
+    public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
+        FileRequest refinedImage = fileUtils.uploadFile(extraImage);
+
+        refinedImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        itemDao.UpdateRoomImage(refinedImage, imageNo);
+    }
+
+
 
     @Override
     public List<FileResponse> getFileInfoByRoomNo(Long roomNo) {

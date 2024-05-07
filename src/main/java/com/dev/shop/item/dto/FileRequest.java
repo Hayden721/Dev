@@ -2,11 +2,13 @@ package com.dev.shop.item.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@Setter
 @ToString
 public class FileRequest {
     private Long roomImageNo;
@@ -27,12 +29,6 @@ public class FileRequest {
         this.roomNo = roomNo;
     }
 
-    public void setRoomNo(Long roomNo) {
-        this.roomNo = roomNo;
-    }
-    public void setThumbnail(char thumbnail){
-        this.thumbnail = thumbnail;
-    }
 }
 
 

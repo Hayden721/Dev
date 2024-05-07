@@ -5,6 +5,7 @@ import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface ItemDao {
     void updateRoomImageByImageNo(Long imageNo);
 
     void insertRoomImages(List<FileRequest> refinedImages);
+
+    void UpdateRoomImage(@Param("refinedImage") FileRequest refinedImage, @Param("imageNo") Long imageNo);
 }

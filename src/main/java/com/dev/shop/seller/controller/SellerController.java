@@ -244,23 +244,15 @@ public class SellerController {
 //    수정 중
 
     @PostMapping("/room/detail/update")
-    public String roomUpdatePost(@ModelAttribute UpdateRoomInfoDto updateRoomInfoDto, @RequestParam("thumbnailImage") MultipartFile thumbnailImage,
-                                 @ModelAttribute ExtraImageDto extraImageDto) {
-        log.info("/seller/room/detail/update updateRoom {}", updateRoomInfoDto);
-        log.info("/seller/room/detail/update extraImage {}", extraImageDto);
 
-        List<MultipartFile> extraImage = extraImageDto.getExtraImage();
+    public String roomUpdatePost(@RequestBody List<UpdateRoomOptionInfoDto> updateRoomOptionInfo) {
 
 
-        log.info("/seller/room/detail/update thumbnailImage {}", thumbnailImage);
-//        Map<Long, MultipartFile> extraImageMap = new HashMap<>();
-//
-//        extraImageMap.put(extraImageDto.getExtraImageNo(), extraImageDto.getExtraImage());
+    log.info("/room/detail/update updateRoomOptionInfo {}", updateRoomOptionInfo);
+
+
         return "redirect:/seller/room/list";
     }
-
-
-
 
 
     @PostMapping("/room/delete")

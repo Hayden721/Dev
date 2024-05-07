@@ -20,6 +20,4 @@ public class RoomDto {
     private String extraAddress;
     private int room_delete;
     private Long sellerNo;
-
-
 }

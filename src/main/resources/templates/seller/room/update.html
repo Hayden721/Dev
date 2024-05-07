@@ -20,9 +20,9 @@
 
         <h2>방 수정</h2>
 
-        <form action="/seller/room/detail/update" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div class="ajax-form-container">
             <!-- 방 번호 -->
-            <input th:value="${roomInfo.roomNo}" name="roomNo">
+            <input th:value="${roomInfo.roomNo}" name="roomNo" hidden>
 
             <div class="room-container">
                 <div class="room-info-container">
@@ -46,20 +46,16 @@
                     <div class="address-container" style="margin-bottom: 10px">
                         <label class="form-label"> 주소
                             <div class="address-find-sort">
-                                <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postCode">
+                                <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postCode" th:value="${roomInfo.postCode}">
                                 <input type="button" class="btn normal-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
                             </div>
-                            <input type="text" class="form-control" id="sample6_address" placeholder="주소" name="address"><br>
-                            <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="roomDetailAddr" style="margin-bottom: 3px">
-                            <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="roomExtraAddr" style="width: 175px">
+                            <input type="text" class="form-control" id="sample6_address" placeholder="주소" name="address" th:value="${roomInfo.address}"><br>
+                            <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="roomDetailAddr" style="margin-bottom: 3px" th:value="${roomInfo.detailAddress}">
+                            <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="roomExtraAddr" style="width: 175px" th:value="${roomInfo.extraAddress}">
                         </label>
                     </div>
 
-                    <label for="room-address">주소
-                        <span id="room-address" th:text="${roomInfo.address + ' ' +roomInfo.detailAddress}"></span>
-                    </label>
                 </div> <!-- room-container END -->
-
 
 
                 <div class="room-image-container">
@@ -89,7 +85,7 @@
             <h2>옵션 정보</h2>
             <div class="option-container">
                 <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
-                    <input th:value="${optionInfoAndImage.roptionNo}" hidden>
+                    <input th:value="${optionInfoAndImage.roptionNo}" hidden name="roptionNo">
 
                     <!-- 옵션 이미지 -->
                     <div class="option-image-container">
@@ -122,10 +118,9 @@
 
             <div style="float: right; margin: 40px 0 0 0;">
                 <button class="btn btn-danger room-delete-button">방 삭제</button>
-                <button class="btn emphasize-btn">수정완료</button>
+                <button type="submit" class="btn emphasize-btn update-btn">수정완료</button>
             </div>
-
-        </form>
+        </div>
 
     </div>
 
@@ -157,6 +152,9 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
         $(document).ready(function() {
+            divValue();
+
+
 
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
@@ -176,12 +174,56 @@
                 }
             })
 
+            updateInfo();
         });
 
-        function controllerDivValue() {
+        function divValue() {
             const roomDivValue = [[ ${roomInfo.roomDiv}]];
             console.log(roomDivValue);
-            $(".room-div").val();
+            $('select[name="roomDiv"] option').prop('selected', false);
+            $('select[name="roomDiv"] option[value = "' + roomDivValue +'"]').prop('selected', true);
+        }
+
+        function updateInfo() {
+
+            $('.update-btn').click(function () {
+
+
+                //optionData
+                const optionList = $(".option-detail-container").map(function() {
+
+                    const $option = $(this);
+
+                    return {
+                        roptionNo: $option.find("input[name='roptionNo']").val(),
+                        roptionTitle: $option.find("input[name='roptionTitle']").val(),
+                        roptionPrice: $option.find("input[name='roptionPrice']").val(),
+                        roptionContent: $option.find("input[name='roptionContent']").val(),
+                    };
+
+                }).get();
+
+                console.log(optionList);
+
+
+                // 0507 수정 중 Unsupported Media Type 오류
+                $.ajax({
+                    type: "post", // 타입 (get, post, put 등등)
+                    url: "/seller/room/detail/update",  // 요청할 서버url
+                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                    data: JSON.stringify(optionList),
+                    success:  function(result) {
+
+                    },// 결과 성공 콜백함수
+
+                    error: function (request, status, error) {
+                        console.log("get error Fail");
+                    }
+                })
+
+            })
+
+
         }
 
         function sample6_execDaumPostcode() {
@@ -226,7 +268,9 @@
                     // 우편번호와 주소 정보를 해당 필드에 넣는다.
                     document.getElementById('sample6_postcode').value = data.zonecode;
                     document.getElementById("sample6_address").value = addr;
+
                     // 커서를 상세주소 필드로 이동한다.
+                    document.getElementById("sample6_detailAddress").value='';
                     document.getElementById("sample6_detailAddress").focus();
                 }
             }).open();

@@ -95,23 +95,28 @@ public class ItemController {
 
         log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
         log.info("/seller/room/detail/update/image imageData : {}", extraImages);
-        itemService.sellerUpdateSaveImagesByRoomNo(roomNo, extraImages);
+        itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
 
     }
 
     @ResponseBody
     @PostMapping("/seller/room/detail/update/image")
-    public void sellerRoomImageUpdatePost() {
+    public void sellerRoomImageUpdatePost(@RequestPart("extraImage") MultipartFile extraImage,
+                                          @RequestParam("imageNo") Long imageNo) {
+
+        log.info("/seller/room/detail/update/image imageNo : {}", imageNo);
+        log.info("/seller/room/detail/update/image imageData : {}", extraImage);
+        itemService.sellerUpdateImageByImageNo(imageNo, extraImage);
 
     }
 
     @ResponseBody
     @PostMapping("/room/image/delete")
-    public String sellerRoomImageDelete(@RequestParam("imageNo") Long imageNo) {
+    public void sellerRoomImageDelete(@RequestParam("imageNo") Long imageNo) {
 
         itemService.deleteRoomImageByImageNo(imageNo);
         log.info("imageNo : {}", imageNo);
-        return "이미지 삭제 완료";
+
     }
 
 

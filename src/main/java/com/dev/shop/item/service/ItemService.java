@@ -23,5 +23,9 @@ public interface ItemService{
 
 
 
-    void sellerUpdateSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
+    void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
+
+    void sellerUpdateImageByImageNo(Long imagNo, MultipartFile extraImage);
+
+
 }
