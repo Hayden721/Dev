@@ -9,6 +9,7 @@ import com.dev.shop.seller.service.SellerService;
 import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -241,19 +242,19 @@ public class SellerController {
         return "/seller/room/update";
     }
 
-//    수정 중
+
 
     @PostMapping("/room/detail/update")
+    public ResponseEntity<?> roomUpdatePost(@RequestBody RoomUpdateRequest data) {
 
-    public String roomUpdatePost(@RequestBody List<UpdateRoomOptionInfoDto> updateRoomOptionInfo) {
+        List<UpdateRoomOptionInfoDto> roomInfo =  data.getOptionList();
 
+        log.info("/room/detail/update roomInfo {}", roomInfo);
+        log.info("/room/detail/update info {}", data);
+        sellerService.updateRoomInfoByData(data);
 
-    log.info("/room/detail/update updateRoomOptionInfo {}", updateRoomOptionInfo);
-
-
-        return "redirect:/seller/room/list";
+        return ResponseEntity.ok().build();
     }
-
 
     @PostMapping("/room/delete")
     public String roomDelete(@RequestParam("roomNo") Long roomNo) {

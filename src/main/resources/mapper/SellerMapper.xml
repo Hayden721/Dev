@@ -14,6 +14,17 @@
 
 
     </insert>
+    <update id="updateRoomInfoByRoomInfo" parameterType="java.util.List">
+        <foreach collection="list" item="roomInfo" separator=";">
+        UPDATE room_tb
+        SET
+            room_title = #{roomInfo.roomTitle},
+            room_content = #{roomInfo.roomContent}
+
+        where
+            room_no = #{roomInfo.roomNo}
+        </foreach>
+    </update>
 
     <select id="selectSellerById" resultType="com.dev.shop.seller.dto.SellerDetailsDto">
         SELECT *

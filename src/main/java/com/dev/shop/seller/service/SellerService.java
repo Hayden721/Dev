@@ -50,4 +50,6 @@ public interface SellerService {
 
 
     List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo);
+
+    void updateRoomInfoByData(RoomUpdateRequest data);
 }

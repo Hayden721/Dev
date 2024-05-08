@@ -146,5 +146,14 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectOptionInfoAndImageByRoomNo(roomNo);
     }
 
+    @Override
+    public void updateRoomInfoByData(RoomUpdateRequest data) {
+
+        List<UpdateRoomInfoDto> roomInfo =  data.getRoomInfo();
+        List<UpdateRoomOptionInfoDto> optionInfo =  data.getOptionList();
+
+        sellerDao.updateRoomInfoByRoomInfo(roomInfo);
+    }
+
 
 }

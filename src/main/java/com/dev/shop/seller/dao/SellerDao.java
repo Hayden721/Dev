@@ -61,4 +61,6 @@ public interface SellerDao {
     void deleteRoomOptionImageByRoomOptionNo(List<Long> roomOptionNo);
 
     void deleteRoomImageByRoomNo(Long roomNo);
+
+    void updateRoomInfoByRoomInfo(List<UpdateRoomInfoDto> roomInfo);
 }

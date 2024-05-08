@@ -1,17 +1,15 @@
 package com.dev.shop.seller.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-
+@Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateRoomInfoDto {
+    private Long roomNo;
     private String roomTitle;
     private String roomContent;
     private String roomDiv;

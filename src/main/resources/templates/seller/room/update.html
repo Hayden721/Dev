@@ -188,6 +188,18 @@
 
             $('.update-btn').click(function () {
 
+                const roomInfo = $(".ajax-form-container").map(function () {
+                    const $roomVal = $(this);
+
+                    return {
+                        roomNo : $roomVal.find("input[name='roomNo']").val(),
+                        roomTitle : $roomVal.find("input[name='roomTitle']").val(),
+                        roomContent :  $roomVal.find("input[name='roomContent']").val(),
+                        roomDiv :  $roomVal.find("#room-div").val()
+                    };
+
+                }).get();
+                console.log("roomInfo", roomInfo);
 
                 //optionData
                 const optionList = $(".option-detail-container").map(function() {
@@ -203,27 +215,26 @@
 
                 }).get();
 
-                console.log(optionList);
+                console.log("optionList : " + optionList);
 
 
-                // 0507 수정 중 Unsupported Media Type 오류
                 $.ajax({
                     type: "post", // 타입 (get, post, put 등등)
                     url: "/seller/room/detail/update",  // 요청할 서버url
-                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                    data: JSON.stringify(optionList),
-                    success:  function(result) {
+                    contentType: "application/json;charset=utf-8",
+                    data: JSON.stringify({ roomInfo, optionList }),
 
+                    success:  function(result) {
+                        console.log("AJAX 성공:", result);
+                        // location.href = "/seller/room/list";
                     },// 결과 성공 콜백함수
 
                     error: function (request, status, error) {
-                        console.log("get error Fail");
+                        console.log("/seller/room/detail/update ajax Fail");
+                        console.log("Status : " + status);
                     }
                 })
-
             })
-
-
         }
 
         function sample6_execDaumPostcode() {
