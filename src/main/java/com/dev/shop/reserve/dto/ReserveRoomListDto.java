@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter @Setter @AllArgsConstructor @ToString
 public class ReserveRoomListDto {
@@ -28,5 +29,8 @@ public class ReserveRoomListDto {
     private String saveName;
     private String originalName;
 
-
+    public String getCreatedDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return this.createdDate.format(formatter);
+    }
 }

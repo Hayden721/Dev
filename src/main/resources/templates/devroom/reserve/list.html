@@ -87,6 +87,7 @@
 
 
             findAllList();
+            activePagingButton();
         });
 
         function setQueryStringParams() {
@@ -99,7 +100,7 @@
             new URLSearchParams(location.search).forEach((value, key) => {
                 console.log(`${key}:${value}`);
                 const inputField = form.find(`[name="${key}"]`);
-                console.log("---" + inputField.length);
+                // console.log("---" + inputField.length);
 
                 if (inputField.length) {
                     inputField.val(value);
@@ -200,23 +201,40 @@
         }
 
         function activePagingButton() {
-            let pageValue = parseInt($('.active span').text());
+            var $span = $(".page-item.active span");
+            var spanText = $span.text();
+
+            var spanNumber = parseInt(spanText);
+
+            console.log("spanNumber", spanNumber);
             const pagination = [[ ${roomList.pagination} ]];
-            console.log("페이지 값 : ", pageValue);
+
+
 
             let startPage = pagination.startPage;
-            console.log("startPage", startPage)
 
-            if (pagination.startPage === pageValue) {
+            console.log("prevPage : ", pagination.prevPage);
+
+            //페이징 이동
+            if (pagination.prevPage === false) {
                 $('.page-start').css('pointer-events', 'none');
+                // $('.page-prev').css('pointer-events', 'none');
+            }
+
+            if(pagination.nextPage === false) {
+                $('.page-end').css('pointer-events', 'none');
+                // $('.page-next').css('pointer-events', 'none');
+            }
+
+            // 이전 이동
+            if(pagination.startPage === spanNumber) {
                 $('.page-prev').css('pointer-events', 'none');
             }
-
-            if(pagination.endPage === pageValue) {
-                $('.page-end').css('pointer-events', 'none');
+            // 다음 이동
+            if(pagination.endPage === spanNumber) {
                 $('.page-next').css('pointer-events', 'none');
             }
-            console.log(pagination.startPage === pageValue);
+            // console.log("같은 값인가요>", pagination.startPage === pageValue);
         }
 
     

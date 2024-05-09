@@ -57,9 +57,9 @@
 
                 </div> <!-- room-container END -->
 
-
+                <p>* 이미지는 바로 변경됩니다 *</p>
                 <div class="room-image-container">
-                    <p>* 이미지는 바로 변경됩니다 *</p>
+
                     <div class="thumbnail-image-container">
                         <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
 
@@ -109,7 +109,7 @@
 
                         <div class="option-content-container">
                             <label>옵션 설명
-                                <textarea class="form-control" maxlength="100" th:value="${optionInfoAndImage.roptionContent}" name="roptionContent" style="resize: none; width: 300px; height: 100px"></textarea>
+                                <textarea class="form-control option-content" maxlength="100" th:text="${optionInfoAndImage.roptionContent}" style="resize: none; width: 300px; height: 100px"></textarea>
                             </label>
                         </div>
                     </div>
@@ -203,19 +203,18 @@
 
                 //optionData
                 const optionList = $(".option-detail-container").map(function() {
-
                     const $option = $(this);
 
                     return {
                         roptionNo: $option.find("input[name='roptionNo']").val(),
                         roptionTitle: $option.find("input[name='roptionTitle']").val(),
                         roptionPrice: $option.find("input[name='roptionPrice']").val(),
-                        roptionContent: $option.find("input[name='roptionContent']").val(),
+                        roptionContent: $option.find(".option-content").val()
                     };
 
                 }).get();
 
-                console.log("optionList : " + optionList);
+                console.log("optionList : " , optionList);
 
 
                 $.ajax({
@@ -226,7 +225,7 @@
 
                     success:  function(result) {
                         console.log("AJAX 성공:", result);
-                        // location.href = "/seller/room/list";
+                        location.href = "/seller/room/list";
                     },// 결과 성공 콜백함수
 
                     error: function (request, status, error) {

@@ -24,11 +24,15 @@
             GROUP BY room_no
         ) b
         ON a.room_no = b.room_no
-        LEFT JOIN roomImage_tb c
+        LEFT JOIN (
+        select room_no, thumbnail, file_delete, created_date, save_name, original_name
+        from roomimage_tb
+        where thumbnail = 'Y'
+        and file_delete = 'N'
+        ) c (room_no, thumbnail, file_delete, created_date, save_name, original_name)
         ON a.room_no = c.room_no
-
         WHERE a.room_delete = 0
-            AND b.cnt != 0
+        AND b.cnt != 0
 
         <!-- 공간 옵션값이 존재 할 때 -->
         <if test="searchDiv != null and searchDiv.size() > 0">
@@ -60,21 +64,23 @@
     <select id="countAllList" resultType="int">
         select COUNT(*) as room_count
         from (
-        select a.*, IFNULL(b.cnt, 0) as cnt
-        FROM room_tb a
-
-        LEFT JOIN (
-        SELECT room_no, COUNT(roption_no) cnt
-        FROM roomoption_tb
-        GROUP BY room_no
-        ) b
-        ON a.room_no = b.room_no
-
-        LEFT JOIN roomimage_tb c
-        ON a.room_no = c.room_no
-
-        WHERE a.room_delete = 0
-        AND b.cnt != 0
+            select a.*, IFNULL(b.cnt, 0) as cnt
+            FROM room_tb a
+            LEFT JOIN (
+                SELECT room_no, COUNT(roption_no) cnt
+                FROM roomoption_tb
+                GROUP BY room_no
+            ) b
+            ON a.room_no = b.room_no
+            LEFT JOIN (
+                SELECT *
+                FROM roomimage_tb
+                WHERE thumbnail = 'Y'
+                AND file_delete = 'N'
+            ) c
+            ON a.room_no = c.room_no
+            WHERE a.room_delete = 0
+                AND b.cnt != 0
 
         <!-- 공간 옵션값이 존재 할 때 -->
         <if test="searchDiv != null and searchDiv.size() > 0">

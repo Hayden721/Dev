@@ -149,10 +149,13 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void updateRoomInfoByData(RoomUpdateRequest data) {
 
-        List<UpdateRoomInfoDto> roomInfo =  data.getRoomInfo();
-        List<UpdateRoomOptionInfoDto> optionInfo =  data.getOptionList();
+        List<UpdateRoomInfoDto> roomInfo = data.getRoomInfo();
+        List<UpdateRoomOptionInfoDto> optionInfo = data.getOptionList();
+
+        log.info("sellerserviceimpl optionInfo : {}",optionInfo);
 
         sellerDao.updateRoomInfoByRoomInfo(roomInfo);
+        sellerDao.updateRoomOptionInfoByOptionInfo(optionInfo);
     }
 
 

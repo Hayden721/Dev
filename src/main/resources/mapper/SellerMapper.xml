@@ -20,11 +20,22 @@
         SET
             room_title = #{roomInfo.roomTitle},
             room_content = #{roomInfo.roomContent}
-
         where
             room_no = #{roomInfo.roomNo}
         </foreach>
     </update>
+    <update id="updateRoomOptionInfoByOptionInfo" parameterType="java.util.List">
+        <foreach collection="list" item="optionInfo" separator=";">
+            UPDATE roomoption_tb
+            SET
+            roption_title = #{optionInfo.roptionTitle},
+            roption_content = #{optionInfo.roptionContent},
+            roption_price = #{optionInfo.roptionPrice}
+            WHERE
+            roption_no = #{optionInfo.roptionNo}
+        </foreach>
+    </update>
+
 
     <select id="selectSellerById" resultType="com.dev.shop.seller.dto.SellerDetailsDto">
         SELECT *
