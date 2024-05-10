@@ -7,6 +7,7 @@ import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
 import com.dev.shop.reserve.service.ReserveService;
 
+import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -141,6 +142,11 @@ public class ReserveServiceImpl implements ReserveService {
     @Override
     public void updateReservationStatus() {
         reserveDao.updateReservationStatus();
+    }
+
+    @Override
+    public List<RoomImageDto> getRoomImageByRoomNo(Long roomNo) {
+        return reserveDao.selectRoomImageByRoomNo(roomNo);
     }
 
     @Override

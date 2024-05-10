@@ -4,6 +4,7 @@ import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.seller.dto.RoomImageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -44,4 +45,6 @@ public interface ReserveDao {
 
 
     void updateReservationStatus();
+
+    List<RoomImageDto> selectRoomImageByRoomNo(Long roomNo);
 }

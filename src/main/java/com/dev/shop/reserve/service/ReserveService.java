@@ -4,6 +4,7 @@ import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.PagingResponse;
 
 import java.util.ArrayList;
@@ -27,4 +28,6 @@ public interface ReserveService {
     void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo);
 
     void updateReservationStatus();
+
+    List<RoomImageDto> getRoomImageByRoomNo(Long roomNo);
 }

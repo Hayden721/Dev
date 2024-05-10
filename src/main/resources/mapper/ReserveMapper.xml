@@ -153,7 +153,12 @@
         FROM member_tb
         WHERE member_id = #{memberId}
     </select>
-
+    <select id="selectRoomImageByRoomNo" resultType="com.dev.shop.seller.dto.RoomImageDto">
+        SELECT *
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+            and file_delete = 'N';
+    </select>
 
 
     <insert id="insertReserveInfo">
@@ -163,7 +168,6 @@
         VALUES (
             #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, #{endDateTime}
             )
-
     </insert>
 
 </mapper>

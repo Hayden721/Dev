@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/config}">
 <head>
-    <link rel="stylesheet" th:href="@{/css/reserve/detail.css}" >
+    <link rel="stylesheet" href="/css/reserve/detail.css">
 
     <title>ShareSpot</title>
 </head>
@@ -26,16 +26,20 @@
             </div>
         </div> <!-- title-container END -->
 
+        <div class="images-container">
+            <div th:each="roomImage : ${roomImage}">
+                <div th:if="${roomImage.thumbnail} == 'Y'" class="thumbnail-img-div">
+                    <img class="thumbnail-img" th:src="${filePath} + '/' + ${roomImage.createdDate} + '/' + ${roomImage.saveName}" th:alt="${roomImage.originalName}">
+                </div>
 
-
-        <div class="images-map-container">
-            <div class="images-container">
-
+                <div th:unless="${roomImage.thumbnail} == 'Y'" class="extra-image-div">
+                    <img class="extra-img" th:src="${filePath} + '/' + ${roomImage.createdDate} + '/' + ${roomImage.saveName}" th:alt="${roomImage.originalName}">
+                </div>
             </div>
+        </div>
 
-            <div class="address-map-container">
+        <div class="address-map-container">
 
-            </div>
         </div>
 
 

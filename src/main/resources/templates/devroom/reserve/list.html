@@ -17,7 +17,7 @@
         <div style="margin-top: 10px;"></div>
 
         <div class="option-container">
-            <form id="searchForm" class="option-form" role="search" onsubmit="return false;" autocomplete="off">
+            <form id="searchForm" class="option-form" role="search" onsubmit="return false;" autocomplete="off" style="display: flex; flex-direction: row;">
                 <div class="option-box">
                     <div class="keywordSearch">
                         <input class="form-control me-2" id="keyword" name="keyword" type="search" placeholder="검색어를 입력하세요." aria-label="Search">
@@ -40,8 +40,9 @@
 
                 </div>
 
-                <button class="btn btn-primary option-button" onclick="movePage(1);" type="submit"><i class="bi bi-search"></i></button>
-
+                <div class="option-btn-container">
+                    <button class="btn btn-primary option-button" onclick="movePage(1);" type="submit"><i class="bi bi-search"></i></button>
+                </div>
             </form>
         </div>
 
@@ -64,7 +65,6 @@
                     <p th:text="${roomList.address} + ${roomList.detailAddress}" style="font-size: 17px;"></p>
                 </div>
 
-
             </div> <!-- room-container -->
         </div> <!-- list-container end -->
 
@@ -84,7 +84,6 @@
             // console.log(test1);
 
             console.log(location.search);
-
 
             findAllList();
             activePagingButton();

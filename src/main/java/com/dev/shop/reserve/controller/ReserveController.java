@@ -5,6 +5,7 @@ import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.reserve.dto.CriteriaDto;
 import com.dev.shop.reserve.service.ReserveService;
+import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -57,10 +58,17 @@ public class ReserveController {
         // roomOption select
         List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
 
-                log.info("--- reserveController --- 값 : {}", roomOptionInfo);
+        // 이미지 파일 패스
+        String filePath = fileUtils.choosePath();
 
+        // roomImage
+        List<RoomImageDto> roomImage = reserveService.getRoomImageByRoomNo(roomNo);
+        // roomOptionImage
+                log.info("--- reserveController --- 값 : {}", roomOptionInfo);
+        model.addAttribute("filePath", filePath);
         model.addAttribute("roomInfo", roomInfo);
         model.addAttribute("roomOptionInfo", roomOptionInfo);
+        model.addAttribute("roomImage", roomImage);
 
     }
 

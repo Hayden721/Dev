@@ -17,7 +17,7 @@ public class RoomImageDto {
     private int fileSize;
     private LocalDate createdDate;
     private LocalDate deleteDate;
-
+    private char thumbnail;
     private Long roomNo;
 
     @Builder
