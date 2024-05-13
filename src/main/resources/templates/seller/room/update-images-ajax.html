@@ -1,0 +1,195 @@
+<link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
+    <!-- 추가 이미지 -->
+    <div class="extra-images-wrap">
+        <div class="extra-image-container" th:each="addImage : ${additionalImage}">
+            <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
+            <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+
+            <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
+            <!-- overlay -->
+            <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
+
+            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
+        </div>
+        <div class="extra-image-container">
+            <label for="addImages">
+                <div class="input-image-custom">파일 선택</div>
+            </label>
+            <input type="file" name="extraImages" multiple id="addImages" hidden="hidden">
+        </div>
+    </div>
+
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        imageUploadAjax();
+        deleteImageBtnConfirm();
+        deleteImage();
+        mouseHoverImageBlur();
+
+        imageClick2();
+    });
+    function imageUploadAjax() {
+        $('#addImages').on('change', function () {
+            var imageData = new FormData();
+            // roomNo
+            const roomNo = $('input[name=roomNo]').val();
+            console.log("roomNo : ", roomNo);
+
+            $.each($('input[name="extraImages"]')[0].files, function (i, file) {
+                imageData.append('extraImages', file);
+            });
+
+            console.log(imageData.get('extraImages'));
+
+            imageData.append('roomNo', roomNo);
+
+            $.ajax({
+                type: "post", // 타입 (get, post, put 등등)
+                url: "/seller/room/detail/upload/image",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: imageData,
+                contentType: false, // 필수 옵션
+                processData: false, // 필수 옵션
+                success:  function(result) {
+                    imagePosting2();
+                    $('#addImages').val('');
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail")
+                }
+            })
+
+            function imagePosting2() {
+                const roomNo = $('input[name=roomNo]').val();
+                $.ajax({
+                    type: "get", // 타입 (get, post, put 등등)
+                    url: "/seller/room/detail/images",  // 요청할 서버url
+                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                    data: {
+                        roomNo: roomNo
+                    },
+                    success:  function(result) {
+                        console.log("imagePosting2 성공!");
+                        $('.images-ajax').html(result);
+                    },// 결과 성공 콜백함수
+
+                    error: function (request, status, error) {
+                        console.log("get error Fail");
+                    }
+                })
+            }
+        })
+    }
+
+    function deleteImageBtnConfirm() {
+        $('.img-delete-btn').click(function () {
+            const imageContainer = $(this).closest('.thumbnail-image-container, .extra-image-container').find('.image-js');
+            const imageNo = imageContainer.data('imageNo');
+
+            $('input[name=click-image-no]').val(imageNo);
+
+        })
+    }
+
+    function deleteImage() {
+        $('.image-delete-click').click(function () {
+            const imageNo = $('input[name=click-image-no]').val();
+            console.log(imageNo);
+
+            $.ajax({
+                type: "post",           // 타입 (get, post, put 등등)
+                url: "/room/image/delete",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: {
+                    imageNo: imageNo
+                },
+                success: function (result) { // 결과 성공 콜백함수
+                    $(`img[data-image-no="${imageNo}"]`).closest('.extra-image-container').remove();
+                },
+                error: function (request, status, error) {
+                    console.log("get error Fail")
+                }
+            })
+
+        })
+    }
+
+    function mouseHoverImageBlur() {
+        // extraImage
+        const image = $('.image-js');
+
+        image.on('mouseenter', function () {
+            $(this).css('filter', 'blur(3px');
+            $(this).siblings('.overlay').css('opacity', '1');
+        })
+
+        image.on('mouseleave', function () {
+            $(this).css('filter', 'blur(0px');
+            $(this).siblings('.overlay').css('opacity', '0');
+        })
+
+    }
+
+
+
+    function imageClick2() {
+
+        const image = $('.image-js');
+
+        image.click(function() {
+            $(this).siblings('.image-input').trigger('click');
+
+        });
+
+        $('.image-input').on('change', function() {
+            const imageNo = $(this).siblings('.image-js').data('image-no');
+
+            console.log("imageNo", imageNo);
+
+            let imageData = new FormData();
+
+
+            const image = $('input[name="extraImage"]')[0].files[0];
+
+            if (image) {
+                imageData.append('extraImage', image);
+            }
+            imageData.append('imageNo', imageNo);
+
+            console.log(imageData.get('extraImage'));
+
+            const clickedImage = $(this).siblings('.image-js');
+
+            // 이미지 변경
+            const file = this.files[0];
+
+            if (file) {
+                let render = new FileReader();
+                render.onload = function(e) {
+                    clickedImage.attr('src', e.target.result);
+                };
+                render.readAsDataURL(file);
+            }
+
+            $.ajax({
+                type: "post",
+                url: "/seller/room/detail/update/image",
+                dataType: "html",
+                data: imageData,
+                contentType: false,
+                processData: false,
+                success: function(result) {
+                    console.log("Image upload success");
+                },
+                error: function(request, status, error) {
+                    console.log("Error uploading image: " + error);
+                }
+            });
+        });
+    }
+
+/*]]>*/
+</script>
+
