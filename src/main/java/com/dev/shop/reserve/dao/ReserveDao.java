@@ -22,18 +22,41 @@ public interface ReserveDao {
 
     List<ReserveRoomListDto> selectRoomList(CriteriaDto criteriaDto);
 
-
+    /**
+     *
+     * @param criteriaDto - list 페이지에서 보낸 criteria 데이터
+     * @return 게시물의 개수
+     */
     int countAllList(CriteriaDto criteriaDto);
 
+    /**
+     *
+     * @param roomNo - 방 번호(Primary key)
+     * @return 방 번호에 맞는 방 정보
+     */
     RoomDto selectRoomInfoByRoomNo(Long roomNo);
 
     /**
      * 방 옵션 조회
-     * @param roomNo - 방 번호
+     * @param roomNo - 방 번호(Primary key)
      * @return 해당 방에 대한 옵션 값
      */
     List<RoomOptionDto> selectRoomOptionInfoByRoomNo(Long roomNo);
+
+    /**
+     *
+     * @param selectDate - 멤버가 선택한 날짜
+     * @param roomNo - 방 번호(Primary key)
+     * @return 선택한 날짜에 예약 가능한 시작 시간
+     */
     ArrayList<Integer> getReservedStartTime(@Param("selectDate") String selectDate, @Param("roomNo") Long roomNo);
+
+    /**
+     *
+     * @param selectDate - 멤버가 선택한 날짜
+     * @param roomNo - 방 번호(Primary key)
+     * @return 선택한 날짜에 예약 가능한 종료 시간
+     */
     ArrayList<Integer> getReservedEndTime(@Param("selectDate") String selectDate, @Param("roomNo") Long roomNo);
 
     List<Map<String, Integer>> getReservedAllTime(@Param("selectDate") String selectDate, @Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo);
@@ -43,8 +66,22 @@ public interface ReserveDao {
 
     String selectMemberNoByAuthId(String authId);
 
-
+    /**
+     * 예약 시간 지난 예약 데이터 상태를 '종료' 로 만들기
+     */
     void updateReservationStatus();
 
-    List<RoomImageDto> selectRoomImageByRoomNo(Long roomNo);
+    /**
+     *
+     * @param roomNo - 방 번호(Primary key)
+     * @return 썸네일 아닌 이미지
+     */
+    List<RoomImageDto> selectRoomExtraImageByRoomNo(Long roomNo);
+
+    /**
+     *
+     * @param roomNo - 방 번호(Primary key)
+     * @return 썸네일 이미지 데이터
+     */
+    RoomImageDto selectRoomThumbnailByRoomNo(Long roomNo);
 }

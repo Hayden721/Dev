@@ -61,14 +61,24 @@ public class ReserveController {
         // 이미지 파일 패스
         String filePath = fileUtils.choosePath();
 
-        // roomImage
-        List<RoomImageDto> roomImage = reserveService.getRoomImageByRoomNo(roomNo);
+        //thumbnailImage
+        RoomImageDto thumbnailImage = reserveService.getRoomThumbnailImageByRoomNo(roomNo);
+
+        // extraImage
+        List<RoomImageDto> extraImages = reserveService.getRoomExtraImageByRoomNo(roomNo);
+
         // roomOptionImage
-                log.info("--- reserveController --- 값 : {}", roomOptionInfo);
-        model.addAttribute("filePath", filePath);
+
+
+        log.info("--- reserveController --- 값 : {}", roomOptionInfo);
+
+
         model.addAttribute("roomInfo", roomInfo);
         model.addAttribute("roomOptionInfo", roomOptionInfo);
-        model.addAttribute("roomImage", roomImage);
+        // 이미지 관련 model
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("thumbnailImage", thumbnailImage);
+        model.addAttribute("extraImages", extraImages);
 
     }
 

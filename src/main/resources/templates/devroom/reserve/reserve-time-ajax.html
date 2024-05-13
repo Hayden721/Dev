@@ -20,13 +20,15 @@
     </div>
     <div th:each="startTime : ${availableReserveTimes['start_time']}" class="radio-sort">
 
-            <input type="radio" th:value="${startTime}" th:name="reserveStartTime">
-            <label th:text="${startTime}"></label>
+        <input type="radio" th:value="${startTime}" th:name="reserveStartTime">
+        <label th:text="${startTime}"></label>
 
     </div>
+
     <div>
     <label>종료시간</label>
     </div>
+
     <div th:each="endTime : ${availableReserveTimes['end_time']}" class="radio-sort">
 
             <input type="radio" th:value="${endTime}" th:name="reserveEndTime">

@@ -72,6 +72,12 @@ html, body {
     border: none;
 }
 
+.emphasize-btn:active {
+    color: #F3EFF5;
+    background-color: #2f5e18;
+}
+
+
 .normal-btn {
     color: #F3EFF5;
     background-color: #72B01D;

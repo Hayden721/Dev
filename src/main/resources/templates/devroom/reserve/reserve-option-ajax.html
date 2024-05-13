@@ -133,6 +133,7 @@
 
     // 날짜 클릭
     $(document).on("click", "#calendar table > tbody > tr > td > span", function(event) {
+
         var yearmonth = $(".calendar-yearmonth").text().split("/");
         var clickDate = yearmonth[0] + "-" + yearmonth[1] + "-" + $(event.target).text();
 
@@ -153,7 +154,6 @@
                     console.log(error)
                 }
             })
-
 
         $(".selectDate").val(clickDate);
     });

@@ -12,8 +12,35 @@
 
 <div layout:fragment="content">
     <div class="detail-wrap">
+        <div class="images-container">
+            <div class="thumbnail-img-container">
+                <img class="thumbnail-img" th:src="${filePath} + '/' + ${thumbnailImage.createdDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}">
+            </div>
+
+            <div th:if="${extraImages.size()} >= 4">
+                <div th:with="images = ${extraImages.subList(0, 4)}" class="extra-img-container">
+                    <div th:each="extraImages : ${images}" class="extra-img-div">
+                        <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.createdDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
+                    </div>
+                </div>
+
+            </div>
+
+            <div th:unless="${extraImages.size()} >= 4">
+
+                <div class="extra-img-container">
+                    <div th:each="extraImages : ${extraImages}" class="extra-img-div">
+                        <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.createdDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
         <div class="title-container">
-            <span th:text="${roomInfo.roomTitle}" class="title-style"></span>
+            <h1 th:text="${roomInfo.roomTitle}"></h1>
             <span th:switch="${roomInfo.roomDiv}">
                 <span th:case="'studyroom'">스터디룸</span>
                 <span th:case="'meeting'">회의실</span>
@@ -25,24 +52,6 @@
                 <p th:text="${roomInfo.roomContent}"></p>
             </div>
         </div> <!-- title-container END -->
-
-        <div class="images-container">
-            <div th:each="roomImage : ${roomImage}">
-                <div th:if="${roomImage.thumbnail} == 'Y'" class="thumbnail-img-div">
-                    <img class="thumbnail-img" th:src="${filePath} + '/' + ${roomImage.createdDate} + '/' + ${roomImage.saveName}" th:alt="${roomImage.originalName}">
-                </div>
-
-                <div th:unless="${roomImage.thumbnail} == 'Y'" class="extra-image-div">
-                    <img class="extra-img" th:src="${filePath} + '/' + ${roomImage.createdDate} + '/' + ${roomImage.saveName}" th:alt="${roomImage.originalName}">
-                </div>
-            </div>
-        </div>
-
-        <div class="address-map-container">
-
-        </div>
-
-
 
         <div id="option-wrap">
             <div class="option-title">

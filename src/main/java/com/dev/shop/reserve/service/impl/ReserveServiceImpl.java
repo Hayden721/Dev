@@ -145,8 +145,13 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public List<RoomImageDto> getRoomImageByRoomNo(Long roomNo) {
-        return reserveDao.selectRoomImageByRoomNo(roomNo);
+    public List<RoomImageDto> getRoomExtraImageByRoomNo(Long roomNo) {
+        return reserveDao.selectRoomExtraImageByRoomNo(roomNo);
+    }
+
+    @Override
+    public RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo) {
+        return reserveDao.selectRoomThumbnailByRoomNo(roomNo);
     }
 
     @Override

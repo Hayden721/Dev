@@ -82,7 +82,10 @@
 
             <hr>
 
-            <h2>옵션 정보</h2>
+            <div style="display: flex">
+                <h2>옵션 정보</h2>
+                <button class="btn emphasize-btn" style="margin-bottom: .5rem" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
+            </div>
             <div class="option-container">
                 <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
                     <input th:value="${optionInfoAndImage.roptionNo}" hidden name="roptionNo">
@@ -117,7 +120,7 @@
             </div>
 
             <div style="float: right; margin: 40px 0 0 0;">
-                <button class="btn btn-danger room-delete-button">방 삭제</button>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#room-delete-modal" aria-label="Close">방 삭제</button>
                 <button type="submit" class="btn emphasize-btn update-btn">수정완료</button>
             </div>
         </div>
@@ -125,12 +128,12 @@
     </div>
 
 
-    <!-- Modal -->
+    <!-- 이미지 삭제 Modal -->
     <div class="modal fade" id="image-delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">이미지 삭제</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -145,6 +148,54 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- 방 삭제 Modal -->
+    <div class="modal fade" id="room-delete-modal" tabindex="-1" aria-labelledby="roomDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="roomDeleteModalLabel">방 삭제</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    해당 방을 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                    <button type="button" class="btn btn-primary room-delete-btn">예</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addOptionModalLabel">옵션 추가</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label> 옵션 개수
+                        <select name="optionSelection" id="option-selection" class="form-select">
+                            <option value="0">개수 선택</option>
+                        </select>
+
+                    </label>
+                    <!-- 옵션의 개수에 따라 옵션 input 생성 -->
+                    <div id="generateInputForm"></div>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                    <button type="button" class="btn btn-primary">예</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <th:block layout:fragment="script">
@@ -153,8 +204,7 @@
         /*<![CDATA[*/
         $(document).ready(function() {
             divValue();
-
-
+            deleteRoom();
 
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
@@ -231,6 +281,30 @@
                     error: function (request, status, error) {
                         console.log("/seller/room/detail/update ajax Fail");
                         console.log("Status : " + status);
+                    }
+                })
+            })
+        }
+
+        function deleteRoom() {
+
+            const roomNo = $('input[name=roomNo]').val();
+
+            $(".room-delete-btn").click(function () {
+                $.ajax({
+                    type: "post", // 타입 (get, post, put 등등)
+                    url: "/seller/room/delete",  // 요청할 서버url
+                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                    data: {
+                        roomNo: roomNo
+                    },
+                    success:  function(result) {
+                        console.log("방 삭제 완료");
+                        location.href="/seller/room/list";
+                    },// 결과 성공 콜백함수
+
+                    error: function (request, status, error) {
+                        console.log("get error Fail");
                     }
                 })
             })

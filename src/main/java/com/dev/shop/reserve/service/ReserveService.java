@@ -29,5 +29,8 @@ public interface ReserveService {
 
     void updateReservationStatus();
 
-    List<RoomImageDto> getRoomImageByRoomNo(Long roomNo);
+    List<RoomImageDto> getRoomExtraImageByRoomNo(Long roomNo);
+
+
+    RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo);
 }

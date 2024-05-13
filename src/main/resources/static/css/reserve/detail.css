@@ -1,7 +1,4 @@
 .detail-wrap {
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
     width: 1200px;
     height: 100%;
     margin: 0 auto;
@@ -9,13 +6,9 @@
 }
 
 .title-container {
-
     display: flex;
     flex-direction: column;
-}
-
-.title-style {
-    font-size: 50px;
+    margin: 10px 0 10px 0;
 }
 
 #div1-container {
@@ -29,26 +22,51 @@
 .images-map-container {
     display: flex;
     justify-content: center;
-
-
 }
 
 .images-container {
-    width: 500px;
-    height: 400px;
-    padding: 5px;
-    margin: 0 5px 0 0;
+    width: 1200px;
+    height: 550px;
     background-color: thistle;
+    display: flex;
 }
 
-.address-map-container {
-    width: 400px;
-    height: 400px;
-    background-color: yellowgreen;
-    padding: 5px;
-    margin: 0 0 0 5px;
+.thumbnail-img-container {
+    width: 530px;
+    height: 550px;
+    margin: 0 10px 0 0;
 }
 
+.extra-img-container {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 10px;
+
+}
+
+.extra-img-div {
+    width: 325px;
+    height: 270px;
+}
+.extra-img {
+    width: 325px;
+    height: 270px;
+}
+
+.thumbnail-img {
+    width: 530px;
+    height: 550px;
+    border-radius: 15px 0 0 15px;
+
+}
+/* 그리드 2, 4번째 스타일 지정*/
+.extra-img-container .extra-img-div:nth-child(2) .extra-img{
+    border-radius: 0 15px 0 0;
+}
+
+.extra-img-container .extra-img-div:nth-child(4) .extra-img{
+    border-radius: 0 0 15px 0;
+}
 
 #div2-container {
     width: 100%;
@@ -181,12 +199,3 @@
     display: inline-block;
 }
 
-.thumbnail-img {
-    width: 400px;
-    height: 400px;
-}
-
-.extra-img {
-    width: 200px;
-    height: 200px;
-}
