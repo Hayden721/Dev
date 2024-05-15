@@ -61,7 +61,7 @@
                 <div class="room-image-container">
 
                     <div class="thumbnail-image-container">
-                        <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
+                        <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
 
                         <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
                         <img th:unless="${thumbnailImage} != null" class="image-input image-js" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
@@ -82,6 +82,9 @@
 
             <hr>
 
+
+
+            <!-- ajax로 불러오기 -->
             <div style="display: flex">
                 <h2>옵션 정보</h2>
                 <button class="btn emphasize-btn" style="margin-bottom: .5rem" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
@@ -187,11 +190,13 @@
                     <!-- 옵션의 개수에 따라 옵션 input 생성 -->
                     <div id="generateInputForm"></div>
                 </div>
-                </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                    <button type="button" class="btn btn-secondary" id="option-close-btn" data-bs-dismiss="modal">아니요</button>
                     <button type="button" class="btn btn-primary">예</button>
                 </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -205,6 +210,9 @@
         $(document).ready(function() {
             divValue();
             deleteRoom();
+            generateOptions();
+            generateOptionForm();
+            optionModalClear();
 
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
@@ -227,13 +235,16 @@
             updateInfo();
         });
 
+        // 방 구분 select
         function divValue() {
             const roomDivValue = [[ ${roomInfo.roomDiv}]];
             console.log(roomDivValue);
+            //
             $('select[name="roomDiv"] option').prop('selected', false);
             $('select[name="roomDiv"] option[value = "' + roomDivValue +'"]').prop('selected', true);
         }
 
+        //방 업데이트
         function updateInfo() {
 
             $('.update-btn').click(function () {
@@ -283,6 +294,89 @@
                         console.log("Status : " + status);
                     }
                 })
+            })
+        }
+
+        // <select>의 <option> 생성
+        function generateOptions() {
+            let createCount = 6;
+            let select = $("#option-selection");
+
+            for (let i=1; i<= createCount; i++){
+                let option = $("<option></option>").val(i).text(i);
+                select.append(option);
+            }
+        }
+
+        // 옵션 개수에 따라 입력칸 생성
+        function generateOptionForm() {
+            $("#option-selection").change(function (){
+
+                let selectValue = $(this).val();
+                console.log(selectValue);
+
+                let inputForm = $("#generateInputForm");
+
+                let html= "";
+
+                if(selectValue === "0") {
+                    html += "";
+                    inputForm.html(html);
+                }else {
+                    for (let i = 1; i <= selectValue; i++) {
+                        html += "<div class='input-form'>" +
+                            "<fieldset class='fieldset-style'>"+
+                            "<legend>옵션" +selectValue + "</legend>" +
+                            "<label class='option-label'> 옵션이름" +
+                            "<input name='roomOptionTitle" + i + "' class='value-check form-control'>" +
+                            "</label>" +
+                            "<label class='option-label'> 옵션 내용" +
+                            "<input name='roomOptionContent" + i + "' class='value-check form-control'>" +
+                            "</label>" +
+
+                            "<lable class='option-label'>옵션 가격" +
+                            "<div class='input-group option-price'>" +
+                            "<input name='roomOptionPrice" + i + "' class='value-check form-control'>" +
+                            "<span class='input-group-text' id='basic-addon2'>₩</span>"+
+                            "</div>" +
+                            "</lable>" +
+                            "</fieldset>" +
+                            "</div>";
+                    }
+                    inputForm.html(html);
+                    checkInput();
+                }
+            });
+        }
+
+        // 옵션 입력칸 빈칸 검사
+        function checkInput() {
+            // .value-check 클래스를 가진 입력란에 대해 input 이벤트를 감지
+            $('.value-check').on('input', function() {
+                // 빈 칸 여부 확인
+                var valueCheck = false;
+                $('.value-check').each(function() {
+                    if ($(this).val().trim() === '') {
+                        valueCheck = true;
+                        return false; // 빈 칸 발견 시 반복 중단
+                    }
+                });
+
+                // 빈 칸이 없으면 버튼 활성화, 빈 칸이 있으면 비활성화
+                if (valueCheck) {
+                    $('#create-room-button').prop('disabled', true); // 비활성화
+                } else {
+                    $('#create-room-button').prop('disabled', false); // 활성화
+                }
+            });
+        }
+
+        function optionModalClear() {
+            $('#option-close-btn').click(function () {
+                $("#option-selection").val("0");
+
+                let inputForm = $("#generateInputForm");
+                inputForm.html("");
             })
         }
 

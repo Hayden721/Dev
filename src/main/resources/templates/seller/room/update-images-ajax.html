@@ -1,4 +1,6 @@
 <link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
+
+
     <!-- 추가 이미지 -->
     <div class="extra-images-wrap">
         <div class="extra-image-container" th:each="addImage : ${additionalImage}">
@@ -26,9 +28,9 @@
         deleteImageBtnConfirm();
         deleteImage();
         mouseHoverImageBlur();
-
         imageClick2();
     });
+    // 새로운 이미지 추가
     function imageUploadAjax() {
         $('#addImages').on('change', function () {
             var imageData = new FormData();
@@ -82,7 +84,7 @@
             }
         })
     }
-
+    // 이미지 삭제 확인 버튼
     function deleteImageBtnConfirm() {
         $('.img-delete-btn').click(function () {
             const imageContainer = $(this).closest('.thumbnail-image-container, .extra-image-container').find('.image-js');
@@ -93,6 +95,7 @@
         })
     }
 
+    //이미지 삭제
     function deleteImage() {
         $('.image-delete-click').click(function () {
             const imageNo = $('input[name=click-image-no]').val();
@@ -115,7 +118,7 @@
 
         })
     }
-
+    // 이미지 위에 마우스 올렸을 때 이벤트
     function mouseHoverImageBlur() {
         // extraImage
         const image = $('.image-js');
@@ -132,17 +135,17 @@
 
     }
 
-
-
+    // 이미지를 클릭했을 때 동작
     function imageClick2() {
 
         const image = $('.image-js');
-
+        //이미지 클릭시 click 트리거 작동
         image.click(function() {
             $(this).siblings('.image-input').trigger('click');
 
         });
 
+        // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
         $('.image-input').on('change', function() {
             const imageNo = $(this).siblings('.image-js').data('image-no');
 
