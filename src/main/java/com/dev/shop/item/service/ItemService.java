@@ -28,4 +28,7 @@ public interface ItemService{
     void sellerUpdateImageByImageNo(Long imagNo, MultipartFile extraImage);
 
 
+    List<FileResponse> getAdditionalImageByRoomNo(Long roomNo);
+
+    FileResponse getThumbnailImageByRoomNo(Long roomNo);
 }

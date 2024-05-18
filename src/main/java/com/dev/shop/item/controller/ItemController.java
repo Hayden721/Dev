@@ -99,6 +99,24 @@ public class ItemController {
 
     }
 
+    // 이미지 불러오기
+    @GetMapping("seller/room/update-images-ajax")
+    public String sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
+
+        String filePath = fileUtils.choosePath();
+        FileResponse thumbnailImage = itemService.getThumbnailImageByRoomNo(roomNo);
+        List<FileResponse> additionalImage = itemService.getAdditionalImageByRoomNo(roomNo);
+
+
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("thumbnailImage", thumbnailImage);
+        model.addAttribute("additionalImage", additionalImage);
+
+
+        return "/seller/room/update-images-ajax";
+    }
+
+    // 이미지 업데이트
     @ResponseBody
     @PostMapping("/seller/room/detail/update/image")
     public void sellerRoomImageUpdatePost(@RequestPart("extraImage") MultipartFile extraImage,
@@ -110,6 +128,7 @@ public class ItemController {
 
     }
 
+    // 이미지 삭제
     @ResponseBody
     @PostMapping("/room/image/delete")
     public void sellerRoomImageDelete(@RequestParam("imageNo") Long imageNo) {

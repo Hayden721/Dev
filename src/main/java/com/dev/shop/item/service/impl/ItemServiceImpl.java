@@ -113,5 +113,14 @@ public class ItemServiceImpl implements ItemService {
         itemDao.updateRoomImageByImageNo(imageNo);
     }
 
+    @Override
+    public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
+        return itemDao.selectThumbnailByRoomNo(roomNo);
+    }
+
+    @Override
+    public List<FileResponse> getAdditionalImageByRoomNo(Long roomNo) {
+        return itemDao.selectAdditionalImageByRoomNo(roomNo);
+    }
 
 }

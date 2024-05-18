@@ -27,4 +27,8 @@ public interface ItemDao {
     void insertRoomImages(List<FileRequest> refinedImages);
 
     void UpdateRoomImage(@Param("refinedImage") FileRequest refinedImage, @Param("imageNo") Long imageNo);
+
+    List<FileResponse> selectAdditionalImageByRoomNo(Long roomNo);
+
+    FileResponse selectThumbnailByRoomNo(Long roomNo);
 }

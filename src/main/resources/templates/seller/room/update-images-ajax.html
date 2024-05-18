@@ -1,25 +1,60 @@
 <link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
 
+    <div class="room-image-container">
+        <div class="thumbnail-image-container">
+            <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
 
-    <!-- 추가 이미지 -->
-    <div class="extra-images-wrap">
-        <div class="extra-image-container" th:each="addImage : ${additionalImage}">
-            <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
-            <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+            <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
+            <img th:unless="${thumbnailImage} != null" class="image-input image-js" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
 
-            <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
-            <!-- overlay -->
-            <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
+            <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
 
-            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
+            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
         </div>
-        <div class="extra-image-container">
-            <label for="addImages">
-                <div class="input-image-custom">파일 선택</div>
-            </label>
-            <input type="file" name="extraImages" multiple id="addImages" hidden="hidden">
+
+
+        <!-- 추가 이미지 -->
+        <div class="extra-images-wrap">
+            <div class="extra-image-container" th:each="addImage : ${additionalImage}">
+                <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
+                <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+
+                <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
+                <!-- overlay -->
+                <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
+
+                <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
+            </div>
+            <div class="extra-image-container">
+                <label for="addImages">
+                    <div class="input-image-custom">파일 선택</div>
+                </label>
+                <input type="file" name="extraImages" multiple id="addImages" hidden="hidden">
+            </div>
         </div>
     </div>
+
+
+<!-- 이미지 삭제 Modal -->
+<div class="modal fade" id="image-delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">이미지 삭제</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input value="" name="click-image-no" hidden>
+                <p>* 바로 삭제 됩니다 *</p>
+                <p>사진을 삭제하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary image-delete-click" data-bs-dismiss="modal">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
@@ -28,9 +63,10 @@
         deleteImageBtnConfirm();
         deleteImage();
         mouseHoverImageBlur();
-        imageClick2();
+        // imageClickExtraImages();
+        imageUpdate();
     });
-    // 새로운 이미지 추가
+    // 새로운 이미지 추가, 이미지 insert
     function imageUploadAjax() {
         $('#addImages').on('change', function () {
             var imageData = new FormData();
@@ -134,9 +170,75 @@
         })
 
     }
+    // 이미지 업데이트 수정
+    function update(nameValue) {
+        // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
+        $('.image-input').on('change', function() {
+            const imageNo = $(this).siblings('.image-js').data('image-no');
 
-    // 이미지를 클릭했을 때 동작
-    function imageClick2() {
+            console.log("imageNo", imageNo);
+
+            let imageData = new FormData();
+
+            const image = $(`input[name="${nameValue}"]`)[0].files[0];
+            console.log(image);
+
+            if (image) {
+                imageData.append('extraImage', image);
+            }
+            imageData.append('imageNo', imageNo);
+
+            console.log(imageData.get('extraImage'));
+
+            const clickedImage = $(this).siblings('.image-js');
+
+            // 이미지 변경
+            const file = this.files[0];
+
+            if (file) {
+                let render = new FileReader();
+                render.onload = function(e) {
+                    clickedImage.attr('src', e.target.result);
+                };
+                render.readAsDataURL(file);
+            }
+
+        });
+    }
+
+    function imageUpdate() {
+        const image = $('.image-js');
+        let nameValue;
+
+        //이미지 클릭시 click 트리거 작동
+        image.click(function() {
+            $(this).siblings('.image-input').trigger('click');
+
+            nameValue = String($(this).siblings('.image-input').attr('name'));
+
+            console.log("nameValue : ",nameValue);
+
+            switch (nameValue)  {
+                case "thumbnailImage":
+                    console.log("thumbnailImage ok");
+                    update(nameValue);
+                    break;
+                case "extraImage":
+                    console.log("extraImage ok");
+                    update(nameValue);
+                    break;
+            }
+
+        });
+
+
+
+    }
+
+
+
+    // 이미지를 클릭했을 때 동작, 이미지 업데이트
+    function imageClickExtraImages() {
 
         const image = $('.image-js');
         //이미지 클릭시 click 트리거 작동
@@ -144,6 +246,9 @@
             $(this).siblings('.image-input').trigger('click');
 
         });
+
+        // 클릭했을 때 input 값
+
 
         // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
         $('.image-input').on('change', function() {

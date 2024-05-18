@@ -7,12 +7,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-
     <link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
 
     <title>Dev-room</title>
 </head>
-
 
 <div layout:fragment="seller-content">
 
@@ -24,6 +22,7 @@
             <!-- 방 번호 -->
             <input th:value="${roomInfo.roomNo}" name="roomNo" hidden>
 
+            <!-- 방 옵션 정보 -->
             <div class="room-container">
                 <div class="room-info-container">
                     <label for="room-title">방 이름
@@ -31,7 +30,7 @@
                     </label>
 
                     <label for="room-content">방 설명
-                        <input id="room-content" class="form-control" th:value="${roomInfo.roomContent}" name="roomContent">
+                        <textarea id="room-content" class="form-control" th:text="${roomInfo.roomContent}" style="resize: none; height: 200px;"></textarea>
                     </label>
 
                     <label for="room-div">업체 구분
@@ -41,48 +40,29 @@
                             <option value="office">사무실</option>
                         </select>
                     </label>
-                    <!-- 주소  -->
 
+                    <!-- 주소  -->
                     <div class="address-container" style="margin-bottom: 10px">
                         <label class="form-label"> 주소
                             <div class="address-find-sort">
                                 <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postCode" th:value="${roomInfo.postCode}">
-                                <input type="button" class="btn normal-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+                                <input type="button" class="btn normal-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" style="margin: 5px 0 5px 0">
                             </div>
+
                             <input type="text" class="form-control" id="sample6_address" placeholder="주소" name="address" th:value="${roomInfo.address}"><br>
                             <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="roomDetailAddr" style="margin-bottom: 3px" th:value="${roomInfo.detailAddress}">
                             <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="roomExtraAddr" style="width: 175px" th:value="${roomInfo.extraAddress}">
                         </label>
                     </div>
-
                 </div> <!-- room-container END -->
 
                 <p>* 이미지는 바로 변경됩니다 *</p>
-                <div class="room-image-container">
-
-                    <div class="thumbnail-image-container">
-                        <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
-
-                        <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
-                        <img th:unless="${thumbnailImage} != null" class="image-input image-js" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-
-                        <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
-
-                        <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
-                    </div>
-
-                    <!-- 추가 이미지 -->
-                    <div class="images-ajax"></div>
-
-                </div> <!-- room-image-container END -->
-
-
+                <!-- 이미지 ajax 처리 -->
+                <div class="images-ajax"></div>
 
             </div> <!-- room-container END -->
 
             <hr>
-
-
 
             <!-- ajax로 불러오기 -->
             <div style="display: flex">
@@ -130,7 +110,6 @@
 
     </div>
 
-
     <!-- 이미지 삭제 Modal -->
     <div class="modal fade" id="image-delete-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -173,6 +152,7 @@
         </div>
     </div>
 
+    <!-- 옵션 추가 modal -->
     <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -201,7 +181,7 @@
         </div>
     </div>
 
-</div>
+
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -217,7 +197,7 @@
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
                 type: "get", // 타입 (get, post, put 등등)
-                url: "/seller/room/detail/images",  // 요청할 서버url
+                url: "/seller/room/update-images-ajax",  // 요청할 서버url
                 dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                 data: {
                     roomNo: roomNo
@@ -255,7 +235,7 @@
                     return {
                         roomNo : $roomVal.find("input[name='roomNo']").val(),
                         roomTitle : $roomVal.find("input[name='roomTitle']").val(),
-                        roomContent :  $roomVal.find("input[name='roomContent']").val(),
+                        roomContent :  $roomVal.find("#room-content").val(),
                         roomDiv :  $roomVal.find("#room-div").val()
                     };
 
@@ -380,6 +360,7 @@
             })
         }
 
+        // 방 삭제
         function deleteRoom() {
 
             const roomNo = $('input[name=roomNo]').val();
