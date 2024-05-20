@@ -226,7 +226,6 @@
 
         //방 업데이트
         function updateInfo() {
-
             $('.update-btn').click(function () {
 
                 const roomInfo = $(".ajax-form-container").map(function () {
@@ -350,7 +349,7 @@
                 }
             });
         }
-
+        // 옵션 추가 모달 닫을 때 초기화하기
         function optionModalClear() {
             $('#option-close-btn').click(function () {
                 $("#option-selection").val("0");
@@ -384,7 +383,7 @@
                 })
             })
         }
-
+        // 카카오 주소 함수
         function sample6_execDaumPostcode() {
             new daum.Postcode({
                 oncomplete: function(data) {

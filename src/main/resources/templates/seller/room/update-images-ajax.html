@@ -1,17 +1,20 @@
 <link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
 
     <div class="room-image-container">
-        <div class="thumbnail-image-container">
-            <input class="image-input" type="file" accept="images/*" name="thumbnailImage" hidden>
+        <!-- 썸네일 이미지 -->
+        <div class="thumbnail-image-container" th:if="${thumbnailImage} != null">
+            <input class="thumbnail-input" type="file" accept="images/*" name="thumbnailImage" hidden>
 
-            <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
-            <img th:unless="${thumbnailImage} != null" class="image-input image-js" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
-
+            <img th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
             <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
-
+            <!-- 이미지 삭제 버튼 -->
             <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
         </div>
 
+        <div class="thumbnail-image-container" th:unless="${thumbnailImage} != null">
+            <button class="btn emphasize-btn" id="thumbnail-btn" style="width: 270px; height: 270px; ">썸네일 이미지</button>
+            <input class="thumbnail-input" type="file" accept="images/*" name="thumbnailImage" hidden>
+        </div>
 
         <!-- 추가 이미지 -->
         <div class="extra-images-wrap">
@@ -29,7 +32,7 @@
                 <label for="addImages">
                     <div class="input-image-custom">파일 선택</div>
                 </label>
-                <input type="file" name="extraImages" multiple id="addImages" hidden="hidden">
+                <input type="file" name="extraImages" id="addImages" hidden="hidden" multiple>
             </div>
         </div>
     </div>
@@ -59,15 +62,51 @@
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
     $(document).ready(function() {
-        imageUploadAjax();
+        extraImageUploadAjax();
         deleteImageBtnConfirm();
         deleteImage();
         mouseHoverImageBlur();
-        // imageClickExtraImages();
-        imageUpdate();
+        imageClickExtraImages();
+        ThumbnailUploadAjax();
     });
-    // 새로운 이미지 추가, 이미지 insert
-    function imageUploadAjax() {
+    // 썸네일 이미지 업로드
+    function ThumbnailUploadAjax() {
+        $('#thumbnail-btn').click(function() {
+            $(this).siblings('.thumbnail-input').trigger('click');
+        });
+
+        $('#thumbnail-input').on('change', function () {
+            let imageData = new FormData();
+            const roomNo = $('input[name=roomNo]').val();
+
+            const selectImage = $('input[name="thumbnailImage"]');
+            console.log("thumbnailImage select", selectImage);
+
+            imageData.append('thumbnailImage', selectImage);
+
+            $.ajax({
+                type: "post", // 타입 (get, post, put 등등)
+                url: "/seller/room/detail/upload/image",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: imageData,
+                contentType: false, // 필수 옵션
+                processData: false, // 필수 옵션
+                success:  function(result) {
+                    imagePosting2();
+                    $('#addImages').val('');
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail")
+                }
+            })
+
+        })
+
+    }
+    
+    // 새로운 추가 이미지 추가, 이미지 insert
+    function extraImageUploadAjax() {
         $('#addImages').on('change', function () {
             var imageData = new FormData();
             // roomNo
@@ -99,27 +138,30 @@
                 }
             })
 
-            function imagePosting2() {
-                const roomNo = $('input[name=roomNo]').val();
-                $.ajax({
-                    type: "get", // 타입 (get, post, put 등등)
-                    url: "/seller/room/detail/images",  // 요청할 서버url
-                    dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
-                    data: {
-                        roomNo: roomNo
-                    },
-                    success:  function(result) {
-                        console.log("imagePosting2 성공!");
-                        $('.images-ajax').html(result);
-                    },// 결과 성공 콜백함수
 
-                    error: function (request, status, error) {
-                        console.log("get error Fail");
-                    }
-                })
-            }
         })
     }
+
+        function imagePosting2() {
+            const roomNo = $('input[name=roomNo]').val();
+            $.ajax({
+                type: "get", // 타입 (get, post, put 등등)
+                url: "/seller/room/detail/images",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: {
+                    roomNo: roomNo
+                },
+                success:  function(result) {
+                    console.log("imagePosting2 성공!");
+                    $('.images-ajax').html(result);
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail");
+                }
+            })
+        }
+
     // 이미지 삭제 확인 버튼
     function deleteImageBtnConfirm() {
         $('.img-delete-btn').click(function () {
@@ -154,6 +196,7 @@
 
         })
     }
+
     // 이미지 위에 마우스 올렸을 때 이벤트
     function mouseHoverImageBlur() {
         // extraImage
@@ -168,74 +211,7 @@
             $(this).css('filter', 'blur(0px');
             $(this).siblings('.overlay').css('opacity', '0');
         })
-
     }
-    // 이미지 업데이트 수정
-    function update(nameValue) {
-        // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
-        $('.image-input').on('change', function() {
-            const imageNo = $(this).siblings('.image-js').data('image-no');
-
-            console.log("imageNo", imageNo);
-
-            let imageData = new FormData();
-
-            const image = $(`input[name="${nameValue}"]`)[0].files[0];
-            console.log(image);
-
-            if (image) {
-                imageData.append('extraImage', image);
-            }
-            imageData.append('imageNo', imageNo);
-
-            console.log(imageData.get('extraImage'));
-
-            const clickedImage = $(this).siblings('.image-js');
-
-            // 이미지 변경
-            const file = this.files[0];
-
-            if (file) {
-                let render = new FileReader();
-                render.onload = function(e) {
-                    clickedImage.attr('src', e.target.result);
-                };
-                render.readAsDataURL(file);
-            }
-
-        });
-    }
-
-    function imageUpdate() {
-        const image = $('.image-js');
-        let nameValue;
-
-        //이미지 클릭시 click 트리거 작동
-        image.click(function() {
-            $(this).siblings('.image-input').trigger('click');
-
-            nameValue = String($(this).siblings('.image-input').attr('name'));
-
-            console.log("nameValue : ",nameValue);
-
-            switch (nameValue)  {
-                case "thumbnailImage":
-                    console.log("thumbnailImage ok");
-                    update(nameValue);
-                    break;
-                case "extraImage":
-                    console.log("extraImage ok");
-                    update(nameValue);
-                    break;
-            }
-
-        });
-
-
-
-    }
-
-
 
     // 이미지를 클릭했을 때 동작, 이미지 업데이트
     function imageClickExtraImages() {

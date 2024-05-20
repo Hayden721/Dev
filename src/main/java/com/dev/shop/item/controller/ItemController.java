@@ -91,12 +91,13 @@ public class ItemController {
     @ResponseBody
     @PostMapping("/seller/room/detail/upload/image")
     public void sellerRoomImageUploadPost(@RequestPart("extraImages") List<MultipartFile> extraImages,
+                                          @RequestPart("thumbnailImage") MultipartFile thumbnailImage,
                                             @RequestParam("roomNo") Long roomNo) {
 
         log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
         log.info("/seller/room/detail/update/image imageData : {}", extraImages);
-        itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
 
+        itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
     }
 
     // 이미지 불러오기
