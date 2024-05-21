@@ -31,7 +31,7 @@ public class ItemController {
 
 
     @GetMapping("/seller/room/image-upload")
-    public String roomImageUpload(Model model, HttpSession session) {
+    public String roomImageUploadGet(Model model, HttpSession session) {
 
         Long roomNo = (Long) session.getAttribute("generatedRoomNo");
 
@@ -90,32 +90,48 @@ public class ItemController {
 
     @ResponseBody
     @PostMapping("/seller/room/detail/upload/image")
-    public void sellerRoomImageUploadPost(@RequestPart("extraImages") List<MultipartFile> extraImages,
-                                          @RequestPart("thumbnailImage") MultipartFile thumbnailImage,
+    public void sellerRoomImageUploadPost(@RequestPart(name="extraImages", required = false) List<MultipartFile> extraImages,
+                                          @RequestPart(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
                                             @RequestParam("roomNo") Long roomNo) {
 
-        log.info("/seller/room/detail/update/image roomNo : {}", roomNo);
-        log.info("/seller/room/detail/update/image imageData : {}", extraImages);
+        log.info("/seller/room/detail/upload/image roomNo : {}", roomNo);
 
-        itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
+
+
+        if(thumbnailImage == null) {
+            if (!extraImages.isEmpty()) {
+                log.info("/seller/room/detail/upload/image imageData : {}", extraImages);
+                itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
+            }
+        } else {
+            if(!thumbnailImage.isEmpty()) {
+                log.info("/seller/room/detail/upload/image thumbnailImage : {}", thumbnailImage);
+                itemService.sellerSaveThumbnailImageByRoomNo(roomNo, thumbnailImage);
+            }
+        }
+
+
+
+
+
     }
 
-    // 이미지 불러오기
-    @GetMapping("seller/room/update-images-ajax")
-    public String sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
-
-        String filePath = fileUtils.choosePath();
-        FileResponse thumbnailImage = itemService.getThumbnailImageByRoomNo(roomNo);
-        List<FileResponse> additionalImage = itemService.getAdditionalImageByRoomNo(roomNo);
-
-
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-        model.addAttribute("additionalImage", additionalImage);
-
-
-        return "/seller/room/update-images-ajax";
-    }
+//    // 이미지 불러오기
+//    @GetMapping("seller/room/update-images-ajax")
+//    public String sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
+//
+//        String filePath = fileUtils.choosePath();
+//        FileResponse thumbnailImage = itemService.getThumbnailImageByRoomNo(roomNo);
+//        List<FileResponse> additionalImage = itemService.getAdditionalImageByRoomNo(roomNo);
+//
+//
+//        model.addAttribute("filePath", filePath);
+//        model.addAttribute("thumbnailImage", thumbnailImage);
+//        model.addAttribute("additionalImage", additionalImage);
+//
+//
+//        return "/seller/room/update-images-ajax";
+//    }
 
     // 이미지 업데이트
     @ResponseBody

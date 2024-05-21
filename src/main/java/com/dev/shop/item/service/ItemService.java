@@ -31,4 +31,6 @@ public interface ItemService{
     List<FileResponse> getAdditionalImageByRoomNo(Long roomNo);
 
     FileResponse getThumbnailImageByRoomNo(Long roomNo);
+
+    void sellerSaveThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage);
 }

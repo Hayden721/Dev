@@ -38,6 +38,8 @@ public class SellerController {
 
     private final SellerService sellerService;
     private final FileUtils fileUtils;
+
+    // sellerSpot 메인 페이지
     @GetMapping("/main")
     public void mainGet() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -45,7 +47,7 @@ public class SellerController {
 
         log.info("--- [/seller/login] 권한 확인 : {}", authorities);
     }
-
+    // 로그인 페이지
     @GetMapping("/login")
     public String loginGet(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -64,7 +66,7 @@ public class SellerController {
 
         return "seller/login";
     }
-
+    // 로그아웃
     @GetMapping("/logout")
     public String sellerLogoutGet(HttpServletRequest request, HttpServletResponse response) {
 
@@ -76,7 +78,7 @@ public class SellerController {
 
         return "redirect:/seller/login";
     }
-
+    // 회원가입
     @GetMapping("/register")
     public String registerGet() {
         log.info("--- [/seller/register] --- GET");
@@ -118,7 +120,7 @@ public class SellerController {
         }
 
     }
-
+    // 방 만들기 GET
     @GetMapping("/room/create")
     public String roomCreateGet(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -134,7 +136,7 @@ public class SellerController {
             return "/seller/room/create";
         }
     }
-
+    // 방 만들기 POST
     @PostMapping("/room/create")
     public void roomCreatePost(@RequestBody SellerRoomDto sellerRoomDto, HttpSession session) {
         log.info("------------sellerRoomDto = {}",sellerRoomDto);
@@ -203,10 +205,14 @@ public class SellerController {
 
         String filePath = fileUtils.choosePath();
 
+        // 썸네일 이미지
+        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+        // 추가 이미지
         List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
 
 
         model.addAttribute("filePath", filePath);
+        model.addAttribute("thumbnailImage", thumbnailImage);
         model.addAttribute("additionalImage", additionalImage);
 
 

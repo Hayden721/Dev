@@ -31,4 +31,7 @@ public interface ItemDao {
     List<FileResponse> selectAdditionalImageByRoomNo(Long roomNo);
 
     FileResponse selectThumbnailByRoomNo(Long roomNo);
+
+
+    void insertThumbnailImageByRoomNo(FileRequest refinedThumbnailImage);
 }

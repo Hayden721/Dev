@@ -29,6 +29,13 @@
         </foreach>
 
     </insert>
+    <insert id="insertThumbnailImageByRoomNo">
+        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, file_delete, created_date, room_no)
+        VALUES
+            (null, #{originalName}, #{saveName}, #{fileSize}, #{thumbnail}, 'N', #{createdDate}, #{roomNo})
+
+    </insert>
+
     <update id="updateRoomImageByImageNo">
         UPDATE roomimage_tb
         SET file_delete = 'Y'

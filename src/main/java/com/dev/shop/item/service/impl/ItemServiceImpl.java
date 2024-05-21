@@ -58,6 +58,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
+        log.info("extraImages {}", extraImages);
         List<FileRequest> refinedImages = fileUtils.uploadFiles(extraImages);
         log.info("refinedImage {} ", refinedImages);
 
@@ -116,6 +117,21 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
         return itemDao.selectThumbnailByRoomNo(roomNo);
+    }
+
+    /**
+     *
+     * @param roomNo - 방 번호
+     * @param thumbnailImage - 썸네일 이미지 데이터
+     */
+    @Override
+    public void sellerSaveThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage) {
+        FileRequest refinedThumbnailImage = fileUtils.uploadFile(thumbnailImage);
+        log.info("refinedThumbnailImage {}", refinedThumbnailImage);
+        refinedThumbnailImage.setThumbnail('Y');
+        refinedThumbnailImage.setRoomNo(roomNo);
+        refinedThumbnailImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        itemDao.insertThumbnailImageByRoomNo(refinedThumbnailImage);
     }
 
     @Override
