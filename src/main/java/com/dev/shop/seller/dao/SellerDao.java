@@ -1,7 +1,7 @@
 package com.dev.shop.seller.dao;
 
-import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
+import com.dev.shop.seller.dto.ImageFileDto;
+import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -40,9 +40,9 @@ public interface SellerDao {
 
     void deleteRoomOptionByRoomNo(Long roomNo);
 
-    List<FileResponse> selectAdditionalImageByRoomNo(Long roomNo);
+    List<ImageFileDto> selectAdditionalImageByRoomNo(Long roomNo);
 
-    FileResponse selectThumbnailByRoomNo(Long roomNo);
+    ImageFileDto selectThumbnailByRoomNo(Long roomNo);
 
     List<ReserveManageDto> selectReserveManageInfoBySellerNo(Long sellerNo);
 
@@ -65,4 +65,9 @@ public interface SellerDao {
     void updateRoomInfoByRoomInfo(List<UpdateRoomInfoDto> roomInfo);
 
     void updateRoomOptionInfoByOptionInfo(List<UpdateRoomOptionInfoDto> optionInfo);
+
+    void insertThumbnailImage(ImageFileDto refinedThumbnailImage);
+
+
+    void insertExtraImages(List<ImageFileDto> refinedImages);
 }

@@ -19,15 +19,12 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+
+// 삭제 예정
 public class ItemController {
 
     private final ItemService itemService;
     private final FileUtils fileUtils;
-
-    @GetMapping("/seller/error/image-upload-error")
-    public void imageUploadError() {
-
-    }
 
 
     @GetMapping("/seller/room/image-upload")
@@ -39,25 +36,25 @@ public class ItemController {
         // session에서 넘어온 roomNo가 null일 때 비정상적인 접근 오류 사이트로 redirect시키기
 
 
-            String filePath = fileUtils.choosePath();
-            log.info("/seller/room/image-upload filePath : {}", filePath);
+        String filePath = fileUtils.choosePath();
+        log.info("/seller/room/image-upload filePath : {}", filePath);
 
-            List<FileResponse> roomImage = itemService.getFileInfoByRoomNo(roomNo);
+        List<FileResponse> roomImage = itemService.getFileInfoByRoomNo(roomNo);
 
 
-            //roomNo로 저장된 roption 리스트로 불러와서
-            List<RoomOptionDto> roomOptionInfo = itemService.getRoomOptionByRoomNo(roomNo);
-            int roomOptionCount = roomOptionInfo.size();
+        //roomNo로 저장된 roption 리스트로 불러와서
+        List<RoomOptionDto> roomOptionInfo = itemService.getRoomOptionByRoomNo(roomNo);
+        int roomOptionCount = roomOptionInfo.size();
 
-            session.removeAttribute("generatedRoomNo");
+        session.removeAttribute("generatedRoomNo");
 
-            model.addAttribute("roomNo", roomNo);
-            model.addAttribute("filePath", filePath);
-            model.addAttribute("roomImage", roomImage);
-            model.addAttribute("roomOptionInfo", roomOptionInfo);
-            model.addAttribute("roomOptionCount", roomOptionCount);
+        model.addAttribute("roomNo", roomNo);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("roomImage", roomImage);
+        model.addAttribute("roomOptionInfo", roomOptionInfo);
+        model.addAttribute("roomOptionCount", roomOptionCount);
 
-            return "/seller/room/image-upload";
+        return "/seller/room/image-upload";
 
     }
 
@@ -69,8 +66,7 @@ public class ItemController {
             @RequestParam("optionImage") List<MultipartFile> optionImage,
             @RequestParam(value = "roptionNo", required = false) List<Long> roptionNo
 
-            ) {
-
+    ) {
 
 
         log.info("/seller/room/create/image POST roomNo : {}", roomNo);
@@ -88,33 +84,8 @@ public class ItemController {
     }
 
 
-    @ResponseBody
-    @PostMapping("/seller/room/detail/upload/image")
-    public void sellerRoomImageUploadPost(@RequestPart(name="extraImages", required = false) List<MultipartFile> extraImages,
-                                          @RequestPart(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
-                                            @RequestParam("roomNo") Long roomNo) {
-
-        log.info("/seller/room/detail/upload/image roomNo : {}", roomNo);
 
 
-
-        if(thumbnailImage == null) {
-            if (!extraImages.isEmpty()) {
-                log.info("/seller/room/detail/upload/image imageData : {}", extraImages);
-                itemService.sellerSaveImagesByRoomNo(roomNo, extraImages);
-            }
-        } else {
-            if(!thumbnailImage.isEmpty()) {
-                log.info("/seller/room/detail/upload/image thumbnailImage : {}", thumbnailImage);
-                itemService.sellerSaveThumbnailImageByRoomNo(roomNo, thumbnailImage);
-            }
-        }
-
-
-
-
-
-    }
 
 //    // 이미지 불러오기
 //    @GetMapping("seller/room/update-images-ajax")
@@ -133,17 +104,7 @@ public class ItemController {
 //        return "/seller/room/update-images-ajax";
 //    }
 
-    // 이미지 업데이트
-    @ResponseBody
-    @PostMapping("/seller/room/detail/update/image")
-    public void sellerRoomImageUpdatePost(@RequestPart("extraImage") MultipartFile extraImage,
-                                          @RequestParam("imageNo") Long imageNo) {
 
-        log.info("/seller/room/detail/update/image imageNo : {}", imageNo);
-        log.info("/seller/room/detail/update/image imageData : {}", extraImage);
-        itemService.sellerUpdateImageByImageNo(imageNo, extraImage);
-
-    }
 
     // 이미지 삭제
     @ResponseBody

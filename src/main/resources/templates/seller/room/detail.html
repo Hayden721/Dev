@@ -37,13 +37,13 @@
 
             <div class="room-image-container">
                 <div class="thumbnail-image-container">
-                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image">
+                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createdDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image">
                     <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
                 </div>
 
                 <!-- 썸네일 아닌 이미지 -->
                 <div class="extra-images-container">
-                    <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none">
+                    <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createdDate} + '/' + ${addImage.saveName}" alt="none">
                 </div>
             </div> <!-- room-image-container END -->
 

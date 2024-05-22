@@ -1,7 +1,6 @@
 package com.dev.shop.seller.controller;
 
-import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
+
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -9,7 +8,6 @@ import com.dev.shop.seller.service.SellerService;
 import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,15 +18,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Controller
 @RequestMapping("/seller")
@@ -37,7 +33,9 @@ import java.util.Map;
 public class SellerController {
 
     private final SellerService sellerService;
-    private final FileUtils fileUtils;
+
+    FileUtils fileUtils = new FileUtils();
+    String filePath = fileUtils.choosePath();
 
     // sellerSpot 메인 페이지
     @GetMapping("/main")
@@ -66,6 +64,7 @@ public class SellerController {
 
         return "seller/login";
     }
+
     // 로그아웃
     @GetMapping("/logout")
     public String sellerLogoutGet(HttpServletRequest request, HttpServletResponse response) {
@@ -78,7 +77,8 @@ public class SellerController {
 
         return "redirect:/seller/login";
     }
-    // 회원가입
+
+    // 회원 가입
     @GetMapping("/register")
     public String registerGet() {
         log.info("--- [/seller/register] --- GET");
@@ -102,6 +102,8 @@ public class SellerController {
     public void roomCreateError() {
 
     }
+
+    // 방 생성할 때 생성 가능한지 검증
     @GetMapping("/room/create-verification")
     public String createRoomVerification(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -120,6 +122,7 @@ public class SellerController {
         }
 
     }
+
     // 방 만들기 GET
     @GetMapping("/room/create")
     public String roomCreateGet(Model model) {
@@ -156,7 +159,7 @@ public class SellerController {
         return "/seller/room/option-create";
     }
     @PostMapping("/room/option-create")
-    public ResponseEntity<?> roomOptionCreatePost(@RequestBody List<PostRoomOptionDto> options, HttpSession session) {
+    public ResponseEntity<?> roomOptionCreatePost(@RequestBody List<PostRoomOptionDto> options) {
         log.info("----------------- json test : {}", options);
 
         // 1. 방을 만든다. 2. 만든 방에 대한 roomNo 필요 3. roomNo를 찾아서 그에 대한 roomOption데이터를 insert해야한다.
@@ -174,7 +177,7 @@ public class SellerController {
     @GetMapping("/room/detail")
     public void roomListDetail(@RequestParam final Long roomNo,  Model model) {
 
-        String filePath = fileUtils.choosePath(); // 파일 경로
+
 
         // 방 정보
         RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo); // 방 정보
@@ -182,9 +185,9 @@ public class SellerController {
         int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
 
         // 썸네일 이미지
-        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
 
-        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
 
         // 방 옵션 정보
         List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
@@ -199,25 +202,7 @@ public class SellerController {
         model.addAttribute("thumbnailImage", thumbnailImage);
     }
 
-    // 이미지 추가했을 때 이미지 ajax
-    @GetMapping("/room/detail/images")
-    public String sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
 
-        String filePath = fileUtils.choosePath();
-
-        // 썸네일 이미지
-        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-        // 추가 이미지
-        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-
-
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-        model.addAttribute("additionalImage", additionalImage);
-
-
-        return "/seller/room/update-images-ajax";
-    }
 
 
     @GetMapping("/room/detail/update")
@@ -226,11 +211,11 @@ public class SellerController {
 
         RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo);
         List<RoomOptionDto> roomOptionInfo = sellerService.getRoomOptionInfoByRoomNo(roomNo);
-        String filePath = fileUtils.choosePath(); // 파일 경로
-        // 썸네일 이미지
-        FileResponse thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
 
-        List<FileResponse> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+        // 썸네일 이미지
+        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+
+        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
 
         // 방 옵션 정보
         List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
@@ -308,5 +293,63 @@ public class SellerController {
         model.addAttribute("reservationInfo", reservationInfo);
     }
 
+// ------------------- image
+    // 이미지 업로드 에러
+    @GetMapping("/error/image-upload-error")
+    public void imageUploadError() {
 
+    }
+
+    // 이미지 ajax(upload, update, delete 할 때 사용)
+    @GetMapping("/images/update-images-ajax")
+    public void sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
+
+        // 썸네일 이미지
+        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
+        // 추가 이미지
+        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
+
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("thumbnailImage", thumbnailImage);
+        model.addAttribute("additionalImage", additionalImage);
+
+
+
+    }
+
+    // detail 페이지에서 이미지 업로드 기능
+    @ResponseBody
+    @PostMapping("/room/detail/upload/image")
+    public void sellerRoomImageUploadPost(@RequestPart(name = "extraImages", required = false) List<MultipartFile> extraImages,
+                                          @RequestPart(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
+                                          @RequestParam("roomNo") Long roomNo) {
+
+        log.info("/seller/room/detail/upload/image roomNo : {}", roomNo);
+
+
+        if (thumbnailImage == null) {
+            if (extraImages != null && !extraImages.isEmpty()) {
+                log.info("/seller/room/detail/upload/image extraImages : {}", extraImages);
+                sellerService.sellerUploadExtraImagesByRoomNo(roomNo, extraImages);
+            }
+        } else {
+            if (!thumbnailImage.isEmpty()) {
+                log.info("/seller/room/detail/upload/image thumbnailImage : {}", thumbnailImage);
+                sellerService.sellerUploadThumbnailImageByRoomNo(roomNo, thumbnailImage);
+            }
+        }
+    }
+
+    // 이미지 업데이트 수정 중
+    @ResponseBody
+    @PostMapping("/room/detail/update/image")
+    public void sellerRoomImageUpdatePost(
+            @RequestPart(value = "extraImage") MultipartFile extraImage,
+                                          @RequestParam("imageNo") Long imageNo) {
+
+        log.info("/seller/room/detail/update/image imageNo : {}", imageNo);
+        log.info("/seller/room/detail/update/image imageData : {}", extraImage);
+        sellerService.sellerUpdateImageByImageNo(imageNo, extraImage);
+
+    }
 }

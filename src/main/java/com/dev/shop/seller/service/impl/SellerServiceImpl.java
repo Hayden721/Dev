@@ -1,16 +1,18 @@
 package com.dev.shop.seller.service.impl;
 
+import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
 import com.dev.shop.seller.dao.SellerDao;
 import com.dev.shop.seller.service.SellerService;
+import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +24,7 @@ import java.util.List;
 public class SellerServiceImpl implements SellerService {
     private final SellerDao sellerDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
+    private final FileUtils fileUtils;
 
     SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:sss");
     Date time = new Date();
@@ -114,19 +116,15 @@ public class SellerServiceImpl implements SellerService {
             // 2. room 삭제
             sellerDao.deleteRoomByRoomNo(roomNo);
         }
-
-
-
-
     }
 
     @Override
-    public List<FileResponse> getAdditionalImageByRoomNo(Long roomNo) {
+    public List<ImageFileDto> getAdditionalImageByRoomNo(Long roomNo) {
         return sellerDao.selectAdditionalImageByRoomNo(roomNo);
     }
 
     @Override
-    public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
+    public ImageFileDto getThumbnailImageByRoomNo(Long roomNo) {
         return sellerDao.selectThumbnailByRoomNo(roomNo);
     }
 
@@ -146,6 +144,8 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectOptionInfoAndImageByRoomNo(roomNo);
     }
 
+
+
     @Override
     public void updateRoomInfoByData(RoomUpdateRequest data) {
 
@@ -159,4 +159,44 @@ public class SellerServiceImpl implements SellerService {
     }
 
 
+
+    // 이미지 관련 기능
+
+    /**
+     * 이미지 업로드 (썸네일 이미지)
+     * @param roomNo - 방 번호
+     * @param thumbnailImage - 썸네일 이미지 데이터
+     */
+    @Override
+    public void sellerUploadThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage) {
+        ImageFileDto refinedThumbnailImage = fileUtils.uploadFile(thumbnailImage);
+        log.info("refinedThumbnailImage {}", refinedThumbnailImage);
+        refinedThumbnailImage.setThumbnail('Y');
+        refinedThumbnailImage.setRoomNo(roomNo);
+//        refinedThumbnailImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+        sellerDao.insertThumbnailImage(refinedThumbnailImage);
+    }
+
+    /**
+     * 이미지 업로드 (추가 이미지)
+     * @param roomNo - 방 번호
+     * @param extraImages - 추가 이미지 데이터
+     */
+    @Override
+    public void sellerUploadExtraImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
+        log.info("extraImages {}", extraImages);
+        List<ImageFileDto> refinedImages = fileUtils.uploadFiles(extraImages);
+        log.info("refinedImage {} ", refinedImages);
+
+        for(ImageFileDto imageFile : refinedImages) {
+            imageFile.setThumbnail('N');
+            imageFile.setRoomNo(roomNo);
+        }
+
+        sellerDao.insertExtraImages(refinedImages);
+    }
+    @Override
+    public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
+
+    }
 }

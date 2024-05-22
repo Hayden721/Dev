@@ -23,14 +23,14 @@ public interface ItemService{
 
 
 
-    void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
+//    void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
 
     void sellerUpdateImageByImageNo(Long imagNo, MultipartFile extraImage);
 
+//
+//    List<FileResponse> getAdditionalImageByRoomNo(Long roomNo);
+//
+//    FileResponse getThumbnailImageByRoomNo(Long roomNo);
 
-    List<FileResponse> getAdditionalImageByRoomNo(Long roomNo);
 
-    FileResponse getThumbnailImageByRoomNo(Long roomNo);
-
-    void sellerSaveThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage);
 }

@@ -3,12 +3,12 @@
     <div class="room-image-container">
         <!-- 썸네일 이미지 -->
         <div class="thumbnail-image-container" th:if="${thumbnailImage} != null">
-            <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+            <input class="image-input" type="file" accept="images/*" name="image-edit" hidden>
 
-            <img th:src="${filePath} + '/' + ${thumbnailImage.createDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
+            <img th:src="${filePath} + '/' + ${thumbnailImage.createdDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image image-js" th:data-image-no="${thumbnailImage.roomImageNo}">
             <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
             <!-- 이미지 삭제 버튼 -->
-            <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" aria-label="Close" style="left: 91%; top: 1%;"></button>
+
         </div>
 
         <div class="thumbnail-image-container" th:unless="${thumbnailImage} != null">
@@ -20,19 +20,17 @@
         <div class="extra-images-wrap">
             <div class="extra-image-container" th:each="addImage : ${additionalImage}">
                 <input th:value="${addImage.roomImageNo}" name="extraImageNo" hidden>
-                <input class="image-input" type="file" accept="images/*" name="extraImage" hidden>
+                <input class="image-input" type="file" accept="images/*" name="image-edit" hidden>
 
-                <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
+                <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createdDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
                 <!-- overlay -->
                 <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
 
                 <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="#image-delete-modal" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
             </div>
             <div class="extra-image-container">
-                <label for="addImages">
-                    <div class="input-image-custom">파일 선택</div>
-                </label>
-                <input type="file" name="extraImages" id="addImages" hidden="hidden" multiple>
+                <button class="btn extra-image-upload-btn">파일 선택</button>
+                <input type="file" name="image-edit" id="upload-extra-images"  accept="images/*" multiple>
             </div>
         </div>
     </div>
@@ -61,11 +59,11 @@
 <script th:inline="javascript" type="text/javascript">
     /*<![CDATA[*/
     $(document).ready(function() {
-        imageUploadAjax();
+        extraImageUploadAjax();
         deleteImageBtnConfirm();
         deleteImage();
         mouseHoverImageBlur();
-        imageClickExtraImages();
+        imageClickUpdateImages();
         thumbnailUploadAjax();
     });
 
@@ -106,47 +104,60 @@
     }
     
     // 새로운 추가 이미지 추가, 이미지 insert(upload)
-    function imageUploadAjax() {
-        $('#addImages').on('change', function () {
+    function extraImageUploadAjax() {
+        $('.extra-image-upload-btn').click(function() {
+            $(this).siblings('#upload-extra-images').trigger('click');
+        });
+
+        $('#upload-extra-images').on('change', function () {
             var imageData = new FormData();
             // roomNo
             const roomNo = $('input[name=roomNo]').val();
             console.log("roomNo : ", roomNo);
 
-            $.each($('input[name="extraImages"]')[0].files, function (i, file) {
-                imageData.append('extraImages', file);
-            });
+            // 파일 입력 요소 확인
 
-            console.log(imageData.get('extraImages'));
+            let files = $('#upload-extra-images')[0].files;
+            console.log(files);
+            if (files.length === 0) {
+                console.log("파일이 선택되지 않았습니다.");
+                return;
+            }
+
+            $.each(files, function (i, file) {
+                imageData.append('extraImages', file);
+                console.log(imageData.get('extraImages'));
+
+            });
 
             imageData.append('roomNo', roomNo);
 
             $.ajax({
                 type: "post", // 타입 (get, post, put 등등)
                 url: "/seller/room/detail/upload/image",  // 요청할 서버url
-                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+
                 data: imageData,
                 contentType: false, // 필수 옵션
                 processData: false, // 필수 옵션
                 success:  function(result) {
                     imagePosting();
-                    $('#addImages').val('');
+                    $('#upload-extra-images').val('');
                 },// 결과 성공 콜백함수
 
                 error: function (request, status, error) {
                     console.log("get error Fail")
                 }
             })
-
-
         })
     }
-        // update-images-ajax Get
+
+
+        // upload, update, delete 했을 때 ajax get 실행
         function imagePosting() {
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
                 type: "get", // 타입 (get, post, put 등등)
-                url: "/seller/room/detail/images",  // 요청할 서버url
+                url: "/seller/images/update-images-ajax",  // 요청할 서버url
                 dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                 data: {
                     roomNo: roomNo
@@ -214,7 +225,7 @@
     }
 
     // 이미지를 클릭했을 때 동작, 이미지 업데이트 함수
-    function imageClickExtraImages() {
+    function imageClickUpdateImages() {
 
         const image = $('.image-js');
         //이미지 클릭시 click 트리거 작동
@@ -232,8 +243,7 @@
 
             let imageData = new FormData();
 
-
-            const image = $('input[name="extraImage"]')[0].files[0];
+            const image = this.files[0];
 
             if (image) {
                 imageData.append('extraImage', image);
@@ -271,6 +281,8 @@
             });
         });
     }
+
+
 
 /*]]>*/
 </script>

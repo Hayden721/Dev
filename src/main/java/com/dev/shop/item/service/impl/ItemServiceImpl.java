@@ -1,7 +1,7 @@
 package com.dev.shop.item.service.impl;
 
 import com.dev.shop.item.dao.ItemDao;
-import com.dev.shop.item.dto.FileRequest;
+import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.item.service.ItemService;
@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -28,8 +26,8 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public void saveImagesByRoomNo(Long roomNo, List<MultipartFile> files, MultipartFile thumbnail) {
 
-        List<FileRequest> refinedImages = fileUtils.uploadFiles(files);
-        FileRequest refinedThumbnail = fileUtils.uploadFile(thumbnail);
+        List<ImageFileDto> refinedImages = fileUtils.uploadFiles(files);
+        ImageFileDto refinedThumbnail = fileUtils.uploadFile(thumbnail);
 
 
         log.info("ItemService --------------------- {}", refinedImages);
@@ -39,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
             return;
         }
 
-        for (FileRequest file : refinedImages) {
+        for (ImageFileDto file : refinedImages) {
             file.setThumbnail('N');
             file.setRoomNo(roomNo);
         }
@@ -56,28 +54,12 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-    @Override
-    public void sellerSaveImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
-        log.info("extraImages {}", extraImages);
-        List<FileRequest> refinedImages = fileUtils.uploadFiles(extraImages);
-        log.info("refinedImage {} ", refinedImages);
 
-        for(FileRequest imageFile : refinedImages) {
-            imageFile.setThumbnail('N');
-            imageFile.setRoomNo(roomNo);
-        }
-
-        itemDao.insertRoomImages(refinedImages);
-
-
-
-    }
 
     @Override
     public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
-        FileRequest refinedImage = fileUtils.uploadFile(extraImage);
+        ImageFileDto refinedImage = fileUtils.uploadFile(extraImage);
 
-        refinedImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
         itemDao.UpdateRoomImage(refinedImage, imageNo);
     }
 
@@ -113,30 +95,17 @@ public class ItemServiceImpl implements ItemService {
     public void deleteRoomImageByImageNo(Long imageNo) {
         itemDao.updateRoomImageByImageNo(imageNo);
     }
-
-    @Override
-    public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
-        return itemDao.selectThumbnailByRoomNo(roomNo);
-    }
-
-    /**
-     *
-     * @param roomNo - 방 번호
-     * @param thumbnailImage - 썸네일 이미지 데이터
-     */
-    @Override
-    public void sellerSaveThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage) {
-        FileRequest refinedThumbnailImage = fileUtils.uploadFile(thumbnailImage);
-        log.info("refinedThumbnailImage {}", refinedThumbnailImage);
-        refinedThumbnailImage.setThumbnail('Y');
-        refinedThumbnailImage.setRoomNo(roomNo);
-        refinedThumbnailImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        itemDao.insertThumbnailImageByRoomNo(refinedThumbnailImage);
-    }
-
-    @Override
-    public List<FileResponse> getAdditionalImageByRoomNo(Long roomNo) {
-        return itemDao.selectAdditionalImageByRoomNo(roomNo);
-    }
+//
+//    @Override
+//    public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
+//        return itemDao.selectThumbnailByRoomNo(roomNo);
+//    }
+//
+//
+//
+//    @Override
+//    public List<FileResponse> getAdditionalImageByRoomNo(Long roomNo) {
+//        return itemDao.selectAdditionalImageByRoomNo(roomNo);
+//    }
 
 }

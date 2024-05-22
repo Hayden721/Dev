@@ -1,6 +1,6 @@
 package com.dev.shop.item.dao;
 
-import com.dev.shop.item.dto.FileRequest;
+import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomOptionDto;
@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface ItemDao {
 
-    void insertImageFilesByRoomNo(List<FileRequest> files);
+    void insertImageFilesByRoomNo(List<ImageFileDto> files);
 
     List<FileResponse> selectFileInfoByRoomNo(Long roomNo);
 
@@ -24,14 +24,14 @@ public interface ItemDao {
 
     void updateRoomImageByImageNo(Long imageNo);
 
-    void insertRoomImages(List<FileRequest> refinedImages);
+    void insertRoomImages(List<ImageFileDto> refinedImages);
 
-    void UpdateRoomImage(@Param("refinedImage") FileRequest refinedImage, @Param("imageNo") Long imageNo);
+    void UpdateRoomImage(@Param("refinedImage") ImageFileDto refinedImage, @Param("imageNo") Long imageNo);
 
     List<FileResponse> selectAdditionalImageByRoomNo(Long roomNo);
 
     FileResponse selectThumbnailByRoomNo(Long roomNo);
 
 
-    void insertThumbnailImageByRoomNo(FileRequest refinedThumbnailImage);
+
 }

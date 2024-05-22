@@ -154,7 +154,7 @@
 
     <!-- 옵션 추가 modal -->
     <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="addOptionModalLabel">옵션 추가</h1>
@@ -197,7 +197,7 @@
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
                 type: "get", // 타입 (get, post, put 등등)
-                url: "/seller/room/detail/images",  // 요청할 서버url
+                url: "/seller/images/update-images-ajax",  // 요청할 서버url
                 dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                 data: {
                     roomNo: roomNo

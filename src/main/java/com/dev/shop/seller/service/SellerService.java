@@ -1,10 +1,9 @@
 package com.dev.shop.seller.service;
 
-import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -37,9 +36,9 @@ public interface SellerService {
 
     void removeRoomByRoomNo(Long roomNo);
 
-    List<FileResponse> getAdditionalImageByRoomNo(Long roomNo);
+    List<ImageFileDto> getAdditionalImageByRoomNo(Long roomNo);
 
-    FileResponse getThumbnailImageByRoomNo(Long roomNo);
+    ImageFileDto getThumbnailImageByRoomNo(Long roomNo);
 
 
 
@@ -49,7 +48,21 @@ public interface SellerService {
 
 
 
-    List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo);
+
 
     void updateRoomInfoByData(RoomUpdateRequest data);
+
+
+
+    // 이미지 관련 기능
+
+    void sellerUploadExtraImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages);
+
+
+    void sellerUploadThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage);
+
+
+    List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo);
+
+    void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage);
 }

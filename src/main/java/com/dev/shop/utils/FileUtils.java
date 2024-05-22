@@ -1,6 +1,6 @@
 package com.dev.shop.utils;
 
-import com.dev.shop.item.dto.FileRequest;
+import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.OptionImageRequest;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -38,8 +38,8 @@ public class FileUtils {
 
     }
     // main image upload
-    public List<FileRequest> uploadFiles(final List<MultipartFile> multipartFiles) {
-        List<FileRequest> files = new ArrayList<>();
+    public List<ImageFileDto> uploadFiles(final List<MultipartFile> multipartFiles) {
+        List<ImageFileDto> files = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (multipartFile.isEmpty()) {
                 continue;
@@ -49,7 +49,7 @@ public class FileUtils {
         return files;
     }
 
-    public FileRequest uploadFile(final MultipartFile multipartFile) {
+    public ImageFileDto uploadFile(final MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -64,10 +64,11 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
 
-        return FileRequest.builder()
+        return ImageFileDto.builder()
                 .originalName(multipartFile.getOriginalFilename())
                 .saveName(saveName)
                 .fileSize(multipartFile.getSize())
+                .createdDate(LocalDate.parse(today))
                 .build();
     }
 
