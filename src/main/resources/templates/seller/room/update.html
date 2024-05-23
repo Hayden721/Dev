@@ -64,43 +64,7 @@
 
             <hr>
 
-            <!-- ajax로 불러오기 -->
-            <div style="display: flex">
-                <h2>옵션 정보</h2>
-                <button class="btn emphasize-btn" style="margin-bottom: .5rem" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
-            </div>
-            <div class="option-container">
-                <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
-                    <input th:value="${optionInfoAndImage.roptionNo}" hidden name="roptionNo">
-
-                    <!-- 옵션 이미지 -->
-                    <div class="option-image-container">
-                        <img th:data-roption-image-no="${optionInfoAndImage.roptionImageNo}" class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
-                        <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionInfoAndImage.originalName}" th:unless="${optionInfoAndImage.roptionImageNo} != 0">
-                    </div>
-
-                    <div class="option-info-container">
-                        <div class="option-name-price-container">
-                            <label>옵션 이름
-                                <input class="form-control" th:value="${optionInfoAndImage.roptionTitle}" name="roptionTitle" style="width: 300px">
-                            </label>
-
-                            <label>옵션 가격
-                                <div class='input-group option-price' style="width: 150px;">
-                                    <input th:value="${optionInfoAndImage.roptionPrice}" name='roptionPrice' class='form-control'>
-                                    <span class='input-group-text' id='basic-addon2'>₩</span>
-                                </div>
-                            </label>
-                        </div>
-
-                        <div class="option-content-container">
-                            <label>옵션 설명
-                                <textarea class="form-control option-content" maxlength="100" th:text="${optionInfoAndImage.roptionContent}" style="resize: none; width: 300px; height: 100px"></textarea>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div id="option-ajax"></div>
 
             <div style="float: right; margin: 40px 0 0 0;">
                 <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#room-delete-modal" aria-label="Close">방 삭제</button>
@@ -152,34 +116,9 @@
         </div>
     </div>
 
-    <!-- 옵션 추가 modal -->
-    <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="addOptionModalLabel">옵션 추가</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <label> 옵션 개수
-                        <select name="optionSelection" id="option-selection" class="form-select">
-                            <option value="0">개수 선택</option>
-                        </select>
 
-                    </label>
-                    <!-- 옵션의 개수에 따라 옵션 input 생성 -->
-                    <div id="generateInputForm"></div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="option-close-btn" data-bs-dismiss="modal">아니요</button>
-                    <button type="button" class="btn btn-primary">예</button>
-                </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+</div>
 
 
 
@@ -190,9 +129,9 @@
         $(document).ready(function() {
             divValue();
             deleteRoom();
-            generateOptions();
-            generateOptionForm();
-            optionModalClear();
+
+
+
 
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
@@ -205,6 +144,23 @@
                 success:  function(result) {
                     console.log("imagePosting2 성공!");
                     $('.images-ajax').html(result);
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail");
+                }
+            })
+
+            $.ajax({
+                type: "get", // 타입 (get, post, put 등등)
+                url: "/seller/room/update/option-get-ajax",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: {
+                    roomNo: roomNo
+                },
+                success:  function(result) {
+                    console.log("option-get 성공!");
+                    $('#option-ajax').html(result);
                 },// 결과 성공 콜백함수
 
                 error: function (request, status, error) {
@@ -276,57 +232,9 @@
             })
         }
 
-        // <select>의 <option> 생성
-        function generateOptions() {
-            let createCount = 6;
-            let select = $("#option-selection");
 
-            for (let i=1; i<= createCount; i++){
-                let option = $("<option></option>").val(i).text(i);
-                select.append(option);
-            }
-        }
 
-        // 옵션 개수에 따라 입력칸 생성
-        function generateOptionForm() {
-            $("#option-selection").change(function (){
 
-                let selectValue = $(this).val();
-                console.log(selectValue);
-
-                let inputForm = $("#generateInputForm");
-
-                let html= "";
-
-                if(selectValue === "0") {
-                    html += "";
-                    inputForm.html(html);
-                }else {
-                    for (let i = 1; i <= selectValue; i++) {
-                        html += "<div class='input-form'>" +
-                            "<fieldset class='fieldset-style'>"+
-                            "<legend>옵션" +selectValue + "</legend>" +
-                            "<label class='option-label'> 옵션이름" +
-                            "<input name='roomOptionTitle" + i + "' class='value-check form-control'>" +
-                            "</label>" +
-                            "<label class='option-label'> 옵션 내용" +
-                            "<input name='roomOptionContent" + i + "' class='value-check form-control'>" +
-                            "</label>" +
-
-                            "<lable class='option-label'>옵션 가격" +
-                            "<div class='input-group option-price'>" +
-                            "<input name='roomOptionPrice" + i + "' class='value-check form-control'>" +
-                            "<span class='input-group-text' id='basic-addon2'>₩</span>"+
-                            "</div>" +
-                            "</lable>" +
-                            "</fieldset>" +
-                            "</div>";
-                    }
-                    inputForm.html(html);
-                    checkInput();
-                }
-            });
-        }
 
         // 옵션 입력칸 빈칸 검사
         function checkInput() {
@@ -348,15 +256,6 @@
                     $('#create-room-button').prop('disabled', false); // 활성화
                 }
             });
-        }
-        // 옵션 추가 모달 닫을 때 초기화하기
-        function optionModalClear() {
-            $('#option-close-btn').click(function () {
-                $("#option-selection").val("0");
-
-                let inputForm = $("#generateInputForm");
-                inputForm.html("");
-            })
         }
 
         // 방 삭제

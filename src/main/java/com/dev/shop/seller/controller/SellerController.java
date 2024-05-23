@@ -202,10 +202,7 @@ public class SellerController {
         model.addAttribute("thumbnailImage", thumbnailImage);
     }
 
-
-
-
-    @GetMapping("/room/detail/update")
+    @GetMapping("/room/update")
     public String roomUpdateGet(@RequestParam("roomNo") Long roomNo, Model model) {
         log.info("/room/detail/update roomNo : {}", roomNo);
 
@@ -217,8 +214,6 @@ public class SellerController {
 
         List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
 
-        // 방 옵션 정보
-        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
 
 
         model.addAttribute("roomInfo", roomInfo);
@@ -228,14 +223,14 @@ public class SellerController {
         model.addAttribute("filePath", filePath);
         model.addAttribute("additionalImage", additionalImage);
         model.addAttribute("thumbnailImage", thumbnailImage);
-        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
+
 
         return "/seller/room/update";
     }
 
 
 
-    @PostMapping("/room/detail/update")
+    @PostMapping("/room/update")
     public ResponseEntity<?> roomUpdatePost(@RequestBody RoomUpdateRequest data) {
 
         List<UpdateRoomOptionInfoDto> roomInfo =  data.getOptionList();
@@ -293,7 +288,7 @@ public class SellerController {
         model.addAttribute("reservationInfo", reservationInfo);
     }
 
-// ------------------- image
+// ------------------- image function
     // 이미지 업로드 에러
     @GetMapping("/error/image-upload-error")
     public void imageUploadError() {
@@ -351,5 +346,17 @@ public class SellerController {
         log.info("/seller/room/detail/update/image imageData : {}", extraImage);
         sellerService.sellerUpdateImageByImageNo(imageNo, extraImage);
 
+    }
+
+// option function
+
+    // 옵션 ajax로 호출
+    @GetMapping("/room/update/option-get-ajax")
+    public void sellerOptionAjaxGet(Model model, @RequestParam("roomNo") Long roomNo) {
+        // 방 옵션 정보
+        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
+
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
     }
 }
