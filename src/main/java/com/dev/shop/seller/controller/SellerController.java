@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -358,5 +359,16 @@ public class SellerController {
 
         model.addAttribute("filePath", filePath);
         model.addAttribute("optionInfoAndImage", optionInfoAndImage);
+    }
+
+//     추가 옵션 데이터 받기
+    @PostMapping("/room/update/add-option")
+    @ResponseBody
+    public void roomAddOptionsPost(
+        @RequestBody Map<String, List<AddOptionsDto>> addOptions
+    ) {
+        List<AddOptionsDto> options = addOptions.get("options");
+        log.info("options {}", options);
+        log.info("data : {}", addOptions);
     }
 }

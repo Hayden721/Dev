@@ -21,10 +21,11 @@
     width: 940px;
     height: auto;
     background-color: #BCBFC8;
-    border-radius: 20px;
+    border-radius: 10px;
     padding: 20px;
     display: flex;
     margin: 0 0 15px 0;
+    position: relative;
 }
 
 .thumbnail-image {
@@ -75,14 +76,15 @@
 }
 
 .option-image {
-    width: 150px;
-    height: 150px;
+    width: 170px;
+    height: 170px;
     border-radius: 10px;
 }
 .option-info-container {
+    width: 100%;
     display: flex;
     margin: 0 0 0 15px;
-    align-items: center;
+
 }
 
 .option-image-container {
@@ -141,6 +143,12 @@
     justify-content: center;
 }
 
+.img-delete-btn {
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+}
+
 .input-image-custom {
     width: 100px;
     height: 100px;
@@ -162,3 +170,27 @@
     border-radius: 10px;
 }
 
+
+/* 옵션 css */
+.option-delete-btn {
+    position: absolute;
+    background-color: red;
+    top: 10px;
+    left: 904px;
+}
+
+.option-img-add-btn {
+    width: 170px;
+    height: 170px;
+}
+
+.add-option-container {
+    width: 940px;
+    height: auto;
+    background-color: #BCBFC8;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    margin: 0 0 15px 0;
+    position: relative;
+}
