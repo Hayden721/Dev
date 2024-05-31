@@ -8,6 +8,7 @@ import com.dev.shop.seller.service.SellerService;
 import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -361,14 +362,28 @@ public class SellerController {
         model.addAttribute("optionInfoAndImage", optionInfoAndImage);
     }
 
-//     추가 옵션 데이터 받기
     @PostMapping("/room/update/add-option")
     @ResponseBody
-    public void roomAddOptionsPost(
-        @RequestBody Map<String, List<AddOptionsDto>> addOptions
+    public ResponseEntity<String> roomAddOptionsPost(
+            @RequestParam("titles[]") List<String> titles,
+            @RequestParam("prices[]") List<String> prices,
+            @RequestParam("contents[]") List<String> contents,
+            @RequestParam("images[]") List<MultipartFile> images
     ) {
-        List<AddOptionsDto> options = addOptions.get("options");
-        log.info("options {}", options);
-        log.info("data : {}", addOptions);
+
+        // 받은 데이터 처리 로직
+
+        for (int i = 0; i < titles.size(); i++) {
+            String title = titles.get(i);
+            String price = prices.get(i);
+            String content = contents.get(i);
+            MultipartFile image = images.get(i);
+            log.info("Title: {}", title);
+            log.info("Price: {}", price);
+            log.info("Content: {}", content);
+
+        }
+
+        return ResponseEntity.ok("good");
     }
 }
