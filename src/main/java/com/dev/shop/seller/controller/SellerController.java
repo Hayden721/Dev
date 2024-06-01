@@ -365,25 +365,15 @@ public class SellerController {
     @PostMapping("/room/update/add-option")
     @ResponseBody
     public ResponseEntity<String> roomAddOptionsPost(
-            @RequestParam("titles[]") List<String> titles,
-            @RequestParam("prices[]") List<String> prices,
-            @RequestParam("contents[]") List<String> contents,
-            @RequestParam("images[]") List<MultipartFile> images
+            @ModelAttribute AddOptionWrapper optionData
     ) {
 
-        // 받은 데이터 처리 로직
+        log.info("optionData {}" , optionData.getOptions());
 
-        for (int i = 0; i < titles.size(); i++) {
-            String title = titles.get(i);
-            String price = prices.get(i);
-            String content = contents.get(i);
-            MultipartFile image = images.get(i);
-            log.info("Title: {}", title);
-            log.info("Price: {}", price);
-            log.info("Content: {}", content);
 
-        }
 
         return ResponseEntity.ok("good");
+
+
     }
 }
