@@ -1,10 +1,7 @@
 <link rel="stylesheet" href="/css/seller/room-detail-update.css">
 
 <!-- ajax로 불러오기 -->
-<div style="display: flex; justify-content: space-between">
-    <h2>옵션 정보</h2>
-    <button class="btn emphasize-btn" style="margin-bottom: .5rem" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
-</div>
+
 <div class="option-container">
     <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
         <input th:value="${optionInfoAndImage.roptionNo}" hidden name="roptionNo">
@@ -36,9 +33,10 @@
             </div>
         </div>
 
-        <button type="button" class="btn-close option-delete-btn" data-bs-toggle="modal" data-bs-target="" aria-label="Close"></button>
+        <button type="button" class="btn-close option-delete-btn" id="option-delete" data-bs-toggle="modal" data-bs-target="#option-delete-modal" aria-label="Close"></button>
     </div>
 </div>
+
 
 <!-- 옵션 추가 modal -->
 <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" data-bs-backdrop="static" aria-hidden="true">
@@ -61,10 +59,28 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="option-close-btn" data-bs-dismiss="modal">아니요</button>
-                <button type="button" class="btn btn-primary add-option-btn" disabled="disabled">예</button>
+                <button type="button" class="btn btn-primary add-option-btn" disabled="disabled" data-bs-dismiss="modal">예</button>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- 옵션 삭제 Modal -->
+<div class="modal fade" id="option-delete-modal" tabindex="-1" aria-labelledby="optionDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="optionDeleteModalLabel">방 삭제</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                옵션을 삭제하시겠습니까?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                <button type="button" class="btn btn-primary room-delete-btn">예</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -210,6 +226,7 @@
                 const image = $(this).find('.add-option-img')[0].files[0];
 
                 const optionData = {
+                    roomNo: roomNo,
                     title: title,
                     price: price,
                     content: content,
@@ -220,11 +237,12 @@
 
             const formData = new FormData();
 
-            optionDataArray.forEach((data, index) => {
-                formData.append(`options[${index}].title`, data.title);
-                formData.append(`options[${index}].price`, data.price);
-                formData.append(`options[${index}].content`, data.content);
-                formData.append(`options[${index}].image`, data.image);
+            optionDataArray.forEach((data) => {
+                formData.append('roomNo', data.roomNo);
+                formData.append('titles[]', data.title);
+                formData.append('prices[]', data.price);
+                formData.append('contents[]', data.content);
+                formData.append('images[]', data.image);
             });
 
             console.log("optionDataArray:", optionDataArray);

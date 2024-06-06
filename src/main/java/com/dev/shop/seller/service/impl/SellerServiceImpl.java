@@ -1,7 +1,7 @@
 package com.dev.shop.seller.service.impl;
 
+import com.dev.shop.seller.dto.OptionImageDto;
 import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -15,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -199,4 +198,48 @@ public class SellerServiceImpl implements SellerService {
     public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
 
     }
+
+    @Override
+    public void insertRoomOptionByFormData(Long roomNo, List<String> titles, List<Integer> prices, List<String> contents, List<MultipartFile> images) {
+
+        List<PostRoomOptionDto> optionDataDto = new ArrayList<>();
+        List<Long> generatedKey = new ArrayList<>();
+
+        for (int i=0; i< titles.size(); i++) {
+            String roomOptionTitle = titles.get(i);
+            String roomOptionContent = contents.get(i);
+            int roomOptionPrice = prices.get(i);
+
+            PostRoomOptionDto roomOption = new PostRoomOptionDto(roomNo, roomOptionTitle, roomOptionContent, roomOptionPrice);
+            optionDataDto.add(roomOption);
+        }
+        log.info("optionDataDto : {}", optionDataDto);
+
+        for (PostRoomOptionDto item : optionDataDto) {
+            sellerDao.insertOptionInfoByOptionData(item);
+            System.out.println("Generated Key: " + generatedKey);
+            generatedKey.add(item.getRoomOptionNo());
+        }
+
+        log.info("제너레이트키 리스트 값 확인 : {}", generatedKey);
+
+        if (!generatedKey.isEmpty()) {
+
+            List<OptionImageDto> refinedImages = fileUtils.optionImageUploads(images);
+
+            for (int i=0; i < refinedImages.size(); i++) {
+                refinedImages.get(i).setRoptionNo(generatedKey.get(i));
+            }
+            log.info("이미지 데이터 변환 확인 : {}", refinedImages);
+            sellerDao.insertOptionImageByRefinedImages(refinedImages);
+
+        }
+
+
+
+
+
+    }
+
+
 }

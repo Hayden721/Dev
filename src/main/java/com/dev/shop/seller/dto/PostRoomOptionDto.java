@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-
+@NoArgsConstructor
 @ToString
 public class PostRoomOptionDto {
 
@@ -19,8 +19,13 @@ public class PostRoomOptionDto {
     @JsonProperty("roomOptionPrice")
     private int roomOptionPrice;
 
-    private String roomNo;
+    private Long roomNo;
 
-    public PostRoomOptionDto() {
+
+    public PostRoomOptionDto(Long roomNo, String roomOptionTitle, String roomOptionContent, int roomOptionPrice) {
+        this.roomNo = roomNo;
+        this.roomOptionTitle = roomOptionTitle;
+        this.roomOptionContent = roomOptionContent;
+        this.roomOptionPrice = roomOptionPrice;
     }
 }

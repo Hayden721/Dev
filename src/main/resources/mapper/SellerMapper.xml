@@ -56,6 +56,20 @@
         </foreach>
     </insert>
 
+    <insert id="insertOptionInfoByOptionData" useGeneratedKeys="true" keyProperty="roomOptionNo">
+
+        INSERT INTO roomoption_tb(roption_title, roption_price, roption_content, room_no, roption_delete)
+        VALUES (#{roomOptionTitle}, #{roomOptionPrice}, #{roomOptionContent}, #{roomNo}, 0)
+    </insert>
+    <insert id="insertOptionImageByRefinedImages">
+        INSERT INTO roomoptionimage_tb(original_name, save_name, file_size, file_delete, created_date, roption_no)
+        VALUES
+        <foreach collection="list" item="images" separator=",">
+            (#{images.originalName}, #{images.saveName}, #{images.fileSize}, 'N', #{images.createdDate}, #{images.roptionNo})
+        </foreach>
+
+
+    </insert>
 
 
     <select id="selectRoomListBySellerNo" resultType="com.dev.shop.seller.dto.RoomListDto">

@@ -64,6 +64,11 @@
 
             <hr>
 
+            <div style="display: flex; justify-content: space-between">
+                <h2>옵션 정보</h2>
+                <button class="btn emphasize-btn" style="margin-bottom: .5rem" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
+            </div>
+
             <div id="option-ajax"></div>
 
             <div style="float: right; margin: 40px 0 0 0;">
@@ -94,8 +99,6 @@
             </div>
         </div>
     </div>
-
-
 
     <!-- 방 삭제 Modal -->
     <div class="modal fade" id="room-delete-modal" tabindex="-1" aria-labelledby="roomDeleteModalLabel" aria-hidden="true">

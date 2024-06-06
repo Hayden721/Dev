@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @ToString
 public class AddOptionsDto {
+    private Long roomNo;
     private String title;
     private String price;
     private String content;

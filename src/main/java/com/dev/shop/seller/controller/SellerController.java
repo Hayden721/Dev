@@ -365,12 +365,19 @@ public class SellerController {
     @PostMapping("/room/update/add-option")
     @ResponseBody
     public ResponseEntity<String> roomAddOptionsPost(
-            @ModelAttribute AddOptionWrapper optionData
+            @RequestParam("roomNo") Long roomNo,
+            @RequestParam("titles[]") List<String> titles,
+            @RequestParam("prices[]") List<Integer> prices,
+            @RequestParam("contents[]") List<String> contents,
+            @RequestParam("images[]") List<MultipartFile> images
     ) {
 
-        log.info("optionData {}" , optionData.getOptions());
+        log.info("roomNo {}", roomNo);
+        log.info("titles {}", titles);
 
 
+
+        sellerService.insertRoomOptionByFormData(roomNo, titles, prices, contents, images);
 
         return ResponseEntity.ok("good");
 

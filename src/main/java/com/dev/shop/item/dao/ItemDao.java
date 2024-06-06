@@ -2,7 +2,7 @@ package com.dev.shop.item.dao;
 
 import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
+import com.dev.shop.seller.dto.OptionImageDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +19,7 @@ public interface ItemDao {
 
     List<RoomOptionDto> selectRoomOptionByRoomNo(Long roomNo);
 
-    void insertOptionImageSaveByRefindOptionImage(List<OptionImageRequest> refinedOptionImage);
+    void insertOptionImageSaveByRefindOptionImage(List<OptionImageDto> refinedOptionImage);
 
 
     void updateRoomImageByImageNo(Long imageNo);

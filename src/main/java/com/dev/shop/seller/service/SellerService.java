@@ -65,4 +65,7 @@ public interface SellerService {
     List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo);
 
     void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage);
+
+
+    void insertRoomOptionByFormData(Long roomNo, List<String> titles, List<Integer> prices, List<String> contents, List<MultipartFile> images);
 }

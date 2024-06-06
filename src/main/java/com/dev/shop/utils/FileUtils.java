@@ -1,7 +1,7 @@
 package com.dev.shop.utils;
 
 import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.item.dto.OptionImageRequest;
+import com.dev.shop.seller.dto.OptionImageDto;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -73,19 +73,10 @@ public class FileUtils {
     }
 
 
-    //OpitonImageUpload
-    public List<OptionImageRequest> optionImageUploads(final List<MultipartFile> multipartFiles) {
-        List<OptionImageRequest> files = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            if (multipartFile.isEmpty()) {
-                continue;
-            }
-            files.add(optionImageUpload(multipartFile));
-        }
-        return files;
-    }
+    //OpitonImageUpload 옵션 이미지 업로드에 사용
 
-    public OptionImageRequest optionImageUpload(final MultipartFile multipartFile) {
+
+    public OptionImageDto optionImageUpload(final MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -100,13 +91,24 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
 
-        return OptionImageRequest.builder()
+        return OptionImageDto.builder()
                 .originalName(multipartFile.getOriginalFilename())
                 .saveName(saveName)
                 .fileSize(multipartFile.getSize())
+                .createdDate(LocalDate.parse(today))
                 .build();
     }
 
+    public List<OptionImageDto> optionImageUploads(final List<MultipartFile> multipartFiles) {
+        List<OptionImageDto> files = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            if (multipartFile.isEmpty()) {
+                continue;
+            }
+            files.add(optionImageUpload(multipartFile));
+        }
+        return files;
+    }
 
     private String generatedSaveFileName(final String filename) {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");

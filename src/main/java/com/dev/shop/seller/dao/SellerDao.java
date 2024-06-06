@@ -70,4 +70,9 @@ public interface SellerDao {
 
 
     void insertExtraImages(List<ImageFileDto> refinedImages);
+
+
+    void insertOptionInfoByOptionData(PostRoomOptionDto item);
+
+    void insertOptionImageByRefinedImages(List<OptionImageDto> refinedImages);
 }

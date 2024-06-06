@@ -3,7 +3,7 @@ package com.dev.shop.item.service.impl;
 import com.dev.shop.item.dao.ItemDao;
 import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.item.dto.OptionImageRequest;
+import com.dev.shop.seller.dto.OptionImageDto;
 import com.dev.shop.item.service.ItemService;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.utils.FileUtils;
@@ -54,16 +54,12 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
-
-
     @Override
     public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
         ImageFileDto refinedImage = fileUtils.uploadFile(extraImage);
 
         itemDao.UpdateRoomImage(refinedImage, imageNo);
     }
-
-
 
     @Override
     public List<FileResponse> getFileInfoByRoomNo(Long roomNo) {
@@ -77,7 +73,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void saveOptionImageByRoomOptionNo(List<MultipartFile> optionImage, List<Long> roptionNo) {
-        List<OptionImageRequest> refinedOptionImage = fileUtils.optionImageUploads(optionImage);
+        List<OptionImageDto> refinedOptionImage = fileUtils.optionImageUploads(optionImage);
         log.info("----------------- itemServiceImpl refinedOptionImage : {} ", refinedOptionImage);
 
         for(int i=0; i<refinedOptionImage.size(); i++) {
@@ -95,17 +91,6 @@ public class ItemServiceImpl implements ItemService {
     public void deleteRoomImageByImageNo(Long imageNo) {
         itemDao.updateRoomImageByImageNo(imageNo);
     }
-//
-//    @Override
-//    public FileResponse getThumbnailImageByRoomNo(Long roomNo) {
-//        return itemDao.selectThumbnailByRoomNo(roomNo);
-//    }
-//
-//
-//
-//    @Override
-//    public List<FileResponse> getAdditionalImageByRoomNo(Long roomNo) {
-//        return itemDao.selectAdditionalImageByRoomNo(roomNo);
-//    }
+
 
 }
