@@ -4,7 +4,7 @@
 
 <div class="option-container">
     <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
-        <input th:value="${optionInfoAndImage.roptionNo}" hidden name="roptionNo">
+        <input th:value="${optionInfoAndImage.roptionNo}"  name="roptionNo" hidden>
 
         <!-- 옵션 이미지 -->
         <div class="option-image-container">
@@ -74,11 +74,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input name="copyRoptionNo">
+                <input name="copyOptionImageNo">
                 옵션을 삭제하시겠습니까?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                <button type="button" class="btn btn-primary room-delete-btn">예</button>
+                <button type="button" class="btn btn-primary option-delete-execute" data-bs-dismiss="modal">예</button>
             </div>
         </div>
     </div>
@@ -90,12 +92,11 @@
         generateOptions();
         generateOptionForm();
         optionModalClear();
-
         addOptionInfoAjaxPost();
-
+        deleteOptionBtnClick();
+        optionDeleteExecuteClick();
     });
 
-    const roomNo = $('input[name=roomNo]').val();
 
     // <select>의 <option> 생성
     function generateOptions() {
@@ -211,10 +212,12 @@
             inputForm.html("");
         })
     }
-
-
-
+    
     function addOptionInfoAjaxPost() {
+
+        const roomNo = $('input[name=roomNo]').val();
+        console.log("roomNo", roomNo);
+
         $('.add-option-btn').click(function () {
 
             const optionDataArray = [];
@@ -255,6 +258,22 @@
                 contentType: false,
                 success:  function(result) {
 
+                    $.ajax({
+                        type: "get", // 타입 (get, post, put 등등)
+                        url: "/seller/room/update/option-get-ajax",  // 요청할 서버url
+                        dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                        data: {
+                            roomNo: roomNo
+                        },
+                        success:  function(result) {
+                            console.log("option-get 성공!");
+                            $('#option-ajax').html(result);
+                        },// 결과 성공 콜백함수
+
+                        error: function (request, status, error) {
+                            console.log("get error Fail");
+                        }
+                    })
                 },// 결과 성공 콜백함수
 
                 error: function (request, status, error) {
@@ -264,6 +283,52 @@
 
         })
 
+    }
+
+    // .option-delete-btn 버튼 클릭 시 roptionNo 데이터 모달에 전달하기
+    function deleteOptionBtnClick() {
+        $('.option-delete-btn').click(function () {
+
+            // optionNo 값
+            const optionDetailContainer = $(this).closest('.option-detail-container');
+            const roptionNoVal = optionDetailContainer.find('input[name="roptionNo"]').val();
+
+            console.log("roptionNo", roptionNoVal);
+
+            $('input[name=copyRoptionNo]').val(roptionNoVal);
+
+            // optionImageNo 값
+            const optionImageNoVal = optionDetailContainer.find('.option-image').data('roptionImageNo');
+            console.log("optionImageNoVal", optionImageNoVal);
+
+            $('input[name=copyOptionImageNo]').val(optionImageNoVal);
+        })
+    }
+
+    function optionDeleteExecuteClick() {
+        $('.option-delete-execute').click(function () {
+            const copyRoptionNoVal = $('input[name="copyRoptionNo"]').val();
+            console.log("copyRoptionNoVal", copyRoptionNoVal);
+
+            $.ajax({
+                type: "post", // 타입 (get, post, put 등등)
+                url: "/seller/room/update/option-delete",  // 요청할 서버url
+                dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                data: {
+                    optionNo: copyRoptionNoVal
+                    // optionImageNo:
+                },
+                success:  function(result) {
+                    console.log("option-delete 성공");
+
+                },// 결과 성공 콜백함수
+
+                error: function (request, status, error) {
+                    console.log("get error Fail");
+                }
+            })
+
+        })
     }
 
     

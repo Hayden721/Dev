@@ -383,4 +383,11 @@ public class SellerController {
 
 
     }
+
+    @PostMapping("/room/update/option-delete")
+    @ResponseBody
+    public void roomDeleteOptionPost(@RequestParam("optionNo") Long optionNo) {
+        log.info("roomNo : {}", optionNo);
+//        sellerService.deleteOptionByOptionNoAndOptionImageNo(optionNo, optionImageNo);
+    }
 }
