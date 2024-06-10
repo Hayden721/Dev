@@ -65,12 +65,22 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectRoomListBySellerNo(sellerNo);
     }
 
+    /**
+     * 방 정보 조회
+     * @param roomNo - 방 번호
+     * @return 방 정보 데이터
+     */
     @Override
     public RoomDto getRoomDetailByRoomNo(Long roomNo) {
 
         return sellerDao.selectRoomDetailByRoomNo(roomNo);
     }
 
+    /**
+     * 옵션 정보 조회
+     * @param roomNo - 방번호
+     * @return DB에 저장된 옵션 정보
+     */
     @Override
     public List<RoomOptionDto> getRoomOptionInfoByRoomNo(Long roomNo) {
         return sellerDao.selectRoomOptionInfoByRoomNo(roomNo);
@@ -86,6 +96,10 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectRoomCountBySellerNo(sellerNo);
     }
 
+    /**
+     * seller가 생성한 방 삭제
+     * @param roomNo - 방 번호
+     */
     @Override
     public void removeRoomByRoomNo(Long roomNo) {
 
@@ -97,7 +111,7 @@ public class SellerServiceImpl implements SellerService {
             List<Long> roomOptionNo = sellerDao.selectRoomOptionNoByRoomNo(roomNo);
             log.debug("--- SellerServiceImpl room/detail roomOptionNo : {}", roomOptionNo);
             // 2. roomOptionNo로 roomOptionImage delete
-            sellerDao.deleteRoomOptionImageByRoomOptionNo(roomOptionNo);
+            sellerDao.deleteRoomOptionImagesByRoomOptionNo(roomOptionNo);
 
             // 3. roomOption 삭제
             sellerDao.deleteRoomOptionByRoomNo(roomNo);
@@ -156,8 +170,6 @@ public class SellerServiceImpl implements SellerService {
         sellerDao.updateRoomInfoByRoomInfo(roomInfo);
         sellerDao.updateRoomOptionInfoByOptionInfo(optionInfo);
     }
-
-
 
     // 이미지 관련 기능
 
@@ -234,10 +246,26 @@ public class SellerServiceImpl implements SellerService {
             sellerDao.insertOptionImageByRefinedImages(refinedImages);
 
         }
+    }
+
+    /**
+     * 옵션 삭제
+     * @param optionNo - 옵션 번호
+     * @param optionImageNo - 옵션 이미지 번호
+     */
+    @Override
+    public void deleteOptionByOptionNoAndOptionImageNo(Long optionNo, Long optionImageNo) {
 
 
-
-
+        // optionImageNo가 들어오지 않았을 경우
+        if(optionImageNo == null || optionImageNo == 0) {
+            sellerDao.deleteOptionByOptionNo(optionNo);
+        } else {
+            // 이미지 삭제
+            sellerDao.deleteOptionImageByOptionImageNo(optionImageNo);
+            // 이미지 삭제 후 옵션 삭제
+            sellerDao.deleteOptionByOptionNo(optionNo);
+        }
 
     }
 

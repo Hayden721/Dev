@@ -386,8 +386,12 @@ public class SellerController {
 
     @PostMapping("/room/update/option-delete")
     @ResponseBody
-    public void roomDeleteOptionPost(@RequestParam("optionNo") Long optionNo) {
-        log.info("roomNo : {}", optionNo);
-//        sellerService.deleteOptionByOptionNoAndOptionImageNo(optionNo, optionImageNo);
+    public void roomDeleteOptionPost(@RequestParam("optionNo") Long optionNo, @RequestParam(name="optionImageNo", required = false) Long optionImageNo) {
+        log.info("optionNo : {}", optionNo);
+        log.info("optionImageNo : {}", optionImageNo);
+
+        // optionImageNo가 없을 때 데이터 처리 optionImageNo가 null, 0일 때 optionImageNo를 어떻게 해야 할까
+
+        sellerService.deleteOptionByOptionNoAndOptionImageNo(optionNo, optionImageNo);
     }
 }

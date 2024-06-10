@@ -10,6 +10,10 @@
         <div class="option-image-container">
             <img th:data-roption-image-no="${optionInfoAndImage.roptionImageNo}" class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
             <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionInfoAndImage.originalName}" th:unless="${optionInfoAndImage.roptionImageNo} != 0">
+            <!-- 이미지 업로드를 위한 input -->
+            <input type="file" class="option-image-input" name="optionImage" hidden="hidden">
+            <div class="overlay"><i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i></div>
+
         </div>
 
         <div class="option-info-container">
@@ -95,7 +99,10 @@
         addOptionInfoAjaxPost();
         deleteOptionBtnClick();
         optionDeleteExecuteClick();
+        mouseHoverImageBlur();
+        optionImageClickUpdateImage();
     });
+
 
 
     // <select>의 <option> 생성
@@ -158,19 +165,22 @@
                 }
                 inputForm.html(html);
 
-                inputCheckEvent();
-                addOptionImageBtnClick(); // 이미지
+                inputCheckEvent(); // 추가할 옵션 input의 빈 칸 체크
+                addOptionImageBtnClick(); // 이미지 클릭시 click 트리거 실행
 
             }
         });
     }
 
+
+
+    // 추가옵션 input의 빈 칸 확인
     function inputCheckEvent() {
         $(".add-option-container input, .add-option-container textarea").on("keyup change", function () {
             checkOptionInputSubmit();
         });
     }
-
+    //
     function checkOptionInputSubmit() {
         let inputFilled = true;
         $(".add-option-container input, .add-option-container textarea").each(function () {
@@ -188,10 +198,10 @@
         console.log("inputFilled", inputFilled);
     }
 
-
+    // 옵션 추가할 때 이미지 클릭하면 input 트리거 작동
     function addOptionImageBtnClick() {
         $('.option-img-add-btn').click(function () {
-            console.log("옵션이미지버튼 클릭")
+            console.log("옵션 이미지 버튼 클릭")
             $(this).siblings('.add-option-img').trigger('click');
         })
     }
@@ -212,7 +222,8 @@
             inputForm.html("");
         })
     }
-    
+
+    // 옵션 추가 기능
     function addOptionInfoAjaxPost() {
 
         const roomNo = $('input[name=roomNo]').val();
@@ -280,9 +291,7 @@
                     console.log("get error Fail")
                 }
             })
-
         })
-
     }
 
     // .option-delete-btn 버튼 클릭 시 roptionNo 데이터 모달에 전달하기
@@ -305,21 +314,44 @@
         })
     }
 
+    // 옵션 삭제 기능
     function optionDeleteExecuteClick() {
+
         $('.option-delete-execute').click(function () {
             const copyRoptionNoVal = $('input[name="copyRoptionNo"]').val();
             console.log("copyRoptionNoVal", copyRoptionNoVal);
 
+            let optionImageNo = $('input[name="copyOptionImageNo"]').val();
+
+            console.log("optionImageNo", optionImageNo);
+            const roomNo = $('input[name=roomNo]').val();
             $.ajax({
                 type: "post", // 타입 (get, post, put 등등)
                 url: "/seller/room/update/option-delete",  // 요청할 서버url
                 dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                 data: {
-                    optionNo: copyRoptionNoVal
-                    // optionImageNo:
+                    optionNo: copyRoptionNoVal,
+                    optionImageNo: optionImageNo
                 },
                 success:  function(result) {
                     console.log("option-delete 성공");
+
+                    $.ajax({
+                        type: "get", // 타입 (get, post, put 등등)
+                        url: "/seller/room/update/option-get-ajax",  // 요청할 서버url
+                        dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
+                        data: {
+                            roomNo: roomNo
+                        },
+                        success:  function(result) {
+                            console.log("option-get 성공!");
+                            $('#option-ajax').html(result);
+                        },// 결과 성공 콜백함수
+
+                        error: function (request, status, error) {
+                            console.log("get error Fail");
+                        }
+                    })
 
                 },// 결과 성공 콜백함수
 
@@ -327,11 +359,85 @@
                     console.log("get error Fail");
                 }
             })
-
         })
     }
 
-    
+    // -- 옵션 이미지 업데이트 관련 함수 --
+
+    // 이미지 위에 마우스 올렸을 때 이벤트
+    function mouseHoverImageBlur() {
+        // extraImage
+        const image = $('.option-image');
+
+        image.on('mouseenter', function () {
+            $(this).css('filter', 'blur(3px)');
+            $(this).siblings('.overlay').css('opacity', '1');
+        })
+
+        image.on('mouseleave', function () {
+            $(this).css('filter', 'blur(0px)');
+            $(this).siblings('.overlay').css('opacity', '0');
+        })
+    }
+
+    // 이미지를 클릭했을 때 동작, 이미지 업데이트 함수
+    function optionImageClickUpdateImage() {
+
+        const image = $('.option-image');
+
+        //이미지 클릭시 click 트리거 작동
+        image.click(function() {
+            $(this).siblings('.option-image-input').trigger('click');
+        });
+
+        // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
+        $('.image-input').on('change', function() {
+            const optionImageNo = $(this).siblings('.option-image').data('roption-image-no');
+
+            console.log("optionImageNo", optionImageNo);
+
+            let optionImageData = new FormData();
+
+            const image = this.files[0];
+
+            if (image) {
+                optionImageData.append('optionImage', image);
+            }
+            optionImageData.append('optionImageNo', optionImageNo);
+
+            console.log(optionImageData.get('extraImage'));
+
+            const clickedImage = $(this).siblings('.image-js');
+
+            // 이미지 변경
+            const file = this.files[0];
+
+            if (file) {
+                let render = new FileReader();
+                render.onload = function(e) {
+                    clickedImage.attr('src', e.target.result);
+                };
+                render.readAsDataURL(file);
+            }
+
+            // $.ajax({
+            //     type: "post",
+            //     url: "/seller/room/detail/update/image",
+            //     dataType: "html",
+            //     data: imageData,
+            //     contentType: false,
+            //     processData: false,
+            //     success: function(result) {
+            //         console.log("Image upload success");
+            //     },
+            //     error: function(request, status, error) {
+            //         console.log("Error uploading image: " + error);
+            //     }
+            // });
+        });
+    }
+
+
 /*]]>*/
 </script>
 

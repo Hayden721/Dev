@@ -187,7 +187,7 @@
         WHERE room_no = #{roomNo}
     </delete>
 
-    <delete id="deleteRoomOptionImageByRoomOptionNo">
+    <delete id="deleteRoomOptionImagesByRoomOptionNo">
         DELETE FROM roomoptionimage_tb
         WHERE roption_no IN(
         <foreach collection="list" item="roomNo" separator=",">
@@ -201,5 +201,16 @@
         DELETE FROM roomimage_tb
         WHERE room_no = #{roomNo}
     </delete>
+
+    <delete id="deleteOptionImageByOptionImageNo">
+        DELETE FROM roomoptionimage_tb
+        WHERE roptionimage_no = #{optionImageNo}
+    </delete>
+
+    <delete id="deleteOptionByOptionNo">
+        DELETE FROM roomoption_tb
+        WHERE roption_no = #{optionNo}
+    </delete>
+
 
 </mapper>

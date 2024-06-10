@@ -58,7 +58,7 @@ public interface SellerDao {
 
 
 
-    void deleteRoomOptionImageByRoomOptionNo(List<Long> roomOptionNo);
+    void deleteRoomOptionImagesByRoomOptionNo(List<Long> roomOptionNo);
 
     void deleteRoomImageByRoomNo(Long roomNo);
 
@@ -75,4 +75,8 @@ public interface SellerDao {
     void insertOptionInfoByOptionData(PostRoomOptionDto item);
 
     void insertOptionImageByRefinedImages(List<OptionImageDto> refinedImages);
+
+    void deleteOptionImageByOptionImageNo(Long optionImageNo);
+
+    void deleteOptionByOptionNo(Long optionNo);
 }
