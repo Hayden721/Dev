@@ -20,12 +20,13 @@ public class OptionImageDto {
     private Long roptionNo;
 
     @Builder
-    public OptionImageDto(String originalName, String saveName, Long fileSize, Long roptionNo, LocalDate createdDate) {
+    public OptionImageDto(String originalName, String saveName, Long fileSize, Long roptionNo, LocalDate createdDate, Long optionImageNo) {
         this.originalName = originalName;
         this.saveName = saveName;
         this.fileSize = fileSize;
         this.roptionNo = roptionNo;
         this.createdDate = createdDate;
+        this.optionImageNo = optionImageNo;
     }
 
 

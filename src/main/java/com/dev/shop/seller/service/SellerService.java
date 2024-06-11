@@ -70,4 +70,6 @@ public interface SellerService {
     void insertRoomOptionByFormData(Long roomNo, List<String> titles, List<Integer> prices, List<String> contents, List<MultipartFile> images);
 
     void deleteOptionByOptionNoAndOptionImageNo(Long optionNo, Long optionImageNo);
+
+    void updateRoomOptionImageByOptionImageData(MultipartFile optionImage, Long optionImageNo);
 }

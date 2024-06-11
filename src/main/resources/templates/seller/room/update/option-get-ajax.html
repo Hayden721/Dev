@@ -327,7 +327,7 @@
             const roomNo = $('input[name=roomNo]').val();
             $.ajax({
                 type: "post", // 타입 (get, post, put 등등)
-                url: "/seller/room/update/option-delete",  // 요청할 서버url
+                url: "/seller/room/option/delete",  // 요청할 서버url
                 dataType: "html", // 데이터 타입 (html, xml, json, text 등등)
                 data: {
                     optionNo: copyRoptionNoVal,
@@ -382,58 +382,54 @@
 
     // 이미지를 클릭했을 때 동작, 이미지 업데이트 함수
     function optionImageClickUpdateImage() {
-
         const image = $('.option-image');
 
-        //이미지 클릭시 click 트리거 작동
+        // 이미지 클릭 시 input 트리거 작동
         image.click(function() {
             $(this).siblings('.option-image-input').trigger('click');
         });
 
         // input에 이미지 값이 들어왔을 때 즉시 ajax post 동작
-        $('.image-input').on('change', function() {
+        $('.option-image-input').on('change', function() {
             const optionImageNo = $(this).siblings('.option-image').data('roption-image-no');
 
             console.log("optionImageNo", optionImageNo);
 
-            let optionImageData = new FormData();
-
+            let imageData = new FormData();
             const image = this.files[0];
 
             if (image) {
-                optionImageData.append('optionImage', image);
+                imageData.append('optionImage', image);
+                imageData.append('optionImageNo', optionImageNo);
             }
-            optionImageData.append('optionImageNo', optionImageNo);
 
-            console.log(optionImageData.get('extraImage'));
 
-            const clickedImage = $(this).siblings('.image-js');
+            console.log(imageData.get('optionImage'));
 
-            // 이미지 변경
-            const file = this.files[0];
+            const clickedImage = $(this).siblings('.option-image');
 
-            if (file) {
+            if (image) {
                 let render = new FileReader();
                 render.onload = function(e) {
                     clickedImage.attr('src', e.target.result);
                 };
-                render.readAsDataURL(file);
+                render.readAsDataURL(image);
             }
 
-            // $.ajax({
-            //     type: "post",
-            //     url: "/seller/room/detail/update/image",
-            //     dataType: "html",
-            //     data: imageData,
-            //     contentType: false,
-            //     processData: false,
-            //     success: function(result) {
-            //         console.log("Image upload success");
-            //     },
-            //     error: function(request, status, error) {
-            //         console.log("Error uploading image: " + error);
-            //     }
-            // });
+            $.ajax({
+                type: "post",
+                url: "/seller/room/update/option-image",
+
+                data: imageData,
+                contentType: false,
+                processData: false,
+                success: function(result) {
+                    console.log("Image upload success");
+                },
+                error: function(request, status, error) {
+                    console.log("Error uploading image: " + error);
+                }
+            });
         });
     }
 

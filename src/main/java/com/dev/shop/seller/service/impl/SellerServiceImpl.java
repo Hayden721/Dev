@@ -208,7 +208,7 @@ public class SellerServiceImpl implements SellerService {
     }
     @Override
     public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
-
+        // roomExtraImageUpdate Dao 코드
     }
 
     @Override
@@ -266,6 +266,15 @@ public class SellerServiceImpl implements SellerService {
             // 이미지 삭제 후 옵션 삭제
             sellerDao.deleteOptionByOptionNo(optionNo);
         }
+
+    }
+
+    @Override
+    public void updateRoomOptionImageByOptionImageData(MultipartFile optionImage, Long optionImageNo) {
+        OptionImageDto refinedOptionImage = fileUtils.optionImageUpload(optionImage);
+        refinedOptionImage.setOptionImageNo(optionImageNo);
+
+        sellerDao.updateRoomOptionImageByRefinedOptionImage(refinedOptionImage);
 
     }
 

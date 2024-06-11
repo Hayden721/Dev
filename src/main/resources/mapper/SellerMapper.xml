@@ -177,6 +177,21 @@
             roption_no = #{optionInfo.roptionNo}
         </foreach>
     </update>
+    <update id="updateRoomOptionImageByRefinedOptionImage">
+        UPDATE roomoptionimage_tb
+        SET
+
+
+
+        UPDATE room_tb
+        SET
+        room_title = #{roomInfo.roomTitle},
+        room_content = #{roomInfo.roomContent}
+        where
+        room_no = #{roomInfo.roomNo}
+
+
+    </update>
 
     <delete id="deleteRoomByRoomNo">
         DELETE FROM room_tb

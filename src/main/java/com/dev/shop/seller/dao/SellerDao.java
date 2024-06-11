@@ -79,4 +79,6 @@ public interface SellerDao {
     void deleteOptionImageByOptionImageNo(Long optionImageNo);
 
     void deleteOptionByOptionNo(Long optionNo);
+
+    void updateRoomOptionImageByRefinedOptionImage(OptionImageDto refinedOptionImage);
 }
