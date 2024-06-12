@@ -146,19 +146,26 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectReserveManageInfoBySellerNo(sellerNo);
     }
 
+
     @Override
     public List<ReservationDto> getReservationInfoByRoomNo(Long roomNo) {
         return sellerDao.selectReservationInfoByRoomNo(roomNo);
     }
 
-
+    /**
+     * 옵션 정보와 이미지 정보 조회
+     * @param roomNo - 조회할 방 번호
+     * @return 방 번호로 조회한 데이터
+     */
     @Override
     public List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo) {
         return sellerDao.selectOptionInfoAndImageByRoomNo(roomNo);
     }
 
-
-
+    /**
+     * 방 정보 업데이트
+     * @param data - 업데이트할 방 정보
+     */
     @Override
     public void updateRoomInfoByData(RoomUpdateRequest data) {
 
@@ -171,7 +178,6 @@ public class SellerServiceImpl implements SellerService {
         sellerDao.updateRoomOptionInfoByOptionInfo(optionInfo);
     }
 
-    // 이미지 관련 기능
 
     /**
      * 이미지 업로드 (썸네일 이미지)
@@ -208,9 +214,24 @@ public class SellerServiceImpl implements SellerService {
     }
     @Override
     public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
-        // roomExtraImageUpdate Dao 코드
+
+        ImageFileDto refinedExtraImage = fileUtils.uploadFile(extraImage);
+        refinedExtraImage.setRoomImageNo(imageNo);
+
+
+        sellerDao.updateExtraImageByExtraImage(refinedExtraImage);
+
     }
 
+
+    /**
+     * seller가 생성한 방에 새로운 옵션을 추가
+     * @param roomNo - 옵션을 추가 하기 위해 필요한 방 번호
+     * @param titles - 추가할 옵션의 제목
+     * @param prices - 추가할 옵션의 가격
+     * @param contents - 추가할 옵션의 설명
+     * @param images - 추가할 옵션의 이미지
+     */
     @Override
     public void insertRoomOptionByFormData(Long roomNo, List<String> titles, List<Integer> prices, List<String> contents, List<MultipartFile> images) {
 
@@ -269,6 +290,11 @@ public class SellerServiceImpl implements SellerService {
 
     }
 
+    /**
+     * 옵션 이미지 업데이트
+     * @param optionImage - 업데이트 할 이미지 데이터
+     * @param optionImageNo 업데이트 할 이미지 번호
+     */
     @Override
     public void updateRoomOptionImageByOptionImageData(MultipartFile optionImage, Long optionImageNo) {
         OptionImageDto refinedOptionImage = fileUtils.optionImageUpload(optionImage);

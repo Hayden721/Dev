@@ -180,17 +180,16 @@
     <update id="updateRoomOptionImageByRefinedOptionImage">
         UPDATE roomoptionimage_tb
         SET
-
-
-
-        UPDATE room_tb
+            original_name= #{originalName}, save_name = #{saveName}, file_size = #{fileSize},
+            created_date = #{createdDate}
+        WHERE roptionimage_no = #{optionImageNo}
+    </update>
+    <update id="updateExtraImageByExtraImage">
+        UPDATE roomimage_tb
         SET
-        room_title = #{roomInfo.roomTitle},
-        room_content = #{roomInfo.roomContent}
-        where
-        room_no = #{roomInfo.roomNo}
-
-
+        original_name= #{originalName}, save_name = #{saveName}, file_size = #{fileSize},
+        created_date = #{createdDate}
+        WHERE roomimage_no = #{roomImageNo}
     </update>
 
     <delete id="deleteRoomByRoomNo">

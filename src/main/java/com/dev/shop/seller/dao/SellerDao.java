@@ -1,7 +1,6 @@
 package com.dev.shop.seller.dao;
 
 import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.seller.dto.ImageFileDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.seller.dto.*;
@@ -81,4 +80,6 @@ public interface SellerDao {
     void deleteOptionByOptionNo(Long optionNo);
 
     void updateRoomOptionImageByRefinedOptionImage(OptionImageDto refinedOptionImage);
+
+    void updateExtraImageByExtraImage(ImageFileDto refinedExtraImage);
 }
