@@ -50,9 +50,7 @@
             </button>
         </div>
 
-
         <div class="empty-space"></div>
-
 
         <div class="swiper-container">
             <h2>새로 등록된 SPOT</h2>
@@ -60,50 +58,17 @@
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide">
+                    <div th:each="recentCreateRoom : ${recentCreateRoom}" class="swiper-slide">
                         <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
+                            <img th:if="${recentCreateRoom.saveName} != 'noImage'" th:src="${filePath} + '/' + ${recentCreateRoom.createdDate} + '/' + ${recentCreateRoom.saveName}" th:alt="${recentCreateRoom.originalName}" >
+                            <img th:unless="${recentCreateRoom.saveName} != 'noImage'" src="/images/test-image.png" th:alt="${recentCreateRoom.originalName}">
                             <div class="content">
-                                <h3>1</h3>
-                                <p>11,000 원/시간</p>
-                                <p>스터디룸</p>
+                                <h3 th:text="${recentCreateRoom.roomTitle}"></h3>
+                                <p th:text="${recentCreateRoom.roomDiv}"></p>
+                                <p th:text="${recentCreateRoom.address} + ${recentCreateRoom.detailAddress}"></p>
                             </div>
                         </div>
                     </div>
-
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>2</h3>
-                                <p>11,000 원/시간</p>
-                                <p>개인오피스</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>3</h3>
-                                <p>11,000 원/시간</p>
-                                <p>회의실</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>4</h3>
-                                <p>11,000 원/시간</p>
-                                <p>스터디룸</p>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>
@@ -120,50 +85,20 @@
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
+
                     <!-- Slides -->
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>1</h3>
-                                <p>11,000 원/시간</p>
-                                <p>스터디룸</p>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div th:each="roomInfo : ${roomInfo}" class="swiper-slide" >-->
+<!--                        <div class="room-card">-->
+<!--                            <img th:src="${filePath} + '/' + ${roomInfo.createdDate} + '/' + ${roomInfo.saveName}" th:alt="${roomInfo.originalName}" >-->
+<!--                            <div class="content">-->
+<!--                                <h3>1</h3>-->
+<!--                                <p>11,000 원/시간</p>-->
+<!--                                <p>스터디룸</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>2</h3>
-                                <p>11,000 원/시간</p>
-                                <p>개인오피스</p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>3</h3>
-                                <p>11,000 원/시간</p>
-                                <p>회의실</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="swiper-slide">
-                        <div class="room-card">
-                            <img src="/images/test-image.png" alt="Room 1" >
-                            <div class="content">
-                                <h3>4</h3>
-                                <p>11,000 원/시간</p>
-                                <p>스터디룸</p>
-                            </div>
-                        </div>
-                    </div>
 
                 </div>
                 <!-- If we need pagination -->

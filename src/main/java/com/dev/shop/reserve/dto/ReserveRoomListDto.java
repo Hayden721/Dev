@@ -8,7 +8,10 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Getter @Setter @AllArgsConstructor @ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@ToString
 public class ReserveRoomListDto {
 
     private Long roomNo; // 번호(Primary Key)

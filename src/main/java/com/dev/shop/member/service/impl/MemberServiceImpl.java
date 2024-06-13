@@ -3,9 +3,10 @@ package com.dev.shop.member.service.impl;
 import com.dev.shop.member.dao.MemberDao;
 import com.dev.shop.member.dto.MemberDto;
 import com.dev.shop.member.dto.ReservationCriteriaDto;
+import com.dev.shop.member.dto.RoomAndImageDto;
 import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
-import com.dev.shop.seller.dto.ReservationDto;
+import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @Service
@@ -33,8 +32,18 @@ public class MemberServiceImpl implements MemberService {
     String localTime = format.format(time);
 
     /**
+     * 최근 등록된 방 (6개)
+     * @return 최근 등록된 방과 이미지 정보
+     */
+    @Override
+    public List<RoomAndImageDto> getMainInfoNewSpot() {
+        return memberDao.selectRoomAndImage();
+    }
+
+
+    /**
      * 회원가입
-     * @param memberDto
+     * @param memberDto - 입력한 회원가입 정보
      */
     @Override
     public void memberRegister(MemberDto memberDto) {
@@ -114,6 +123,7 @@ public class MemberServiceImpl implements MemberService {
     public void cancelReservation(Long reservationNo) {
         memberDao.updateReservationByReservationNo(reservationNo);
     }
+
 
 
 

@@ -3,9 +3,12 @@ package com.dev.shop.member.controller;
 
 import com.dev.shop.member.dto.MemberDto;
 import com.dev.shop.member.dto.ReservationCriteriaDto;
+import com.dev.shop.member.dto.RoomAndImageDto;
 import com.dev.shop.member.dto.getReserveInfoDto;
 import com.dev.shop.member.service.MemberService;
+import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.seller.dto.ReservationDto;
+import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +35,11 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FileUtils fileUtils;
 
     @GetMapping("/main")
     public String mainGet(Model model, Principal principal) {
+        String filePath = fileUtils.choosePath();
         log.info("--- mainGet ---");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -57,6 +62,13 @@ public class MemberController {
 
             model.addAttribute("auth", authentication);
         }
+
+        List<RoomAndImageDto> recentCreateRoom = memberService.getMainInfoNewSpot();
+
+//        List<RoomAndImageDto> memberService
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("recentCreateRoom", recentCreateRoom);
+
         return "/devroom/member/main";
 
     }
@@ -147,5 +159,7 @@ public class MemberController {
 
         return "redirect:/devroom/member/mypage/reservation-info";
     }
+
+
 
 }

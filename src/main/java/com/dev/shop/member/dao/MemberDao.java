@@ -1,9 +1,7 @@
 package com.dev.shop.member.dao;
 
-import com.dev.shop.member.dto.MemberDetailsDto;
-import com.dev.shop.member.dto.MemberDto;
-import com.dev.shop.member.dto.ReservationCriteriaDto;
-import com.dev.shop.member.dto.getReserveInfoDto;
+import com.dev.shop.member.dto.*;
+import com.dev.shop.reserve.dto.RoomDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -38,4 +36,6 @@ public interface MemberDao {
      * @param reservationNo - 예약 번호
      */
     void updateReservationByReservationNo(Long reservationNo);
+
+    List<RoomAndImageDto> selectRoomAndImage();
 }

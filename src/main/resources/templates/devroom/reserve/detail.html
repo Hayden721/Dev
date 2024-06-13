@@ -2,7 +2,7 @@
 <html lang="ko"
 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/config}">
+      layout:decorate="~{layouts/config}" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="/css/reserve/detail.css">
 
@@ -39,7 +39,11 @@
         </div>
 
         <div class="title-container">
-            <h1 th:text="${roomInfo.roomTitle}"></h1>
+            <div style="display: flex; justify-content: space-between;">
+                <h1 th:text="${roomInfo.roomTitle}"></h1>
+                <button style="margin-right: 10px;" class="btn"><i class="bi bi-heart"></i>저장</button>
+            </div>
+
             <span th:switch="${roomInfo.roomDiv}">
                 <span th:case="'studyroom'">스터디룸</span>
                 <span th:case="'meeting'">회의실</span>

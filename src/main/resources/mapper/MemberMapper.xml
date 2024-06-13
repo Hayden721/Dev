@@ -37,6 +37,9 @@
         WHERE reservation_no = #{reservationNo}
     </update>
 
+    <select id="selectMainInfoNewSpot" resultType="com.dev.shop.reserve.dto.RoomDto">
+
+    </select>
 
     <select id="selectMemberByMemberNo" resultType="MemberDto">
         SELECT *
@@ -85,6 +88,34 @@
         SELECT count(*)
         FROM reservation_tb
         WHERE member_no = #{memberNo};
+    </select>
+    <select id="selectNewSpot">
+        select *
+        from room_tb
+        order by room_no desc
+        limit 0, 5
+    </select>
+    <select id="selectRoomAndImage" resultType="com.dev.shop.member.dto.RoomAndImageDto">
+        select a.*, IFNULL(b.cnt, 0) as cnt, IFNULL(c.created_date, '0101-01-01'), IFNULL(c.save_name, 'noImage'), IFNULL(c.original_name, 'noImage')
+        FROM room_tb a
+            LEFT JOIN (
+                SELECT room_no, COUNT(roption_no) cnt
+                FROM roomoption_tb
+                GROUP BY room_no
+            ) b
+        ON a.room_no = b.room_no
+            LEFT JOIN (
+                select room_no, thumbnail, file_delete, created_date, save_name, original_name
+                from roomimage_tb
+                where thumbnail = 'Y'
+                and file_delete = 'N'
+            ) c (room_no, thumbnail, file_delete, created_date, save_name, original_name)
+        ON a.room_no = c.room_no
+            WHERE a.room_delete = 0
+            AND b.cnt != 0
+            order by room_no desc
+        limit 0, 6
+
     </select>
 
 
