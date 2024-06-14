@@ -40,6 +40,25 @@ public class MemberServiceImpl implements MemberService {
         return memberDao.selectRoomAndImage();
     }
 
+    @Override
+    public boolean roomBookmark(String memberId, Long roomNo) {
+        //memberId로 memberNo 조회
+        Long memberNo = memberDao.selectMemberNo(memberId);
+        log.info("memberNo : {}", memberNo);
+        // 1. 북마크하려는 유저와 방 번호를 사용해서 db에 조회
+        Boolean bookmark = memberDao.selectBookmarkData(memberNo, roomNo);
+        log.info("bookmark : {}", bookmark);
+        if(!bookmark) {
+            memberDao.insertBookmark(memberNo, roomNo);
+            return true;
+        }else {
+            memberDao.deleteBookmark(memberNo, roomNo);
+            return false;
+        }
+
+        //2. 만약 북마크가 존재하지 않으면 insert / 존재한다면 delete
+
+    }
 
     /**
      * 회원가입

@@ -41,7 +41,7 @@
         <div class="title-container">
             <div style="display: flex; justify-content: space-between;">
                 <h1 th:text="${roomInfo.roomTitle}"></h1>
-                <button style="margin-right: 10px;" class="btn"><i class="bi bi-heart"></i>저장</button>
+                <button style="margin-right: 10px;" class="btn, bookmark-btn"><i class="bi bi-heart"></i>저장</button>
             </div>
 
             <span th:switch="${roomInfo.roomDiv}">
@@ -114,6 +114,32 @@
 
     });
 
+    $('.bookmark-btn').click(function () {
+
+        $.ajax({
+            type: 'post',           // 타입 (get, post, put 등등)
+            url: '/devroom/member/bookmark',  // 요청할 서버url
+            dataType: 'html',       // 데이터 타입 (html, xml, json, text 등등)
+            data: {  // 보낼 데이터 (Object , String, Array)
+                roomNo: "[[${roomInfo.getRoomNo}]]"
+
+            },
+            success: function (result) { // 결과 성공 콜백함수
+                console.log(result);
+                if(result){
+                    console.log("1");
+                }else {
+                    console.log("2");
+                }
+            },
+            error: function (request, status, error) {
+                console.log(error)
+            }
+        })
+    })
+        
+    
+    
     </script>
 </th:block>
 

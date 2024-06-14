@@ -13,8 +13,11 @@
             #{memberId}, #{memberEmail}, #{memberPw}, #{memberAuth},#{memberPhone}, #{memberName}
             , #{appendDate}, #{updateDate})
     </insert>
+    <insert id="insertBookmark">
+        INSERT INTO bookmark_tb(member_no, room_no)
+        VALUES (#{memberNo}, #{roomNo})
+    </insert>
     <update id="updateMemberInformation">
-
         <choose>
             <when test="memberPw != ''">
                 UPDATE member_tb
@@ -36,6 +39,11 @@
         SET reservation_status = 0
         WHERE reservation_no = #{reservationNo}
     </update>
+    <delete id="deleteBookmark">
+        DELETE from bookmark_tb
+        WHERE member_no = #{memberNo}
+            AND room_no = #{roomNo}
+    </delete>
 
     <select id="selectMainInfoNewSpot" resultType="com.dev.shop.reserve.dto.RoomDto">
 
@@ -116,6 +124,12 @@
             order by room_no desc
         limit 0, 6
 
+    </select>
+    <select id="selectBookmarkData" resultType="java.lang.Boolean" >
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ElSE false END
+        FROM bookmark_tb
+        WHERE member_no = #{memberNo}
+        AND room_no = #{roomNo}
     </select>
 
 

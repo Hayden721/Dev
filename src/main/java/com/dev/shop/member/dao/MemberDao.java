@@ -38,4 +38,10 @@ public interface MemberDao {
     void updateReservationByReservationNo(Long reservationNo);
 
     List<RoomAndImageDto> selectRoomAndImage();
+
+    void insertBookmark(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
+
+    void deleteBookmark(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
+
+    Boolean selectBookmarkData(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 }

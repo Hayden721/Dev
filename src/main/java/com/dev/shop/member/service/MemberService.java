@@ -47,4 +47,8 @@ public interface MemberService {
 
 
     List<RoomAndImageDto> getMainInfoNewSpot();
+
+    boolean roomBookmark(String memberId, Long roomNo);
+
+
 }

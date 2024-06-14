@@ -13,6 +13,7 @@ import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -160,6 +161,14 @@ public class MemberController {
         return "redirect:/devroom/member/mypage/reservation-info";
     }
 
+    @PostMapping("/bookmark")
+    public ResponseEntity<?> roomBookMark(@RequestParam("roomNo") Long roomNo, Principal principal) {
+        String memberId = principal.getName();
+        log.info("memberId {}", memberId);
+        log.info("roomNo {}", roomNo);
 
+        boolean bookmarkVal = memberService.roomBookmark(memberId, roomNo);
+        return ResponseEntity.ok(bookmarkVal);
+    }
 
 }
