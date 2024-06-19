@@ -1,6 +1,7 @@
 package com.dev.shop.config;
 
 import com.dev.shop.config.handler.CustomAuthenticationFailHandler;
+import com.dev.shop.config.handler.CustomAuthenticationSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -16,10 +17,12 @@ public class MemberSecurityConfig {
 
     private final MemberAuthenticationProvider memberAuthenticationProvider;
     private final CustomAuthenticationFailHandler customAuthenticationFailHandler;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
-    public MemberSecurityConfig(MemberAuthenticationProvider memberAuthenticationProvider, CustomAuthenticationFailHandler customAuthenticationFailHandler) {
+    public MemberSecurityConfig(MemberAuthenticationProvider memberAuthenticationProvider, CustomAuthenticationFailHandler customAuthenticationFailHandler, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
         this.memberAuthenticationProvider = memberAuthenticationProvider;
         this.customAuthenticationFailHandler = customAuthenticationFailHandler;
+        this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
     }
 
 
@@ -38,12 +41,13 @@ public class MemberSecurityConfig {
             .authorizeRequests().anyRequest().hasAuthority("USER")
             .and()
             .formLogin()
-            .loginPage("/devroom/member/login") // 개발자가 설정한 로그인 페이지
-            .loginProcessingUrl("/devroom/member/login")
-            .usernameParameter("memberId")
-            .passwordParameter("memberPw")
-            .failureHandler(customAuthenticationFailHandler)
-            .defaultSuccessUrl("/devroom/member/main", true) // 로그인 성공 시 리다이렉트할 페이지
+                .loginPage("/devroom/member/login") // 개발자가 설정한 로그인 페이지
+                .loginProcessingUrl("/devroom/member/login")
+                .usernameParameter("memberId")
+                .passwordParameter("memberPw")
+                .successHandler(customAuthenticationSuccessHandler)
+                .failureHandler(customAuthenticationFailHandler)
+//            .defaultSuccessUrl("/devroom/member/main", true) // 로그인 성공 시 리다이렉트할 페이지
             .permitAll() //
             .and()
             .logout() // 로그아웃 관련 처리

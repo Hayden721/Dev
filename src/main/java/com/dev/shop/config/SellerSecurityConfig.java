@@ -16,13 +16,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SellerSecurityConfig {
 
     private final SellerAuthenticationProvider sellerAuthenticationProvider;
-    private final CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
     @Autowired
     public SellerSecurityConfig( SellerAuthenticationProvider sellerAuthenticationProvider, CustomAuthenticationFailHandler customAuthenticationFailHandler) {
 
         this.sellerAuthenticationProvider = sellerAuthenticationProvider;
-        this.customAuthenticationFailHandler = customAuthenticationFailHandler;
     }
 
 

@@ -155,7 +155,19 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public String memberNoByAuthId(String authId) {
+    public boolean getBookmarkValue(String memberId, Long roomNo) {
+        Long memberNo = reserveDao.selectMemberNoByAuthId(memberId);
+        log.info("memberNo {}", memberNo);
+        return reserveDao.selectBookmarkedRoom(memberNo, roomNo);
+    }
+
+    /**
+     * 계정아이디를 통해 memberNo를 가지고 온다
+     * @param authId - 북마크하려는 멤버의 id
+     * @return member_no
+     */
+    @Override
+    public Long getMemberNoByAuthId(String authId) {
         return reserveDao.selectMemberNoByAuthId(authId);
     }
 

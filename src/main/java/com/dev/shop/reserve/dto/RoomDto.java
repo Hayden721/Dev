@@ -18,6 +18,6 @@ public class RoomDto {
     private String address;
     private String detailAddress;
     private String extraAddress;
-    private int room_delete;
+    private int roomDelete;
     private Long sellerNo;
 }

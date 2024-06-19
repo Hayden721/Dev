@@ -150,7 +150,7 @@
     </select>
 
 
-    <select id="selectMemberNoByAuthId" resultType="java.lang.String">
+    <select id="selectMemberNoByAuthId" resultType="java.lang.Long">
         SELECT member_no
         FROM member_tb
         WHERE member_id = #{memberId}
@@ -174,15 +174,20 @@
         ORDER BY created_date DESC
     </select>
 
-
+    <select id="selectBookmarkedRoom">
+        SELECT CASE WHEN COUNT(*) > 0 THEN true ElSE false END
+        FROM bookmark_tb
+        WHERE member_no = #{memberNo}
+        AND room_no = #{roomNo}
+    </select>
 
 
     <insert id="insertReserveInfo">
         INSERT INTO reservation_tb (
-            reservation_date, reservation_creation_date, start_time, end_time, seller_no, member_no, room_no, roption_no, end_date_time
+            reservation_date, reservation_creation_date, start_time, end_time, seller_no, member_no, room_no, roption_no, end_date_time, reservation_status
             )
         VALUES (
-            #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, #{endDateTime}
+            #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, #{endDateTime}, 1
             )
     </insert>
 

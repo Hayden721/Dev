@@ -23,7 +23,7 @@ public interface ReserveService {
 
 
 
-    String memberNoByAuthId(String authId);
+    Long getMemberNoByAuthId(String authId);
 
     void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo);
 
@@ -33,4 +33,6 @@ public interface ReserveService {
 
 
     RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo);
+
+    boolean getBookmarkValue(String memberId, Long roomNo);
 }

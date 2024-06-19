@@ -20,7 +20,6 @@ public class ReservationScheduleHandler {
 
         reserveService.updateReservationStatus();
 
-
         log.info("-------- ReservationHandler 확인 dubug");
     }
 

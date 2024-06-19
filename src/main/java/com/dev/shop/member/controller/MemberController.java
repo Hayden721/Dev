@@ -167,6 +167,7 @@ public class MemberController {
         log.info("memberId {}", memberId);
         log.info("roomNo {}", roomNo);
 
+        // 북마크가 되어 있는가? true 북마크 되었음, false 북마크 안되어 있음
         boolean bookmarkVal = memberService.roomBookmark(memberId, roomNo);
         return ResponseEntity.ok(bookmarkVal);
     }

@@ -50,9 +50,12 @@ public class MemberServiceImpl implements MemberService {
         log.info("bookmark : {}", bookmark);
         if(!bookmark) {
             memberDao.insertBookmark(memberNo, roomNo);
+            // 북마크 insert 후 true 반환
             return true;
         }else {
+
             memberDao.deleteBookmark(memberNo, roomNo);
+            // 북마크 delete 후 false 반환
             return false;
         }
 

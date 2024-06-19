@@ -2,6 +2,7 @@
 <html lang="ko"
 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
       layout:decorate="~{layouts/config}" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="/css/reserve/detail.css">
@@ -41,7 +42,15 @@
         <div class="title-container">
             <div style="display: flex; justify-content: space-between;">
                 <h1 th:text="${roomInfo.roomTitle}"></h1>
-                <button style="margin-right: 10px;" class="btn, bookmark-btn"><i class="bi bi-heart"></i>저장</button>
+                <button style="margin-right: 10px;" class="btn bookmark-btn" sec:authorize="isAuthenticated()">
+                    <span class="bookmark-icon-container">
+                        <i th:if="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-heart-fill"></i>
+                        <i th:unless="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-heart"></i>
+                    </span>
+
+                    <span style="font-size: 15px;">북마크</span>
+
+                </button>
             </div>
 
             <span th:switch="${roomInfo.roomDiv}">
@@ -88,6 +97,9 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
 
+
+
+
     $(document).ready(function(){
 
     });
@@ -115,7 +127,8 @@
     });
 
     $('.bookmark-btn').click(function () {
-
+        const $this = $(this);
+        const $bookmark = $this.find('.bookmark-icon-container');
         $.ajax({
             type: 'post',           // 타입 (get, post, put 등등)
             url: '/devroom/member/bookmark',  // 요청할 서버url
@@ -126,10 +139,12 @@
             },
             success: function (result) { // 결과 성공 콜백함수
                 console.log(result);
-                if(result){
-                    console.log("1");
-                }else {
-                    console.log("2");
+
+                if(result === "true"){
+
+                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-heart-fill"></i>');
+                }else if(result === "false") {
+                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-heart"></i>')
                 }
             },
             error: function (request, status, error) {

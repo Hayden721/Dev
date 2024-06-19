@@ -10,11 +10,13 @@ import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +54,16 @@ public class ReserveController {
     }
 
     @GetMapping("/detail")
-    public void detailGet(@RequestParam final Long roomNo, Model model) {
+    public void detailGet(@RequestParam final Long roomNo, Model model, Principal principal) {
+
+
+        String memberId = null;
+        if(principal != null) {
+            memberId = principal.getName();
+        }
+
+
+        log.info("memberId {}", memberId);
         // roomDTO select
         RoomDto roomInfo = reserveService.findRoomInfo(roomNo);
         // roomOption select
@@ -68,9 +79,15 @@ public class ReserveController {
         List<RoomImageDto> extraImages = reserveService.getRoomExtraImageByRoomNo(roomNo);
 
         // roomOptionImage
-
-
         log.info("--- reserveController --- 값 : {}", roomOptionInfo);
+
+
+        if(memberId != null) {
+            // bookmarkCheck
+            boolean bookmarkValue = reserveService.getBookmarkValue(memberId, roomNo);
+            log.info("controller boomarkValue : {}", bookmarkValue);
+            model.addAttribute("bookmark", bookmarkValue);
+        }
 
 
         model.addAttribute("roomInfo", roomInfo);
@@ -79,6 +96,7 @@ public class ReserveController {
         model.addAttribute("filePath", filePath);
         model.addAttribute("thumbnailImage", thumbnailImage);
         model.addAttribute("extraImages", extraImages);
+
 
     }
 
@@ -117,7 +135,7 @@ public class ReserveController {
         log.info("----------------------- startTime : {}, endTime : {} ", reserveStartTime, reserveEndTime);
         log.info("----------------------- selectDate : {}, roomNo : {}, optionNo : {}, authId : {}", selectDate, roomNo, optionNo, authId);
 
-        String memberNo = reserveService.memberNoByAuthId(authId);
+        Long memberNo = reserveService.getMemberNoByAuthId(authId);
 
         model.addAttribute("reserveStartTime", reserveStartTime);
         model.addAttribute("reserveEndTime", reserveEndTime);

@@ -64,7 +64,7 @@ public interface ReserveDao {
     void insertReserveInfo(@Param("parsingDate") LocalDate parsingDate, @Param("reserveStartTime") Integer reserveStartTime, @Param("reserveEndTime") Integer reserveEndTime, @Param("sellerNo") Long sellerNo,
                            @Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo, @Param("endDateTime") LocalDateTime endDateTime);
 
-    String selectMemberNoByAuthId(String authId);
+    Long selectMemberNoByAuthId(String authId);
 
     /**
      * 예약 시간 지난 예약 데이터 상태를 '종료' 로 만들기
@@ -84,4 +84,8 @@ public interface ReserveDao {
      * @return 썸네일 이미지 데이터
      */
     RoomImageDto selectRoomThumbnailByRoomNo(Long roomNo);
+
+    boolean selectBookmarkedRoom(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
+
+
 }

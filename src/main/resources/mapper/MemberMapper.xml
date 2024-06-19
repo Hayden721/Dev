@@ -88,7 +88,8 @@
         LEFT JOIN roomoption_tb c
         ON a.roption_no = c.roption_no
         WHERE member_no = #{memberNo}
-        AND reservation_status = 1 or 2
+        AND reservation_status IN(1, 2)
+        ORDER BY reservation_creation_date desc
         LIMIT #{params.pagination.limitStart}, #{params.recordSize}
     </select>
 
@@ -125,12 +126,11 @@
         limit 0, 6
 
     </select>
-    <select id="selectBookmarkData" resultType="java.lang.Boolean" >
+    <select id="selectBookmarkData" resultType="java.lang.Boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ElSE false END
         FROM bookmark_tb
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
-
 
 </mapper>
