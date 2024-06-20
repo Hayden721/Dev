@@ -2,12 +2,14 @@ package com.dev.shop.config;
 
 import com.dev.shop.config.handler.CustomAuthenticationFailHandler;
 import com.dev.shop.config.handler.CustomAuthenticationSuccessHandler;
+import com.dev.shop.config.handler.CustomLogoutSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 
 @Slf4j
@@ -18,11 +20,19 @@ public class MemberSecurityConfig {
     private final MemberAuthenticationProvider memberAuthenticationProvider;
     private final CustomAuthenticationFailHandler customAuthenticationFailHandler;
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
-    public MemberSecurityConfig(MemberAuthenticationProvider memberAuthenticationProvider, CustomAuthenticationFailHandler customAuthenticationFailHandler, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+    public MemberSecurityConfig(
+            MemberAuthenticationProvider memberAuthenticationProvider,
+            CustomAuthenticationFailHandler customAuthenticationFailHandler,
+            CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+            CustomLogoutSuccessHandler customLogoutSuccessHandler
+
+    ) {
         this.memberAuthenticationProvider = memberAuthenticationProvider;
         this.customAuthenticationFailHandler = customAuthenticationFailHandler;
         this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+        this.customLogoutSuccessHandler = customLogoutSuccessHandler;
     }
 
 
@@ -51,10 +61,12 @@ public class MemberSecurityConfig {
             .permitAll() //
             .and()
             .logout() // 로그아웃 관련 처리
-            .logoutUrl("/devroom/member/logout") // 로그아웃 URL 설정\
-            .logoutSuccessUrl("/devroom/member/main")
-            .invalidateHttpSession(true) // 로그아웃 후 세션 초기화 설정
-            .deleteCookies("JSESSIONID");
+                .logoutUrl("/devroom/member/logout") // 로그아웃 URL 설정
+
+                .logoutSuccessHandler(customLogoutSuccessHandler)
+
+                .invalidateHttpSession(true) // 로그아웃 후 세션 초기화 설정
+                .deleteCookies("JSESSIONID");
         http
             .sessionManagement()
             .maximumSessions(1) // -1 무제한

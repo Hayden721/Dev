@@ -199,3 +199,10 @@
     display: inline-block;
 }
 
+.whole-image-view {
+    position: absolute;
+    top: 590px;
+    right: 240px;
+    background-color: white;
+
+}

@@ -75,24 +75,38 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String memberLoginGet() {
+    public String memberLoginGet(HttpServletRequest request) {
         log.info("--- [GET] member/login ---");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("--- [/login] 토큰값 : {}", authentication);
 
+        String previousPageUrl = request.getHeader("Referer");
+        log.info("previousPageUrl : {}", previousPageUrl);
+        if(previousPageUrl != null && !previousPageUrl.isEmpty()) {
+            request.getSession().setAttribute("previousPageUrl", previousPageUrl);
+        } else {
+            previousPageUrl = "/devroom/member/main";
+            request.getSession().setAttribute("previousPageUrl", previousPageUrl);
+        }
+
         return "/devroom/member/login";
     }
 
-    @GetMapping("/logout")
-    public String memberLogoutGet(HttpServletRequest request, HttpServletResponse response) {
+    @PostMapping("/logout")
+    public void memberLogoutGet(HttpServletRequest request, HttpServletResponse response) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        String refererUrl = request.getHeader("Referer");
+        log.info("refererUrl : {}", refererUrl);
+        System.out.println("refererUrl : " + refererUrl);
+        if(refererUrl != null && refererUrl.isEmpty()) {
+            request.getSession().setAttribute("previousPageUrl", refererUrl);
+        }
         if(authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
 
-        return "redirect:/devroom/member/main";
+
     }
 
     @GetMapping("/register")
