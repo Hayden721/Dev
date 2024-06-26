@@ -16,14 +16,13 @@
                 <button type="button" class="calendar-prev">&lt;</button>
                 <span class="calendar-yearmonth"></span>
                 <button type="button" class="calendar-next">&gt;</button>
-                <button type="button" class="calendar-next">&gt;</button>
                 <button type="button" class="calendar-today">오늘</button>
             </div>
         </div>
 
         <div id="calendar"></div>
         <label> 선택한 날짜 값 확인
-            <input class="selectDate" name="selectDate" value="">
+            <input class="selectDate" name="selectDate" value="" >
         </label>
         <!--     TimeAjax       -->
     </div>
@@ -90,7 +89,7 @@
                     } else if(cellDate < today) {
                         html += " class=\"past-day\"";
                     }
-                    html += ">"+calendarDay+"</span>";
+                    html += ">" + calendarDay + "</span>";
                 }
                 html += "</td>";
                 calendarPos++;
@@ -136,7 +135,7 @@
 
         var yearmonth = $(".calendar-yearmonth").text().split("/");
         var clickDate = yearmonth[0] + "-" + yearmonth[1] + "-" + $(event.target).text();
-
+        const calendarDay = $('#calendar table > tbody > tr > td > span');
             $.ajax({
                 type: 'get',           // 타입 (get, post, put 등등)
                 url: './detail/reserve-time-ajax',  // 요청할 서버url
@@ -156,8 +155,15 @@
             })
 
         $(".selectDate").val(clickDate);
+        calendarDay.removeClass('date-click');
+
+        $(this).addClass('date-click');
+
     });
 
+
+    
+    
 </script>
 
 

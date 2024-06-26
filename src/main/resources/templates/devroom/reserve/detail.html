@@ -22,10 +22,11 @@
                     <div th:each="extraImages : ${images}" class="extra-img-div">
                         <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.createdDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
                     </div>
-
-                    <button class="btn whole-image-view">전체 사진 보기</button>
+                    <button class="btn whole-image-view btn-light" data-bs-toggle="modal" data-bs-target="#whole-image-view-modal">
+                        <span><i class="bi bi-grid-3x3-gap-fill"></i></span>
+                        <span>전체 사진 보기</span>
+                    </button>
                 </div>
-
             </div>
 
             <div th:unless="${extraImages.size()} >= 4">
@@ -34,11 +35,6 @@
                         <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.createdDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
                     </div>
                 </div>
-
-                <button class="btn whole-image-view">
-                    <span><i class="bi bi-grid-3x3-gap"></i></span>
-                    <span>전체 사진 보기</span>
-                </button>
             </div>
 
         </div>
@@ -48,12 +44,10 @@
                 <h1 th:text="${roomInfo.roomTitle}"></h1>
                 <button style="margin-right: 10px;" class="btn bookmark-btn" sec:authorize="isAuthenticated()">
                     <span class="bookmark-icon-container">
-                        <i th:if="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-heart-fill"></i>
-                        <i th:unless="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-heart"></i>
+                        <i th:if="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-fill"></i>
+                        <i th:unless="${bookmark}" style="font-size: 15px" class="bi bi-bookmark"></i>
                     </span>
-
                     <span style="font-size: 15px;">북마크</span>
-
                 </button>
             </div>
 
@@ -63,12 +57,13 @@
                 <span th:case="'office'">개인오피스</span>
             </span>
 
-            <!-- 방 설명 칸 -->
+            <!-- 방 설명  -->
             <div class="contnent-container">
                 <p th:text="${roomInfo.roomContent}"></p>
             </div>
         </div> <!-- title-container END -->
 
+        <!--   옵션     -->
         <div id="option-wrap">
             <div class="option-title">
                 <h2>옵션</h2>
@@ -76,15 +71,17 @@
 
             <div class="option-sort">
                 <div id="option-container">
-                    <div th:each="optionList : ${roomOptionInfo}" class="option-list">
-                        <input th:value="${optionList.roptionNo}" type="hidden">
-                        <div class="image-container">
-                            <img src="https://www.dummyimage.com/90x90/000/fff" alt="none">
+                    <div th:each="optionData : ${optionData}" class="option-list">
+                        <input th:value="${optionData.roptionNo}" type="hidden">
+                        <div class="option-image-container">
+                            <img th:if="${optionData.roptionImageNo} != '0'" th:src="${filePath} + '/' + ${optionData.createdDate} + '/' + ${optionData.saveName}" th:alt="${optionData.originalName}">
+                            <img th:unless="${optionData.roptionImageNo} != '0'" src="https://www.dummyimage.com/90x90/000/fff" alt="none">
                         </div>
 
                         <div>
-                            <span th:text="${optionList.roptionTitle}"></span>
-                            <span th:text="${optionList.roptionPrice}"></span>
+                            <span th:text="${optionData.roptionTitle}"></span>
+                            <span th:text="${optionData.roptionContent}"></span>
+                            <span th:text="${optionData.roptionPrice}"></span>
                         </div>
 
                     </div>
@@ -94,15 +91,29 @@
             </div>
         </div>
 
-    </div> <!-- detail-wrap END -->
-</div> <!-- layout:fragment="content" END -->
 
+
+    </div> <!-- detail-wrap END -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="whole-image-view-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div> <!-- layout:fragment="content" END -->
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
-
-
-
 
     $(document).ready(function(){
 
@@ -146,9 +157,9 @@
 
                 if(result === "true"){
 
-                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-heart-fill"></i>');
+                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-fill"></i>');
                 }else if(result === "false") {
-                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-heart"></i>')
+                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark"></i>')
                 }
             },
             error: function (request, status, error) {
@@ -156,9 +167,7 @@
             }
         })
     })
-        
-    
-    
+
     </script>
 </th:block>
 

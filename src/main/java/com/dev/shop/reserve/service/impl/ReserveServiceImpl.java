@@ -1,10 +1,7 @@
 package com.dev.shop.reserve.service.impl;
 
 import com.dev.shop.reserve.dao.ReserveDao;
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
-import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.reserve.dto.*;
 import com.dev.shop.reserve.service.ReserveService;
 
 import com.dev.shop.seller.dto.RoomImageDto;
@@ -159,6 +156,11 @@ public class ReserveServiceImpl implements ReserveService {
         Long memberNo = reserveDao.selectMemberNoByAuthId(memberId);
         log.info("memberNo {}", memberNo);
         return reserveDao.selectBookmarkedRoom(memberNo, roomNo);
+    }
+
+    @Override
+    public List<OptionAndImageDto> getOptionAndImageByRoomNo(Long roomNo) {
+        return reserveDao.selectOptionAndImage(roomNo);
     }
 
     /**

@@ -1,9 +1,6 @@
 package com.dev.shop.reserve.service;
 
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
-import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.reserve.dto.*;
 import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.PagingResponse;
 
@@ -35,4 +32,7 @@ public interface ReserveService {
     RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo);
 
     boolean getBookmarkValue(String memberId, Long roomNo);
+
+
+    List<OptionAndImageDto> getOptionAndImageByRoomNo(Long roomNo);
 }

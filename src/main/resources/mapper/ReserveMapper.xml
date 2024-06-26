@@ -180,6 +180,14 @@
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
+    <select id="selectOptionAndImage" resultType="com.dev.shop.reserve.dto.OptionAndImageDto">
+        select a.*, IFNULL(b.roptionimage_no, '0') as roptionimage_no, IFNULL(b.original_name, 'noImage') as original_name, IFNULL(b.save_name, 'noImage') as save_name, IFNULL(b.file_size, '0') as file_size, IFNULL(b.file_delete, 'N') as file_delete, IFNULL(b.created_date, '0101-01-01') as created_date
+        FROM roomoption_tb a
+        left join roomoptionimage_tb b
+        on a.roption_no = b.roption_no
+        WHERE a.room_no = #{roomNo};
+
+    </select>
 
 
     <insert id="insertReserveInfo">

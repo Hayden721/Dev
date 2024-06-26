@@ -1,9 +1,6 @@
 package com.dev.shop.reserve.dao;
 
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
-import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.reserve.dto.*;
 import com.dev.shop.seller.dto.RoomImageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -88,4 +85,5 @@ public interface ReserveDao {
     boolean selectBookmarkedRoom(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
 
+    List<OptionAndImageDto> selectOptionAndImage(Long roomNo);
 }

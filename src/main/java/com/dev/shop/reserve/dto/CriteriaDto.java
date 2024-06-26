@@ -7,7 +7,9 @@ import lombok.ToString;
 
 import java.util.List;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 public class CriteriaDto {
     private int page;   // 현재 페이지 번호
     private int recordSize; // 페이지당 출력할 데이터 개수

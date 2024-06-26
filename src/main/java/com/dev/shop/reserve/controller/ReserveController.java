@@ -1,9 +1,6 @@
 package com.dev.shop.reserve.controller;
 
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
-import com.dev.shop.reserve.dto.CriteriaDto;
+import com.dev.shop.reserve.dto.*;
 import com.dev.shop.reserve.service.ReserveService;
 import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.FileUtils;
@@ -62,12 +59,10 @@ public class ReserveController {
             memberId = principal.getName();
         }
 
-
         log.info("memberId {}", memberId);
         // roomDTO select
         RoomDto roomInfo = reserveService.findRoomInfo(roomNo);
-        // roomOption select
-        List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
+
 
         // 이미지 파일 패스
         String filePath = fileUtils.choosePath();
@@ -78,8 +73,13 @@ public class ReserveController {
         // extraImage
         List<RoomImageDto> extraImages = reserveService.getRoomExtraImageByRoomNo(roomNo);
 
-        // roomOptionImage
-        log.info("--- reserveController --- 값 : {}", roomOptionInfo);
+        // roomOptionImage 옵션과 옵션 이미지
+        List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
+
+        List<OptionAndImageDto> optionData = reserveService.getOptionAndImageByRoomNo(roomNo);
+
+        log.info("--- reserveController --- 값 : {}", optionData);
+
 
 
         if(memberId != null) {
@@ -96,6 +96,7 @@ public class ReserveController {
         model.addAttribute("filePath", filePath);
         model.addAttribute("thumbnailImage", thumbnailImage);
         model.addAttribute("extraImages", extraImages);
+        model.addAttribute("optionData", optionData);
 
 
     }

@@ -22,6 +22,7 @@
     text-decoration: none;
 }
 nav {
+    position: relative;
     width: auto;
     height: 90px;
     display: flex;

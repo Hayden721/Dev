@@ -9,36 +9,62 @@
 
 
 <form action="/devroom/reserve/reserve-info" method="post" class="time-form">
-    <input th:name="roomNo" th:value="${roomNo}">
-    <input th:name="optionNo" th:value="${optionNo}">
-    <input th:name="selectDate" th:value="${selectDate}">
-    <input th:name="authId" th:value="${authId}">
-    <input th:name="sellerNo" th:value="${sellerNo}">
+    <input th:name="roomNo" th:value="${roomNo}" hidden>
+    <input th:name="optionNo" th:value="${optionNo}" hidden>
+    <input th:name="selectDate" th:value="${selectDate}" hidden>
+    <input th:name="authId" th:value="${authId}" hidden>
+    <input th:name="sellerNo" th:value="${sellerNo}" hidden>
+
+    <br>
 
     <div>
         <label>시작시간</label>
     </div>
+
     <div th:each="startTime : ${availableReserveTimes['start_time']}" class="radio-sort">
-
-        <input type="radio" th:value="${startTime}" th:name="reserveStartTime">
-        <label th:text="${startTime}"></label>
-
+        <input type="radio" th:value="${startTime}" th:name="reserveStartTime" class="reservation-radio reservation-start-time">
     </div>
 
     <div>
-    <label>종료시간</label>
+        <label>종료시간</label>
     </div>
 
     <div th:each="endTime : ${availableReserveTimes['end_time']}" class="radio-sort">
-
-            <input type="radio" th:value="${endTime}" th:name="reserveEndTime">
-            <label th:text="${endTime}"></label>
-
+        <input type="radio" th:value="${endTime}" th:name="reserveEndTime" class="reservation-radio reservation-end-time">
     </div>
 
     <button sec:authorize="isAuthenticated()">예약하기</button>
 
 </form>
 
+<script th:inline="javascript" type="text/javascript">
+    $(document).ready(function () {
+        reservationTimeException();
+    })
+
+    function reservationTimeException() {
+
+        $('input[name="reserveStartTime"]').change(function () {
+            let startTime = $('input[name="reserveStartTime"]:checked').val();
+            let endTime = $('input[name="reserveEndTime"]:checked').val();
+
+            console.log("startTime startTime : ", startTime);
+            console.log("startTime endTime : ", endTime);
+
+        })
+
+
+        $('input[name="reserveEndTime"]').change(function () {
+            let startTime = $('input[name="reserveStartTime"]:checked').val();
+            let endTime = $('input[name="reserveEndTime"]:checked').val();
+
+            console.log("startTime startTime : ", startTime);
+            console.log("startTime endTime : ", endTime);
+
+        })
+
+    }
+
+</script>
 </body>
 </html>

@@ -2,7 +2,7 @@
     width: 1200px;
     height: 100%;
     margin: 0 auto;
-    background-color: wheat;
+
 }
 
 .title-container {
@@ -27,7 +27,7 @@
 .images-container {
     width: 1200px;
     height: 550px;
-    background-color: thistle;
+
     display: flex;
 }
 
@@ -38,6 +38,7 @@
 }
 
 .extra-img-container {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(2,1fr);
     grid-gap: 10px;
@@ -79,8 +80,9 @@
     float: left;
 }
 #option-container {
-    width: 400px;
-
+    width: 420px;
+    height: 530px;
+    overflow-y: scroll;
     margin: 10px;
 }
 
@@ -98,10 +100,15 @@
     cursor: pointer;
     background-color: #72b01d;
 }
+
+.option-image-container {
+
+}
+
 .option-list img {
-    width: 120px;
-    height: 120px;
-    margin-top: 10px;
+    width: 130px;
+    height: 130px;
+
     left: 280px;
 
 }
@@ -138,6 +145,13 @@
     padding: 8px 8px;
 }
 
+.date-click {
+    border-radius: 50%;
+    color: white;
+    background-color: #72b01d;
+    padding: 8px 8px;
+}
+
 .past-day{
     border-radius: 10px;
     background-color: dimgrey;
@@ -162,7 +176,7 @@
 }
 
 .calendar-container {
- }
+}
 
 .calendar-container > .calendar-header > .calendar-control {
     height: 10px;
@@ -200,9 +214,44 @@
 }
 
 .whole-image-view {
-    position: absolute;
-    top: 590px;
-    right: 240px;
-    background-color: white;
 
+    position: absolute;
+    top: 91%;
+    right: 2%;
+
+}
+
+/* 옵션 css */
+/* 라디오 버튼 스타일 초기화 */
+.reservation-radio {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.reservation-radio {
+    width: 30px;
+    height: 30px;
+    background-color: wheat;
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 5px 0;
+}
+
+.reservation-radio::after {
+    content: attr(value);
+    font-size: 15px;
+    color: #333;
+}
+
+.reservation-radio:checked {
+    background-color: #007bff;
+}
+
+.reservation-radio:checked:after {
+    color: #fff;
 }
