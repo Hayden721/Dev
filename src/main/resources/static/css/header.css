@@ -1,24 +1,21 @@
 .header-ul {
     list-style: none;
     display: flex;
-    justify-content: space-between;
-    margin: 20px;
 }
 
 .header-ul > li {
     display: flex;
     float: left;
-    margin: 20px;
 }
+
 .header-logo {
     margin: 20px;
 }
 .header-logo > a {
     font-size: 40px;
-
 }
 
-.header-ul > li > a {
+.nav > a {
     text-decoration: none;
 }
 nav {
@@ -26,14 +23,62 @@ nav {
     width: auto;
     height: 90px;
     display: flex;
-    align-items:center;
+    align-items: center;
     justify-content: space-between;
-    background-color: white;
 
 }
+
+.mypage-menu > ul {
+    padding: 0;
+    margin: 10px;
+
+}
+
+.mypage-menu > ul > li {
+    margin: 5px 0 0 0;
+}
+
+
 
 #spotBtn {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+}
+
+.mypage-btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: inherit;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border-radius: 24px;
+    width: 100px;
+    height: 45px;
+    margin: 0 20px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.mypage-btn:hover {
+    opacity: 0.6;
+
+}
+
+.mymenu-container {
+    position: relative;
+
+}
+
+.mypage-menu {
+    top: 52px;
+    width: 230px;
+    height: auto;
+    position: absolute;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    z-index: 999;
+    right: 18px;
 }

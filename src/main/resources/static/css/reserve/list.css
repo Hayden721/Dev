@@ -7,14 +7,26 @@
 }
 /* option css*/
 .option-container{
-    width: 1300px;
+    width: 100%;
     height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.option-form {
-    width: 300px;
+
+.option-box {
+    display: flex;
+    align-items: center;
+}
+
+
+.keyword-search-container {
+    display: flex;
+    height: 50px;
+    margin: 0 0 0 20px;
+}
+.option-checkbox-container {
+    margin: 0 20px 0 0;
 }
 
 .option-button {
@@ -23,7 +35,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 10px;
+
 }
 /* option css END*/
 
@@ -64,11 +76,6 @@
 .pagination-container {
     margin: 20px;
 }
-
-.option-box {
-    flex-direction: column;
-}
-
 
 /* 카드 css */
 .room-card {

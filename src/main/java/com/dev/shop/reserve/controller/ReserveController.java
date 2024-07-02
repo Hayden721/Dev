@@ -14,10 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -30,8 +27,8 @@ public class ReserveController {
 
     @GetMapping("/list")
     public String listGet(@ModelAttribute("params") final CriteriaDto params, Model model) {
-
         List<String> searchDiv = params.getSearchDiv();
+
         log.info("두 개로 받아 오는가? = {}", searchDiv);
 
         List<String> searchLocation = params.getSearchLocation();
@@ -44,6 +41,8 @@ public class ReserveController {
 //        PagingResponse<>
         model.addAttribute("roomList", roomList);
         model.addAttribute("filePath", filePath);
+        model.addAttribute("searchDiv", searchDiv);
+        model.addAttribute("searchLocation", searchLocation);
         log.info("--- reserveController --- 값 : {}", roomList);
 
         return "/devroom/reserve/list";

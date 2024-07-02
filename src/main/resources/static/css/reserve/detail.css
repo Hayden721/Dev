@@ -77,13 +77,19 @@
 
 
 .reserveOptionAjax{
+    width: 700px;
     float: left;
 }
+
 #option-container {
-    width: 420px;
-    height: 530px;
+    width: 475px;
+    height: 470px;
     overflow-y: scroll;
-    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
 }
 
 .option-sort {
@@ -92,13 +98,15 @@
 }
 
 .option-list {
-    width: 400px;
+    width: 450px;
     height: 130px;
     position: relative;
     display: flex;
     margin-bottom: 15px;
     cursor: pointer;
     background-color: #72b01d;
+    border-radius: 13px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
 }
 
 .option-image-container {
@@ -108,8 +116,7 @@
 .option-list img {
     width: 130px;
     height: 130px;
-
-    left: 280px;
+    border-radius: 13px;
 
 }
 
@@ -176,6 +183,14 @@
 }
 
 .calendar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-wrapper {
+    margin: 0 0 0 10px;
 }
 
 .calendar-container > .calendar-header > .calendar-control {
@@ -187,7 +202,7 @@
 
 .calendar-container > .calendar-header > .calendar-control > button {
 
-    width: 30px;
+    width: 50px;
     border: 1px solid #cbcbcb;
     background-color: #fff;
     font-size: 12px;
@@ -206,7 +221,7 @@
 
 .reserveTimeAjax {
     display: flex;
-
+    justify-content: center;
 }
 
 .radio-sort {
@@ -222,6 +237,10 @@
 }
 
 /* 옵션 css */
+.time-form {
+    width: 650px;
+}
+
 /* 라디오 버튼 스타일 초기화 */
 .reservation-radio {
     appearance: none;
@@ -232,14 +251,16 @@
 }
 
 .reservation-radio {
-    width: 30px;
-    height: 30px;
-    background-color: wheat;
+    width: 50px;
+    height: 50px;
+    background-color: #E0E0E0;
     position: relative;
     display: inline-flex;
     justify-content: center;
     align-items: center;
     margin: 0 0 5px 0;
+    border-radius: 12px;
+
 }
 
 .reservation-radio::after {
@@ -249,7 +270,7 @@
 }
 
 .reservation-radio:checked {
-    background-color: #007bff;
+    background-color: #72b01d;
 }
 
 .reservation-radio:checked:after {

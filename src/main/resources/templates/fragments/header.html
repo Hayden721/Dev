@@ -9,17 +9,68 @@
       <a href="/devroom/member/main"><img src="/images/logo/share-spot-removebg-200x90.png"></a>
     </div>
 
-    <div id="spotBtn" style="width: 80px; height: 40px; background-color: #3f7d20; display: flex; justify-content: center; align-items: center; border-radius: 10px;">
-      <a href="/devroom/reserve/list" style="font-size: 20px; color: #f3eff5;"> SPOT! </a>
+    <div id="spotBtn" style="width: 80px; height: 45px; background-color: #3f7d20; display: flex; justify-content: center; align-items: center; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
+      <a href="/devroom/reserve/list" style="font-size: 20px; color: #f3eff5; "> SPOT! </a>
     </div>
 
-    <ul class="header-ul">
+      <div class="mymenu-container" sec:authorize="isAnonymous()">
+        <button class="mypage-btn">
+          <span style="margin: 0 4px 0 0;"><i class="bi bi-list" style="font-size: 26px;"></i></span>
+          <span style="margin: 0 0 0 4px;"><i class="bi bi-person" style="font-size: 26px"></i></span>
+        </button>
+        <div class="mypage-menu" style="display: none;">
+          <ul>
+            <li><a href="/devroom/member/login">로그인</a></li>
+            <li><a href="/devroom/member/register">회원가입</a></li>
+          </ul>
+        </div>
+      </div>
 
-      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/mypage">MYPAGE</a></li>
-      <li sec:authorize="isAuthenticated()"><a href="/devroom/member/logout">로그아웃</a></li>
-      <li sec:authorize="isAnonymous()"><a href="/devroom/member/login">로그인</a></li>
-    </ul>
+    <div class="mymenu-container" sec:authorize="isAuthenticated()">
+      <button class="mypage-btn">
+        <span style="margin: 0 4px 0 0;"><i class="bi bi-list" style="font-size: 26px;"></i></span>
+        <span style="margin: 0 0 0 4px;"><i class="bi bi-person-fill" style="font-size: 26px"></i></span>
+      </button>
+      <div class="mypage-menu" style="display: none;">
+        <ul>
+          <li>예약</li>
+          <li>북마크</li>
+          <li><hr style="margin: 5px 0 5px 0;"></li>
+          <li>계정</li>
+          <li><hr style="margin: 5px 0 5px 0;"></li>
+          <li><a href="/devroom/member/logout">로그아웃</a></li>
+        </ul>
+      </div>
+    </div>
+
   </nav>
 
+
+  <script th:inline="javascript" type="text/javascript">
+
+    $(document).ready(function(){
+      mypageMenuToggle();
+    });
+
+    function mypageMenuToggle() {
+
+      $(document).on('click', function (event) {
+
+        if(!$(event.target).closest('.mypage-btn').length) {
+          $('.mypage-menu').hide();
+        }
+      })
+
+      $('.mypage-btn').click(function () {
+        $('.mypage-menu').toggle();
+      })
+
+    }
+
+  </script>
+
 </div>
+
+
+
 </html>

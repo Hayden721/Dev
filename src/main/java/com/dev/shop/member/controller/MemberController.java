@@ -164,7 +164,7 @@ public class MemberController {
         log.info("----------=-=-=--=- {}", reservationInfo);
         model.addAttribute("reservationInfo", reservationInfo);
 
-        return "/devroom/member/reservation-info";
+        return "/devroom/member/mypage/reservation-info";
     }
 
     @PostMapping("/mypage/reservation/cancel")
@@ -173,6 +173,11 @@ public class MemberController {
         memberService.cancelReservation(reservationNo);
 
         return "redirect:/devroom/member/mypage/reservation-info";
+    }
+
+    @GetMapping("/mypage/bookmark/list")
+    public void mypageBookmarkList() {
+
     }
 
     @PostMapping("/bookmark")

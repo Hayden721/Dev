@@ -33,7 +33,7 @@
         <input type="radio" th:value="${endTime}" th:name="reserveEndTime" class="reservation-radio reservation-end-time">
     </div>
 
-    <button sec:authorize="isAuthenticated()">예약하기</button>
+    <button sec:authorize="isAuthenticated()" class="btn " style="float: right;">예약하기</button>
 
 </form>
 
@@ -45,24 +45,42 @@
     function reservationTimeException() {
 
         $('input[name="reserveStartTime"]').change(function () {
-            let startTime = $('input[name="reserveStartTime"]:checked').val();
-            let endTime = $('input[name="reserveEndTime"]:checked').val();
+            let startTime = parseInt($('input[name="reserveStartTime"]:checked').val());
+            let endTime = parseInt($('input[name="reserveEndTime"]:checked').val());
 
             console.log("startTime startTime : ", startTime);
             console.log("startTime endTime : ", endTime);
 
+            if(startTime === endTime) {
+                alert('시작 시간과 종료시간이 같을 수 없습니다.');
+                $('input[name="reserveStartTime"]').prop('checked', false);
+                $('input[name="reserveEndTime"]').prop('checked', false);
+            } else if(startTime > endTime) {
+                alert('시작 시간이 종료시간보다 작을 수 없습니다.');
+                $('input[name="reserveStartTime"]').prop('checked', false);
+                $('input[name="reserveEndTime"]').prop('checked', false);
+            }
         })
 
 
         $('input[name="reserveEndTime"]').change(function () {
-            let startTime = $('input[name="reserveStartTime"]:checked').val();
-            let endTime = $('input[name="reserveEndTime"]:checked').val();
+            let startTime = parseInt($('input[name="reserveStartTime"]:checked').val());
+            let endTime = parseInt($('input[name="reserveEndTime"]:checked').val());
 
             console.log("startTime startTime : ", startTime);
             console.log("startTime endTime : ", endTime);
 
-        })
 
+            if(startTime === endTime) {
+                alert('시작 시간과 종료시간이 같을 수 없습니다.');
+                $('input[name="reserveStartTime"]').prop('checked', false);
+                $('input[name="reserveEndTime"]').prop('checked', false);
+            }else if(startTime > endTime){
+                alert('시작 시간이 종료시간보다 작을 수 없습니다.');
+                $('input[name="reserveStartTime"]').prop('checked', false);
+                $('input[name="reserveEndTime"]').prop('checked', false);
+            }
+        })
     }
 
 </script>
