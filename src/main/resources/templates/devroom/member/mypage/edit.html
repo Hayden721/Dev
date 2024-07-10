@@ -2,7 +2,7 @@
 <html lang="ko"
 
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/mypage-config}">
+      layout:decorate="~{layouts/config}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
@@ -14,7 +14,7 @@
 </head>
 
 
-<div layout:fragment="mypage-content">
+<div layout:fragment="content">
 
     회원 정보 수정
     <form th:action="@{/devroom/member/mypage/edit}" method="post">

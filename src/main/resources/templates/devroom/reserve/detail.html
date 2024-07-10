@@ -78,10 +78,10 @@
                             <img th:unless="${optionData.roptionImageNo} != '0'" src="https://www.dummyimage.com/90x90/000/fff" alt="none">
                         </div>
 
-                        <div>
-                            <span th:text="${optionData.roptionTitle}"></span>
-                            <span th:text="${optionData.roptionContent}"></span>
-                            <span th:text="${optionData.roptionPrice}"></span>
+                        <div class="option-data-container">
+                            <span class="option-title" th:text="${optionData.roptionTitle}"></span>
+                            <span class="option-content" th:text="${optionData.roptionContent}"></span>
+                            <span class="option-price" th:text="${optionData.roptionPrice}"></span>
                         </div>
 
                     </div>
@@ -102,8 +102,12 @@
                 <div class="modal-header">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    ...
+                <div class="modal-body" style="display: flex; justify-content: center;">
+                    <div class="whole-image-container">
+                        <img class="whole-modal-img" th:src="${filePath} + '/' + ${thumbnailImage.createdDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}">
+                        <img th:each="extraImages : ${extraImages}" class="whole-modal-img" th:src="${filePath} + '/' + ${extraImages.createdDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
+
+                    </div>
                 </div>
 
             </div>

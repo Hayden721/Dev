@@ -1,6 +1,20 @@
-.search-container {
+
+.reservation-list-container {
     display: flex;
+    flex-direction: column;
+    margin: 0 13% 0 13%;
+    align-items: center;
+
 }
-.paging-container {
-    padding: 10px;
+
+.reserve-paging-container {
+    display: flex;
+    flex-direction: column;
+    width: 1250px;
+    margin: 20px 0 0 0;
+}
+
+.search-container {
+    align-self: end;
+    width: 400px;
 }

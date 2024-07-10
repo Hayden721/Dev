@@ -44,4 +44,11 @@ public interface MemberDao {
     void deleteBookmark(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
     Boolean selectBookmarkData(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
+
+
+
+
+    int countPaymentHistory(Long memberNo);
+
+    List<PaymentHistoryDto> selectMemberPaymentHistoryByMemberNo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 }

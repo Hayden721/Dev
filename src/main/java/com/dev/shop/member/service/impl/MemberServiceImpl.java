@@ -1,16 +1,13 @@
 package com.dev.shop.member.service.impl;
 
 import com.dev.shop.member.dao.MemberDao;
-import com.dev.shop.member.dto.MemberDto;
-import com.dev.shop.member.dto.ReservationCriteriaDto;
-import com.dev.shop.member.dto.RoomAndImageDto;
-import com.dev.shop.member.dto.getReserveInfoDto;
+import com.dev.shop.member.dto.*;
 import com.dev.shop.member.service.MemberService;
-import com.dev.shop.reserve.dto.RoomDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +58,32 @@ public class MemberServiceImpl implements MemberService {
 
         //2. 만약 북마크가 존재하지 않으면 insert / 존재한다면 delete
 
+    }
+
+    // 결제 내역 페이징 수정 중
+
+    /**
+     * 결제 내역 페이징
+     * @param memberId - 로그인한 멤버 ID
+     * @param params -
+     * @return
+     */
+    @Override
+    public PagingResponse<PaymentHistoryDto> getMemberPaymentHistoryByMemberId(String memberId, ReservationCriteriaDto params) {
+        Long memberNo = memberDao.selectMemberNo(memberId);
+        int paymentCount = memberDao.countPaymentHistory(memberNo);
+
+        if(paymentCount < 1) {
+            return new PagingResponse<>(Collections.emptyList(), null);
+        }
+
+        Pagination pagination = new Pagination(paymentCount, params);
+
+        params.setPagination(pagination);
+
+        List<PaymentHistoryDto> list = memberDao.selectMemberPaymentHistoryByMemberNo(memberNo, params);
+        log.info("Payment Paging List : {}", list);
+        return new PagingResponse<>(list, pagination);
     }
 
     /**

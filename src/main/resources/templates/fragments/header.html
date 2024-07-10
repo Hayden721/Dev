@@ -10,7 +10,7 @@
     </div>
 
     <div id="spotBtn" style="width: 80px; height: 45px; background-color: #3f7d20; display: flex; justify-content: center; align-items: center; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-      <a href="/devroom/reserve/list" style="font-size: 20px; color: #f3eff5; "> SPOT! </a>
+      <a href="/devroom/reserve/list"  style="font-size: 20px; color: #f3eff5;"> SPOT! </a>
     </div>
 
       <div class="mymenu-container" sec:authorize="isAnonymous()">
@@ -18,10 +18,10 @@
           <span style="margin: 0 4px 0 0;"><i class="bi bi-list" style="font-size: 26px;"></i></span>
           <span style="margin: 0 0 0 4px;"><i class="bi bi-person" style="font-size: 26px"></i></span>
         </button>
-        <div class="mypage-menu" style="display: none;">
+        <div class="mypage-menu">
           <ul>
-            <li><a href="/devroom/member/login">로그인</a></li>
-            <li><a href="/devroom/member/register">회원가입</a></li>
+            <li><a style="width: 100%;" href="/devroom/member/login"><div>로그인</div></a></li>
+            <li><a href="/devroom/member/register"><div>회원가입</div></a></li>
           </ul>
         </div>
       </div>
@@ -33,12 +33,12 @@
       </button>
       <div class="mypage-menu" style="display: none;">
         <ul>
-          <li>예약</li>
-          <li>북마크</li>
+          <li><a href="/devroom/member/mypage/reservation-info"><div>예약</div></a></li>
+          <li><a href="/devroom/member/mypage/bookmark/list"><div>북마크</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
-          <li>계정</li>
+          <li><a href="/devroom/member/mypage/account"><div>계정</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
-          <li><a href="/devroom/member/logout">로그아웃</a></li>
+          <li><a href="/devroom/member/logout"><div>로그아웃</div></a></li>
         </ul>
       </div>
     </div>

@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko"
+
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/config}">
 <head>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/member/reservation-info.css}">
-    <title>ShareSpot</title>
+
+
+
+    <title>Test</title>
 </head>
 
 
 <div layout:fragment="content">
-
     <div class="content-middle-container">
 
         <div class="reserve-paging-container">
@@ -20,9 +23,9 @@
                     <label style="margin: 0 5px 5px 0">
                         <select class="form-select" style="width: 120px; text-align-last: center;">
                             <option value="">전체</option>
-                            <option value="1">예약</option>
-                            <option value="0">예약 취소</option>
-                            <option value="2">예약 종료</option>
+                            <option value="1">방이름</option>
+                            <option value="0">옵션 이름</option>
+
                         </select>
                     </label>
 
@@ -37,24 +40,21 @@
                     <tr>
                         <th scope="col">번호</th>
                         <th scope="col">방이름</th>
-                        <th scope="col">옵션이름</th>
+                        <th scope="col">옵션 이름</th>
                         <th scope="col">예약 날짜</th>
                         <th scope="col">예약 시간</th>
-                        <th scope="col">예약 취소</th>
+                        <th scope="col">결제 금액</th>
                     </tr>
                     </thead>
+
                     <tbody>
-                    <tr th:each="reserveInfo : ${reservationInfo.list}" class="list-tr">
-                        <td th:text="${reserveInfo.rowNum}"></td>
-                        <td th:text="${reserveInfo.roomTitle}"></td>
-                        <td th:text="${reserveInfo.roomOptionTitle}"></td>
-                        <td th:text="${reserveInfo.reservationDate}"></td>
-                        <td th:text="${reserveInfo.startTime} + '시' + ' ~ ' + ${reserveInfo.endTime} +'시'"></td>
-                        <td th:switch="${reserveInfo.reservationStatus}">
-                            <button th:case="'0'" class="btn btn-danger" disabled>예약 취소</button>
-                            <button th:case="'1'" class="btn btn-danger" th:data-reservation-no="${reserveInfo.reservationNo}" data-bs-toggle="modal" data-bs-target="#reservationCancelModal">예약 취소</button>
-                            <button th:case="'2'" class="btn btn-danger" disabled>예약 종료</button>
-                        </td>
+                    <tr th:each="payment : ${paymentHistory.list}" class="list-tr">
+                        <td th:text="${payment.rowNum}"></td>
+                        <td th:text="${payment.roomTitle}"></td>
+                        <td th:text="${payment.roptionTitle}"></td>
+                        <td th:text="${payment.reservationDate}"></td>
+                        <td th:text="${payment.startTime} + '~' + ${payment.endTime}"></td>
+                        <td th:text="${payment.totalPrice} "></td>
                     </tr>
                     </tbody>
                 </table>
@@ -64,48 +64,27 @@
         </div>
     </div>
 
+</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="reservationCancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">예약 취소</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    예약을 취소하시겠습니까?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
-                    <button type="button" class="btn btn-primary cancel-btn">네</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div> <!-- layout:fragment="content" END -->
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
         $(document).ready(function () {
-            sendReservationDataToModal();
-            reservationCancelBtn();
+
 
             findAllList();
             activePagingButton();
         })
 
         function findAllList() {
-            const list = [[ ${reservationInfo.list} ]];
+            const list = [[ ${paymentHistory.list} ]];
 
             if( !list.length ) {
                 $(".list-tr").html("<td colspan='6'><div>확인된 예약이 없어요!</div></td>");
                 drawPage();
             }
 
-            const pagination = [[ ${reservationInfo.pagination} ]];
+            const pagination = [[ ${paymentHistory.pagination} ]];
             console.log(pagination);
 
             // @ModelAttribute를 사용했기 때문에 html에서 불러올 수 있음
@@ -137,8 +116,6 @@
                     ? `<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${i});">${i}</a></li>`
                     : `<li class="page-item active"><span class="page-link">${i}</span></li>`
             }
-
-
 
 
             html += `
@@ -189,15 +166,15 @@
 
         function activePagingButton() {
             let pageValue = parseInt($('.active span').text());
-            const pagination = [[ ${reservationInfo.pagination} ]];
+            const pagination = [[ ${paymentHistory.pagination} ]];
             console.log("페이지 값 : ", pageValue);
 
             let startPage = pagination.startPage;
             console.log("startPage", startPage)
 
             if (pagination.startPage === pageValue) {
-                    $('.page-start').css('pointer-events', 'none');
-                    $('.page-prev').css('pointer-events', 'none');
+                $('.page-start').css('pointer-events', 'none');
+                $('.page-prev').css('pointer-events', 'none');
             }
 
             if(pagination.endPage === pageValue) {
@@ -208,33 +185,8 @@
         }
 
 
-        function sendReservationDataToModal() {
-            $('#reservationCancelModal').on('show.bs.modal', function (event) {
-                const button = $(event.relatedTarget);
-                let getReservationNo = button.data('reservationNo');
-                console.log(getReservationNo)
-                const cancelBtn = $(this).find('.cancel-btn');
-                cancelBtn.data('reservation-no', getReservationNo);
-            })
-            
-        }
-        function reservationCancelBtn() {
-            $('.cancel-btn').click(function () {
-                const reservationNo = $(this).data('reservation-no');
-                $.ajax({
-                    type: 'POST',
-                    url: '/devroom/member/mypage/reservation/cancel',
-                    data: {reservationNo: reservationNo},
-                    success: function (response) {
-                        window.location.href='/devroom/member/mypage/reservation-info';
-                    },
-                    error: function () {
-                        window.location.href='/devroom/member/mypage/reservation/cancel/error'
-                    }
 
-                })
-            })
-        }
+
     </script>
 </th:block>
 

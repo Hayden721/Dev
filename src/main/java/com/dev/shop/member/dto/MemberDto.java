@@ -2,8 +2,11 @@ package com.dev.shop.member.dto;
 
 import lombok.*;
 
-@Getter @Setter @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED) @ToString
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 // 로그인에 사용
 public class MemberDto {
     private Long memberNo;

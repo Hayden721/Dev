@@ -1,13 +1,8 @@
 package com.dev.shop.member.controller;
 
 
-import com.dev.shop.member.dto.MemberDto;
-import com.dev.shop.member.dto.ReservationCriteriaDto;
-import com.dev.shop.member.dto.RoomAndImageDto;
-import com.dev.shop.member.dto.getReserveInfoDto;
+import com.dev.shop.member.dto.*;
 import com.dev.shop.member.service.MemberService;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.seller.dto.ReservationDto;
 import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -98,14 +93,15 @@ public class MemberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String refererUrl = request.getHeader("Referer");
         log.info("refererUrl : {}", refererUrl);
+
         System.out.println("refererUrl : " + refererUrl);
+
         if(refererUrl != null && refererUrl.isEmpty()) {
             request.getSession().setAttribute("previousPageUrl", refererUrl);
         }
         if(authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-
 
     }
 
@@ -126,33 +122,43 @@ public class MemberController {
 
     }
 
-    @GetMapping("/mypage")
-    public void mypageGet(){
 
+    @GetMapping("/mypage/account")
+    public void accountGet(Principal principal, Model model) {
+        String memberId = principal.getName();
+
+        model.addAttribute("memberId", memberId);
     }
 
     @GetMapping("/mypage/edit")
-    public String editGet(Model model) {
+    public void mypageEditGet(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(authentication instanceof AnonymousAuthenticationToken) { // 비로그인 상태
-            return "/devroom/member/unlogined";
-        } else { // 로그인 상태
-            MemberDto memberInfo = memberService.memberInfoByAuthId(authId);
+        MemberDto memberInfo = memberService.memberInfoByAuthId(authId);
+        model.addAttribute("memberInfo", memberInfo);
 
-            model.addAttribute("memberInfo", memberInfo);
-            return "/devroom/member/edit";
 
-        }
     }
     @PostMapping("/mypage/edit")
-    public String editPost(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
+    public String mypageEditPost(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
 
         memberService.updateMemberInfo(memberDto, memberNewPw, memberNewPwChk );
 
         return "redirect:/devroom/member/mypage";
+    }
+
+    @GetMapping("/mypage/payment")
+    public void mypagePaymentGet(@ModelAttribute("params") final ReservationCriteriaDto params, Principal principal, Model model) {
+        String memberId = principal.getName();
+
+
+//        memberid로 no를 찾아서 마이바티스에 memberNo바꿔야 함
+        // 페이징
+        PagingResponse<PaymentHistoryDto> pagingPaymentHistory = memberService.getMemberPaymentHistoryByMemberId(memberId, params);
+        log.info("payment history : {}", pagingPaymentHistory);
+        model.addAttribute("paymentHistory", pagingPaymentHistory);
     }
 
     @GetMapping("/mypage/reservation-info")
@@ -176,8 +182,8 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/bookmark/list")
-    public void mypageBookmarkList() {
-
+    public String mypageBookmarkList() {
+        return "/devroom/member/mypage/bookmark-list";
     }
 
     @PostMapping("/bookmark")
@@ -190,5 +196,7 @@ public class MemberController {
         boolean bookmarkVal = memberService.roomBookmark(memberId, roomNo);
         return ResponseEntity.ok(bookmarkVal);
     }
+
+
 
 }

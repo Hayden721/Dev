@@ -82,14 +82,14 @@
 
     <select id="selectReservationInfoByMemberNo" resultType="com.dev.shop.member.dto.getReserveInfoDto">
         SELECT ROW_NUMBER() OVER (ORDER BY a.reservation_creation_date) AS row_num, a.reservation_no, a.reservation_date, a.reservation_creation_date, a.start_time, a.end_time,  a.reservation_status, a.room_no, a.roption_no, b.room_title, c.roption_title
-        from reservation_tb a
-        left join room_tb b
-        on a.room_no = b.room_no
+        FROM reservation_tb a
+        LEFT JOIN room_tb b
+            ON a.room_no = b.room_no
         LEFT JOIN roomoption_tb c
-        ON a.roption_no = c.roption_no
+            ON a.roption_no = c.roption_no
         WHERE member_no = #{memberNo}
-        AND reservation_status IN(1, 2)
-        ORDER BY reservation_creation_date desc
+            AND reservation_status IN(1, 2)
+            ORDER BY reservation_creation_date desc
         LIMIT #{params.pagination.limitStart}, #{params.recordSize}
     </select>
 
@@ -123,7 +123,7 @@
             WHERE a.room_delete = 0
             AND b.cnt != 0
             order by room_no desc
-        limit 0, 6
+        LIMIT 0, 6
 
     </select>
     <select id="selectBookmarkData" resultType="java.lang.Boolean">
@@ -132,5 +132,23 @@
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
+
+    <select id="countPaymentHistory" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM reservation_tb
+        where member_no = #{memberNo}
+    </select>
+
+    <select id="selectMemberPaymentHistoryByMemberNo" resultType="com.dev.shop.member.dto.PaymentHistoryDto">
+        SELECT ROW_NUMBER() OVER(ORDER BY a.reservation_creation_date) as row_num, c.room_title, b.roption_title, a.reservation_date, a.start_time, a.end_time, (a.end_time - a.start_time) * b.roption_price as total_price
+        FROM reservation_tb a
+        LEFT JOIN roomoption_tb b
+            ON a.room_no = b.room_no
+        LEFT JOIN room_tb c
+            ON a.room_no = c.room_no
+        WHERE a.member_no = #{memberNo}
+        LIMIT #{params.pagination.limitStart}, #{params.recordSize}
+    </select>
+
 
 </mapper>

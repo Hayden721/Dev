@@ -13,11 +13,19 @@
 }
 .header-logo > a {
     font-size: 40px;
+
 }
 
 .nav > a {
     text-decoration: none;
+    color: black;
 }
+
+.nav > a:hover {
+    text-decoration: none;
+    color: black;
+}
+
 nav {
     position: relative;
     width: auto;
@@ -38,6 +46,12 @@ nav {
     margin: 5px 0 0 0;
 }
 
+/* 헤더 메뉴 hover css */
+.mypage-menu > ul > li:hover {
+    margin: 5px 0 0 0;
+    background-color: #E0E0E0;
+    width: 100%;
+}
 
 
 #spotBtn {
@@ -81,4 +95,9 @@ nav {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     z-index: 999;
     right: 18px;
+}
+
+
+.header-drawer-menu {
+    width: 100%;
 }

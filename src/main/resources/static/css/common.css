@@ -34,6 +34,13 @@ html, body {
     padding-bottom: 100px;
 }
 
+/* 컨텐츠 중앙 배치 컨테이너 */
+.content-middle-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 13% 0 13%;
+    align-items: center;
+}
 
 /* seller */
 .seller-content{
@@ -49,14 +56,11 @@ html, body {
 .seller-container {
     margin-top: 10px;
     display: flex;
-
-
 }
 
-/* 공통 css */
+/* 공통 버튼 css */
 
 /* Emphasize button*/
-
 .emphasize-btn {
     color: #F3EFF5;
     background-color: #3f7d20;
