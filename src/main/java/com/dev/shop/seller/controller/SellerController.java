@@ -84,12 +84,12 @@ public class SellerController {
     @GetMapping("/register")
     public String registerGet() {
         log.info("--- [/seller/register] --- GET");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication instanceof AnonymousAuthenticationToken) {
+
+
             return "/seller/register";
-        }
-        return "redirect:/seller/login";
+
+
     }
 
     @PostMapping("/register")

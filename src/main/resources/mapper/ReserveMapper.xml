@@ -24,16 +24,16 @@
             FROM roomoption_tb
             GROUP BY room_no
         ) b
-        ON a.room_no = b.room_no
+            ON a.room_no = b.room_no
         LEFT JOIN (
-        select room_no, thumbnail, file_delete, created_date, save_name, original_name
-        from roomimage_tb
-        where thumbnail = 'Y'
-        and file_delete = 'N'
+            select room_no, thumbnail, file_delete, created_date, save_name, original_name
+            from roomimage_tb
+            where thumbnail = 'Y'
+            and file_delete = 'N'
         ) c (room_no, thumbnail, file_delete, created_date, save_name, original_name)
-        ON a.room_no = c.room_no
+            ON a.room_no = c.room_no
         WHERE a.room_delete = 0
-        AND b.cnt != 0
+            AND b.cnt != 0
 
         <!-- 공간 옵션값이 존재 할 때 -->
         <if test="searchDiv != null and searchDiv.size() > 0">

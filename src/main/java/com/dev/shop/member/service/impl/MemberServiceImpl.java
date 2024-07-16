@@ -3,6 +3,7 @@ package com.dev.shop.member.service.impl;
 import com.dev.shop.member.dao.MemberDao;
 import com.dev.shop.member.dto.*;
 import com.dev.shop.member.service.MemberService;
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public PagingResponse<PaymentHistoryDto> getMemberPaymentHistoryByMemberId(String memberId, ReservationCriteriaDto params) {
         Long memberNo = memberDao.selectMemberNo(memberId);
-        int paymentCount = memberDao.countPaymentHistory(memberNo);
+        int paymentCount = memberDao.countPaymentHistory(memberNo, params);
 
         if(paymentCount < 1) {
             return new PagingResponse<>(Collections.emptyList(), null);
@@ -84,6 +85,14 @@ public class MemberServiceImpl implements MemberService {
         List<PaymentHistoryDto> list = memberDao.selectMemberPaymentHistoryByMemberNo(memberNo, params);
         log.info("Payment Paging List : {}", list);
         return new PagingResponse<>(list, pagination);
+    }
+
+    @Override
+    public List<BookmarkedDto> getBookmarkedRoomListByMemberId(String memberId) {
+        Long memberNo = memberDao.selectMemberNo(memberId);
+
+
+        return memberDao.selectBookmarkedListByMemberNo(memberNo);
     }
 
     /**

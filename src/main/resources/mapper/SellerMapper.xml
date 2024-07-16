@@ -25,7 +25,7 @@
         INSERT INTO room_tb(
             room_no, room_title, room_div, room_content, postcode, address, detail_address, extra_address, room_delete, seller_no)
         VALUES (
-            null, #{roomTitle}, #{roomDiv}, #{roomContent}, #{postCode}, #{address}, #{detailAddress}, #{extraAddress}, 0, 2)
+            null, #{roomTitle}, #{roomDiv}, #{roomContent}, #{postCode}, #{address}, #{detailAddress}, #{extraAddress}, 0, #{sellerNo})
     </insert>
 
     <select id="selectSellerNoByAuthId" resultType="java.lang.Long">

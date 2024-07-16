@@ -1,6 +1,7 @@
 package com.dev.shop.member.dao;
 
 import com.dev.shop.member.dto.*;
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.reserve.dto.RoomDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -48,7 +49,9 @@ public interface MemberDao {
 
 
 
-    int countPaymentHistory(Long memberNo);
+    int countPaymentHistory(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 
     List<PaymentHistoryDto> selectMemberPaymentHistoryByMemberNo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
+
+    List<BookmarkedDto> selectBookmarkedListByMemberNo(Long memberNo);
 }

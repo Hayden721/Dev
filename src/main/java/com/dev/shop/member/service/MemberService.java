@@ -2,6 +2,7 @@ package com.dev.shop.member.service;
 
 
 import com.dev.shop.member.dto.*;
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.utils.PagingResponse;
 
 import java.util.List;
@@ -54,4 +55,6 @@ public interface MemberService {
      * @return 결제 내역
      */
     PagingResponse<PaymentHistoryDto> getMemberPaymentHistoryByMemberId(String memberId, ReservationCriteriaDto params);
+
+    List<BookmarkedDto> getBookmarkedRoomListByMemberId(String memberId);
 }

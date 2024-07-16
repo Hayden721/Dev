@@ -3,6 +3,7 @@ package com.dev.shop.member.controller;
 
 import com.dev.shop.member.dto.*;
 import com.dev.shop.member.service.MemberService;
+import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
@@ -122,7 +123,6 @@ public class MemberController {
 
     }
 
-
     @GetMapping("/mypage/account")
     public void accountGet(Principal principal, Model model) {
         String memberId = principal.getName();
@@ -151,6 +151,8 @@ public class MemberController {
 
     @GetMapping("/mypage/payment")
     public void mypagePaymentGet(@ModelAttribute("params") final ReservationCriteriaDto params, Principal principal, Model model) {
+
+        log.info("params : {}", params);
         String memberId = principal.getName();
 
 
@@ -182,7 +184,16 @@ public class MemberController {
     }
 
     @GetMapping("/mypage/bookmark/list")
-    public String mypageBookmarkList() {
+    public String mypageBookmarkList(Principal principal, Model model) {
+        String filePath = fileUtils.choosePath();
+        String memberId = principal.getName();
+
+        // 북마크된 room 가지고 오기
+        List<BookmarkedDto> bookmarkedRoomList = memberService.getBookmarkedRoomListByMemberId(memberId);
+
+
+        model.addAttribute("roomList", bookmarkedRoomList);
+        model.addAttribute("filePath", filePath);
         return "/devroom/member/mypage/bookmark-list";
     }
 

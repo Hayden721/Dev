@@ -15,6 +15,7 @@ public class CriteriaDto {
     private int recordSize; // 페이지당 출력할 데이터 개수
     private int pageSize; // 하단에 출력될 페이지 사이즈
 
+
     private String keyword; // 검색 키워드
     private List<String> searchLocation;  // 지역 검색
     private List<String> searchDiv; // 방 유형 검색

@@ -134,20 +134,100 @@
     </select>
 
     <select id="countPaymentHistory" resultType="java.lang.Integer">
-        SELECT COUNT(*)
-        FROM reservation_tb
-        where member_no = #{memberNo}
+        SELECT COUNT(*) as paging_total_count
+        FROM (
+            SELECT c.room_title, b.roption_title, a.reservation_date, a.start_time, a.end_time
+            FROM reservation_tb a
+            LEFT JOIN roomoption_tb b
+                ON a.roption_no = b.roption_no
+            LEFT JOIN room_tb c
+                ON a.room_no = c.room_no
+            WHERE a.member_no = #{memberNo}
+
+            <!-- 검색어가 존재할 때 -->
+            <if test="params.keyword != null and params.keyword.length() > 0">
+                <choose>
+                    <!-- 검색타입이 있을 떄 -->
+                    <when test="params.searchType != null and params.searchType != ''">
+                        <choose>
+                            <when test="'room_title'.equals(params.searchType)">
+                                AND c.room_title LIKE CONCAT('%', #{params.keyword}, '%')
+                            </when>
+
+                            <when test="'roption_title'.equals(params.searchType)">
+                                AND b.roption_title LIKE CONCAT('%', #{params.keyword}, '%')
+                            </when>
+
+                        </choose>
+                    </when>
+
+                    <otherwise>
+                        AND (
+                            c.room_title LIKE CONCAT('%', #{params.keyword}, '%')
+                            OR  b.roption_title LIKE CONCAT('%', #{params.keyword}, '%')
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+        ) as paging_count
+
+
+
+
+
     </select>
 
     <select id="selectMemberPaymentHistoryByMemberNo" resultType="com.dev.shop.member.dto.PaymentHistoryDto">
         SELECT ROW_NUMBER() OVER(ORDER BY a.reservation_creation_date) as row_num, c.room_title, b.roption_title, a.reservation_date, a.start_time, a.end_time, (a.end_time - a.start_time) * b.roption_price as total_price
-        FROM reservation_tb a
+            FROM reservation_tb a
         LEFT JOIN roomoption_tb b
-            ON a.room_no = b.room_no
+            ON a.roption_no = b.roption_no
         LEFT JOIN room_tb c
             ON a.room_no = c.room_no
         WHERE a.member_no = #{memberNo}
+
+        <!-- 검색어가 존재할 때 -->
+        <if test="params.keyword != null and params.keyword.length() > 0">
+            <!-- #{검색타입} = #{검색어}           -->
+            <choose>
+                <!-- 검색타입이 있을 떄 -->
+                <when test="params.searchType != null and params.searchType != ''">
+                    <choose>
+
+                        <when test="'room_title'.equals(params.searchType)">
+                            AND c.room_title LIKE CONCAT('%', #{params.keyword}, '%')
+                        </when>
+
+                        <when test="'roption_title'.equals(params.searchType)">
+                            AND b.roption_title LIKE CONCAT('%', #{params.keyword}, '%')
+                        </when>
+
+                    </choose>
+                </when>
+
+                <otherwise>
+                    AND (
+                        c.room_title LIKE CONCAT('%', #{params.keyword}, '%')
+                        OR  b.roption_title LIKE CONCAT('%', #{params.keyword}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+
+
         LIMIT #{params.pagination.limitStart}, #{params.recordSize}
+    </select>
+    <select id="selectBookmarkedListByMemberNo" resultType="com.dev.shop.member.dto.BookmarkedDto">
+        SELECT a.room_no, b.room_title, b.room_div, b.room_content, b.postcode, b.address, b.detail_address, b.extra_address, b.room_delete, b.seller_no, c.created_date, c.save_name, c.original_name
+        FROM bookmark_tb a
+        LEFT JOIN room_tb b
+            ON a.room_no = b.room_no
+        LEFT JOIN roomimage_tb c
+            ON b.room_no = c.room_no
+        WHERE a.member_no = #{memberNo}
+            AND thumbnail = 'Y'
+            AND file_delete = 'N'
     </select>
 
 
