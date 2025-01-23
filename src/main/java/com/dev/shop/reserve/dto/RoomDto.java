@@ -20,4 +20,5 @@ public class RoomDto {
     private String extraAddress;
     private int roomDelete;
     private Long sellerNo;
+
 }

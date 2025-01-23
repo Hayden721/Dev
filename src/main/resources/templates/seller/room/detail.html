@@ -6,18 +6,22 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-    <link rel="stylesheet" th:href="@{/css/seller/room-detail.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/seller-room.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/detail.css}">
+    <link rel="stylesheet" th:href="@{/css/components/seller-container.css}">
+    <link rel="stylesheet" th:href="@{/css/image.css}">
 
     <title>Dev-room</title>
 </head>
 
 <div layout:fragment="seller-content">
-
-    <div class="detail-wrap">
-
+    <div class="width-900-center-container">
+    <!-- 방 정보 -->
+    <div class="gray-wrap mb-3 flex-column">
         <h2>방 정보</h2>
-        <div class="room-container">
-            <div class="room-info-container">
+        <div class="">
+            <input th:value="${roomInfo.roomNo}" hidden>
+            <div class="d-flex flex-column">
                 <div> 방 이름 :
                     <span th:text="${roomInfo.roomTitle}"></span>
                 </div>
@@ -26,61 +30,70 @@
                     <span th:text="${roomInfo.roomContent}"></span>
                 </div>
 
-                <div> 방 구분 :
-                    <span th:text="${roomInfo.roomDiv}"></span>
+                <div th:switch="${roomInfo.roomDiv}"> 방 구분 :
+                    <span th:case="studyroom">스터디룸</span>
+                    <span th:case="office">오피스</span>
+                    <span th:case="meeting">회의실</span>
                 </div>
 
                 <div>주소 :
-                    <span th:text="${roomInfo.address + ' ' +roomInfo.detailAddress}"></span>
+                    <span th:text="${roomInfo.address + ' ' + roomInfo.detailAddress}"></span>
                 </div>
-            </div> <!-- room-container END -->
+            </div>
+        </div><!-- room-container END -->
 
-            <div class="room-image-container">
-                <div class="thumbnail-image-container">
-                    <img th:if="${thumbnailImage} != null" th:src="${filePath} + '/' + ${thumbnailImage.createdDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}" class="thumbnail-image">
-                    <img th:unless="${thumbnailImage} != null" class="thumbnail-image" src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+        <div class="d-flex mt-2">
+            <div>
+                <img class="thumbnail-image" th:if="${thumbnail != null}" th:src="${filePath} + '/' + ${thumbnail.uploadDate} + '/' + ${thumbnail.saveName}" th:alt="${thumbnail.originalName}">
+                <input th:value="${thumbnail.roomimageNo}" hidden/>
+                <img class="thumbnail-image" th:unless="${thumbnail != null}"  src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+            </div>
+
+            <!-- 썸네일 아닌 이미지 -->
+            <div class="extra-images-container">
+                <div th:each="extra : ${extra}">
+                <img class="extra-image" th:src="${filePath} + '/' + ${extra.uploadDate} + '/' + ${extra.saveName}" alt="none">
+                <input th:value="${extra.roomimageNo}" hidden/>
                 </div>
+            </div>
+        </div> <!-- room-image-container END -->
 
-                <!-- 썸네일 아닌 이미지 -->
-                <div class="extra-images-container">
-                    <img th:each="addImage : ${additionalImage}" class="extra-image" th:src="${filePath} + '/' + ${addImage.createdDate} + '/' + ${addImage.saveName}" alt="none">
-                </div>
-            </div> <!-- room-image-container END -->
+        <div>
+            <button class="btn auto-size-btn deep-green-btn float-end" th:onclick="|location.href='@{/seller/room/update(roomNo=${roomInfo.roomNo})}'|">방 수정</button>
+        </div>
 
+    </div> <!-- detail-wrap end -->
 
-
-        </div> <!-- room-container END -->
-
-        <hr>
-
+    <div class="mb-2">
         <h2>옵션 정보</h2>
-        <div class="option-container">
-            <div th:each="optionInfoAndImage : ${optionInfoAndImage}" class="option-detail-container">
-                <div class="option-image-container">
-                    <img class="option-image" th:src="${filePath} + '/' + ${optionInfoAndImage.createdDate} + '/' + ${optionInfoAndImage.saveName}" th:alt="${optionInfoAndImage.originalName}" th:if="${optionInfoAndImage.roptionImageNo} != 0">
-                    <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionInfoAndImage.originalName}" th:unless="${optionInfoAndImage.roptionImageNo} != 0">
+        <div class="gray-wrap" th:each="optionAndImage : ${optionAndImage}" >
+            <div class="option-image-container">
+                <img class="option-image" th:src="${filePath} + '/' + ${optionAndImage.uploadDate} + '/' + ${optionAndImage.saveName}" th:alt="${optionAndImage.originalName}" th:if="${optionAndImage.roptionImageNo} != 0">
+                <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" alt="" th:unless="${optionAndImage.roptionImageNo} != 0">
+            </div>
+
+            <div class="option-info-container">
+                <div class="d-flex">
+                    <p>옵션 이름 :</p>
+                    <span th:text="${optionAndImage.roptionTitle}"></span>
                 </div>
 
-                <div class="option-info-container">
-                    <div>옵션 이름 :
-                        <span th:text="${optionInfoAndImage.roptionTitle}"></span>
-                    </div>
+                <div>
+                    <p style="margin-bottom: 0;">옵션 설명</p>
+                    <p style="word-wrap: break-word; overflow-wrap: break-word;" th:text="${optionAndImage.roptionContent}"></p>
+                </div>
 
-                    <div>옵션 설명 :
-                        <span th:text="${optionInfoAndImage.roptionContent}"></span>
-                    </div>
-
-                    <div>옵션 가격 :
-                        <span th:text="${optionInfoAndImage.roptionPrice}"></span>
-                    </div>
+                <div class="d-flex">
+                    <p>가격 :</p>
+                    <span th:text="${optionAndImage.roptionPrice}"></span>
                 </div>
             </div>
         </div>
+
+        <div>
+            <button class="btn auto-size-btn deep-green-btn float-end" th:onclick="|location.href='@{/seller/room/option/update(roomNo=${roomInfo.roomNo})}'|">옵션 수정</button>
+        </div>
     </div>
-
-    <div style="float: right; margin: 10px 0 0 0;">
-        <button class="btn emphasize-btn" th:onclick="|location.href='@{/seller/room/update(roomNo=${roomNo})}'|">수정하기</button>
-
     </div>
 </div> <!-- layout:fragment="seller-content" end -->
 
@@ -89,16 +102,8 @@
     <script th:inline="javascript" type="text/javascript">
         $(document).ready(function() {
 
-            controllerDivValue();
+            
         });
-
-
-        function controllerDivValue() {
-            const roomDivValue = [[ ${roomInfo.roomDiv}]];
-            console.log(roomDivValue);
-            $(".room-div").val();
-        }
-
 
     </script>
 </th:block>

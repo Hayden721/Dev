@@ -1,6 +1,6 @@
 package com.dev.shop.config;
 
-import com.dev.shop.config.handler.CustomAuthenticationFailHandler;
+import com.dev.shop.config.handler.CustomFailureHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,21 +16,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SellerSecurityConfig {
 
     private final SellerAuthenticationProvider sellerAuthenticationProvider;
+    private final CustomFailureHandler customFailureHandler;
 
     @Autowired
-    public SellerSecurityConfig( SellerAuthenticationProvider sellerAuthenticationProvider, CustomAuthenticationFailHandler customAuthenticationFailHandler) {
-
+    public SellerSecurityConfig(SellerAuthenticationProvider sellerAuthenticationProvider, CustomFailureHandler customFailureHandler) {
         this.sellerAuthenticationProvider = sellerAuthenticationProvider;
+        this.customFailureHandler = customFailureHandler;
     }
-
-
 
     @Bean
     public SecurityFilterChain SellerFilterChain(HttpSecurity http) throws Exception {
 
-
-        http. authorizeRequests().antMatchers( "/devroom/member/main","/devroom/member/login", "/devroom/member/register",
-                "/css/**","/js/**", "/devroom/reserve/**", "/seller/login", "/seller/register", "/test/**").permitAll();
+        http. authorizeRequests().antMatchers("/seller/id-duplicate-check","/css/**","/js/**", "/seller/login/**", "/seller/register", "/test/**").permitAll();
         http
                 .authenticationProvider(sellerAuthenticationProvider)
                 .csrf().disable(); //일반 사용자에 대해 Session을 저장하지 않으므로 csrf을 disable 처리함.
@@ -44,6 +41,7 @@ public class SellerSecurityConfig {
                 .usernameParameter("sellerId")
                 .passwordParameter("sellerPw")
                 .defaultSuccessUrl("/seller/main")
+                .failureHandler(customFailureHandler)
                 .permitAll()
                 .and()
                 .logout()

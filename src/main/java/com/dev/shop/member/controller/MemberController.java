@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/devroom/member")
+@RequestMapping("/sharespot/member")
 public class MemberController {
 
     private final MemberService memberService;
@@ -38,6 +39,7 @@ public class MemberController {
     public String mainGet(Model model, Principal principal) {
         String filePath = fileUtils.choosePath();
         log.info("--- mainGet ---");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -46,7 +48,7 @@ public class MemberController {
         log.info("=================== {}", hasUserAuthority);
 
         if(hasUserAuthority) {
-            return "redirect:/devroom/member/logout";
+            return "redirect:/sharespot/member/logout";
         }
 
         log.info("------------------ authorities : {}",authorities);
@@ -60,32 +62,32 @@ public class MemberController {
             model.addAttribute("auth", authentication);
         }
 
-        List<RoomAndImageDto> recentCreateRoom = memberService.getMainInfoNewSpot();
+//        List<RoomAndImageDto> recentCreateRoom = memberService.getMainInfoNewSpot();
 
 //        List<RoomAndImageDto> memberService
         model.addAttribute("filePath", filePath);
-        model.addAttribute("recentCreateRoom", recentCreateRoom);
+//        model.addAttribute("recentCreateRoom", recentCreateRoom);
 
-        return "/devroom/member/main";
+        return "/sharespot/member/main";
 
     }
 
     @GetMapping("/login")
-    public String memberLoginGet(HttpServletRequest request) {
+    public String memberLoginGet(@RequestParam(value = "error", required = false) String error, Model model) {
         log.info("--- [GET] member/login ---");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("--- [/login] 토큰값 : {}", authentication);
 
-        String previousPageUrl = request.getHeader("Referer");
-        log.info("previousPageUrl : {}", previousPageUrl);
-        if(previousPageUrl != null && !previousPageUrl.isEmpty()) {
-            request.getSession().setAttribute("previousPageUrl", previousPageUrl);
-        } else {
-            previousPageUrl = "/devroom/member/main";
-            request.getSession().setAttribute("previousPageUrl", previousPageUrl);
-        }
+        model.addAttribute("error", error);
 
-        return "/devroom/member/login";
+        return "/sharespot/member/login";
+    }
+
+    @GetMapping("/error-session-remove")
+    public String errorSessionRemove(HttpServletRequest request) {
+        request.getSession().removeAttribute("errorMsg");
+
+        return "/sharespot/member/login";
     }
 
     @PostMapping("/logout")
@@ -106,21 +108,36 @@ public class MemberController {
 
     }
 
+    // 아이디 중복 체크
+    @GetMapping("/id-duplicate-check")
+    @ResponseBody
+    public ResponseEntity<?> idDuplicateCheck(@RequestParam("idValue") String memberId ) {
+        log.info("memberId duplicate: {}", memberId);
+
+        int duplicateValue = memberService.checkIdDuplicateByMemberId(memberId);
+
+        return ResponseEntity.ok(duplicateValue);
+    }
+
+
+
     @GetMapping("/register")
     public String memberRegisterGet() {
         log.info("--- [GET] member/register");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(authentication instanceof AnonymousAuthenticationToken) {
             return "/devroom/member/register";
         }
-        return "redirect:/devroom/member/main";
+
+        return "/sharespot/member/register";
     }
 
     @PostMapping("/register")
-    public void memberRegisterPost(MemberDto memberDto) {
-        log.info("memberDetailDto : {}", memberDto);
-        memberService.memberRegister(memberDto);
-
+    public void memberRegisterPost(MemberRequest memberRequest, @RequestParam("memberPwConfirm") String memberPwConfirm) {
+        log.info("memberDetailDto : {}", memberRequest);
+        log.info("memberPwConfirm: {}", memberPwConfirm);
+        memberService.memberRegister(memberRequest, memberPwConfirm);
     }
 
     @GetMapping("/mypage/account")
@@ -130,6 +147,8 @@ public class MemberController {
         model.addAttribute("memberId", memberId);
     }
 
+    // ---------------------------------
+
     @GetMapping("/mypage/edit")
     public void mypageEditGet(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -138,9 +157,8 @@ public class MemberController {
 
         MemberDto memberInfo = memberService.memberInfoByAuthId(authId);
         model.addAttribute("memberInfo", memberInfo);
-
-
     }
+
     @PostMapping("/mypage/edit")
     public String mypageEditPost(MemberDto memberDto, String memberNewPw, String memberNewPwChk) {
 
@@ -154,7 +172,6 @@ public class MemberController {
 
         log.info("params : {}", params);
         String memberId = principal.getName();
-
 
 //        memberid로 no를 찾아서 마이바티스에 memberNo바꿔야 함
         // 페이징

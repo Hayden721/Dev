@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -36,15 +37,20 @@ public class MemberAuthenticationProvider implements AuthenticationProvider {
 
         log.info("memberId : {}, memberPw : {}", memberId, memberPw);
 
-        MemberDetailsDto user = (MemberDetailsDto) userDetailsService.loadUserByUsername(memberId);
+        try {
 
-        log.info("user = {}", user);
+            MemberDetailsDto user = (MemberDetailsDto) userDetailsService.loadUserByUsername(memberId);
 
-        if(user != null && passwordEncoder.matches(memberPw, user.getPassword())) {
+            log.info("user = {}", user);
 
-            token = new UsernamePasswordAuthenticationToken(memberId, memberPw, user.getAuthorities());
+            if (user != null && passwordEncoder.matches(memberPw, user.getPassword())) {
 
-            return token;
+                token = new UsernamePasswordAuthenticationToken(memberId, memberPw, user.getAuthorities());
+
+                return token;
+            }
+        } catch (UsernameNotFoundException e) {
+            throw e;
         }
 
         throw new BadCredentialsException("No such user or wrong password");

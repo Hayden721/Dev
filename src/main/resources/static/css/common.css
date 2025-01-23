@@ -7,11 +7,12 @@
     margin: 0;
     padding: 0;
     font-family: 'GmarketSans', serif;
-
 }
 
 ul, ol {
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 a {
@@ -19,90 +20,27 @@ a {
     color: #0D0A0B;
 }
 
-body{
-
+header, footer {
+    min-width: 1200px;
+    width: 100%;
 }
-html, body {
+
+/* 스피너 스타일 */
+#spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    min-height: 100%;
-
-}
-
-.wrap {
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 100px;
-}
-
-/* 컨텐츠 중앙 배치 컨테이너 */
-.content-middle-container {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
     display: flex;
-    flex-direction: column;
-    margin: 0 13% 0 13%;
+    justify-content: center;
     align-items: center;
 }
 
-/* seller */
-.seller-content{
-    height: 100%;
-    margin: 0 auto;
+#submit-loading-spinner {
+    width: 4rem;
+    height: 4rem;
 
 }
-.seller-wrap {
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 100px;
-}
-.seller-container {
-    margin-top: 10px;
-    display: flex;
-}
-
-/* 공통 버튼 css */
-
-/* Emphasize button*/
-.emphasize-btn {
-    color: #F3EFF5;
-    background-color: #3f7d20;
-}
-.emphasize-btn:hover {
-    color: #F3EFF5;
-    background-color: #39721D;
-}
-
-.emphasize-btn[disabled] {
-    color: #F3EFF5;
-    background-color: #3f7d20;
-    border: none;
-}
-
-.emphasize-btn:active {
-    color: #F3EFF5;
-    background-color: #2f5e18;
-}
-
-
-.normal-btn {
-    color: #F3EFF5;
-    background-color: #72B01D;
-
-}
-
-.normal-btn:hover {
-    background-color: #679F19;
-    color: #F3EFF5;
-}
-
-.normal-btn[disabled] {
-    color: #F3EFF5;
-    background-color: #72B01D;
-    border: none;
-}
-
-.charcoal-btn {
-    background-color: #454955;
-    color: #F3EFF5;
-}
-
-
-

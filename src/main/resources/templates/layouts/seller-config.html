@@ -9,38 +9,55 @@
     <title>Title</title>
 
     <!-- 부트스트랩 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- 부트스트랩 아이콘 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/seller-footer.css}">
-    <link rel="stylesheet" th:href="@{/css/seller/seller-menu.css}">
+    <link rel="stylesheet" th:href="@{/css/components/button.css}">
+    <link rel="stylesheet" th:href="@{/css/components/seller-container.css}">
+    <link rel="stylesheet" th:href="@{/css/color.css}">
+    <link rel="stylesheet" th:href="@{/css/image.css}">
+
+    <link rel="stylesheet" th:href="@{/css/layouts/header.css}">
+    <link rel="stylesheet" th:href="@{/css/layouts/seller-footer.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/seller-menu.css}">
 </head>
 <body>
 
-
-<div th:class="seller-wrap">
 <!-- header fragment 사용 -->
 <th:block th:replace="fragments/seller-header :: seller-header"></th:block>
-    <div class="seller-container">
-        <!-- 사이드 메뉴 -->
+    <main class="main-container">
         <th:block th:replace="fragments/seller-menu :: seller-menu" ></th:block>
-        <!-- content fragment 사용 -->
-        <th:block layout:fragment="seller-content" th:class="seller-content"></th:block>
-    </div>
-</div>
 
-<th:block layout:fragment="script"></th:block>
+        <section class="section-style">
+            <div class="content-middle-container">
+            <th:block layout:fragment="seller-content"></th:block>
+            </div>
+        </section>
+    </main>
 
-<!-- footer fragment 사용 -->
 <th:block th:replace="fragments/seller-footer :: seller-footer"></th:block>
 
+<th:block layout:fragment="script"></th:block>
+<!-- footer fragment 사용 -->
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<script src="/js/sideMenu.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        menuClick();
+
+
+    })
+</script>
+
+
 </body>
 </html>

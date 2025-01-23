@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+
+    <link rel="stylesheet" th:href="@{/css/pages/member/mypage.css}" >
+
+
+    <title>ShareSpot</title>
+</head>
+
+
+<div layout:fragment="content">
+
+    회원 정보 수정
+    <form th:action="@{/templates/sharespot/member/mypage/edit}" method="post">
+        <input name="memberNo" th:value="${memberInfo.getMemberNo()}" type="hidden">
+        <div>
+            <div>
+                <label> 아이디
+                    <input type="text" name="memberId" th:value="${memberInfo.getMemberId()}" readonly>
+                </label>
+            </div>
+            <div>
+                <label> 현재 비밀번호
+                    <input type="text" name="memberPw">
+                </label>
+            </div>
+            <div>
+                <label> 새 비밀번호
+                    <input type="text" name="memberNewPw">
+                </label>
+            </div>
+            <div>
+                <label>  비밀번호 확인
+                    <input type="text" name="memberNewPwChk">
+                </label>
+            </div>
+            <div>
+            <label> 이메일
+                <input type="text" name="memberEmail" th:value="${memberInfo.getMemberEmail()}">
+            </label>
+            </div>
+            <div>
+                <label> 전화번호
+                    <input type="text" name="memberPhone" th:value="${memberInfo.getMemberPhone()}">
+                </label>
+            </div>
+
+            <button>수정하기</button>
+
+        </div>
+    </form>
+
+</div>
+
+</html>

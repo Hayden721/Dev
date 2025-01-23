@@ -2,9 +2,9 @@ package com.dev.shop.member.service;
 
 
 import com.dev.shop.member.dto.*;
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.utils.PagingResponse;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 public interface MemberService {
@@ -17,9 +17,11 @@ public interface MemberService {
 
     /**
      * 멤버 회원가입
-     * @param memberDto - 회원가입 할 정보
+     *
+     * @param memberRequest - 회원가입 정보
+     * @param memberPwConfirm - 비밀번호 확인 값
      */
-    void memberRegister(MemberDto memberDto);
+    void memberRegister(MemberRequest memberRequest, String memberPwConfirm);
 
     /**
      *
@@ -57,4 +59,7 @@ public interface MemberService {
     PagingResponse<PaymentHistoryDto> getMemberPaymentHistoryByMemberId(String memberId, ReservationCriteriaDto params);
 
     List<BookmarkedDto> getBookmarkedRoomListByMemberId(String memberId);
+
+
+    int checkIdDuplicateByMemberId(String memberId);
 }

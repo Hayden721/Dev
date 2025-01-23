@@ -4,50 +4,98 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!--  css 링크 수정해야 함   -->
-    <link rel="stylesheet" type="text/css" href="/css/member/register.css" />
+    <link rel="stylesheet" type="text/css" href="/css/register.css"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <script type="module" src="/js/register.js"></script>
 
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <div class="register-container">
-    Seller 회원가입
-    <form action="/seller/register" method="post">
-        <div class="register-flex">
-            <div>
-                <label>ID
-                    <input class="form-control" name="sellerId">
-                </label>
-            </div>
-            <div>
-                <label>Password
-                    <input class="form-control" name="sellerPw">
-                </label>
-            </div>
 
-            <div>
-                <label>Email
-                    <input class="form-control" name="sellerEmail">
-                </label>
+    <form id="register-form">
+        <div class="mb-2">
+            <label for="id" class="form-label">ID</label>
+            <div style="display: flex;">
+                <input type="text" class="form-control" id="id" placeholder="아이디" name="sellerId" required>
+                <button type="button" style="width: 125px; margin: 0 0 0 5px;" class="btn normal-btn" id="duplicate-btn">중복 체크</button>
+                <input type="text" value="" id="id-duplicate-value" required hidden>
             </div>
-
-            <div>
-                <label>Name
-                    <input class="form-control" name="sellerName">
-                </label>
-            </div>
-
-            <div>
-                <label>Phone
-                    <input class="form-control" name="sellerPhone">
-                </label>
+            <div style="height: 25px;">
+                <span id="id-message" class="warn-message"></span>
             </div>
         </div>
-        <button>회원가입</button>
+
+        <div>
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="text" class="form-control" id="password" placeholder="영문 대소문자, 숫자를 조합해 입력해주세요(8~16자)" name="sellerPw" required>
+            <div style="height: 25px;">
+                <span id="password-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div>
+            <label for="password-confirm" class="form-label">비밀번호 확인</label>
+            <input type="text" class="form-control" id="password-confirm" placeholder="비밀번호 확인" name="sellerPwConfirm" required>
+            <div style="height: 25px;">
+                <span id="pw-confirm-message" class="warn-message"></span>
+            </div>
+            <input type="text" value="0" id="pw-check-value" required hidden>
+        </div>
+
+        <div class="mb-2">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" placeholder="이름" name="sellerName" required>
+            <div style="height: 25px;">
+                <span id="name-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <label for="email" class="form-label">이메일</label>
+            <input type="text" class="form-control" id="email" placeholder="xxx@example.com" name="sellerEmail" required>
+            <span id="email-message" class="warn-message"></span>
+            <input type="text" value="0" id="email-confirm-value" required hidden>
+
+        </div>
+
+        <div class="mb-2">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" class="form-control" id="phone" placeholder="'-'없이 작성해주세요." name="sellerPhone" required>
+            <div style="height: 25px;">
+                <span id="phone-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div class="d-flex float-end">
+            <button class="btn btn-primary register-btn" id="" disabled>회원가입</button>
+            <button type="button" class="btn btn-danger ms-1" onclick="location.href='/seller/login'">취소</button>
+        </div>
     </form>
 </div>
-<button >취소</button>
 </body>
+
+<script th:inline="javascript" type="module">
+    import { checkInputValues, registerFormat, passwordConfirm, idDuplicateCheck, register } from '/js/register.js';
+
+    $(document).ready(function () {
+
+        idDuplicateCheck("/seller/id-duplicate-check");
+        passwordConfirm();
+        register("/seller/register", "/seller/login");
+        registerFormat();
+
+        // 입력창 확인
+        $('#id-duplicate-value, #password, #password-confirm, #name, #email, #phone').on('input', function () {
+            checkInputValues();
+        })
+
+
+    });
+
+</script>
 </html>

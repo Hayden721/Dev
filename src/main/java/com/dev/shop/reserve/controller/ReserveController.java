@@ -1,13 +1,12 @@
 package com.dev.shop.reserve.controller;
 
+import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.reserve.dto.*;
 import com.dev.shop.reserve.service.ReserveService;
-import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,7 @@ import java.util.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/devroom/reserve")
+@RequestMapping("/sharespot/reserve")
 @RequiredArgsConstructor
 public class ReserveController {
 
@@ -38,66 +37,50 @@ public class ReserveController {
 
         PagingResponse<ReserveRoomListDto> roomList = reserveService.findAllRoom(params);
 
-//        PagingResponse<>
         model.addAttribute("roomList", roomList);
         model.addAttribute("filePath", filePath);
         model.addAttribute("searchDiv", searchDiv);
         model.addAttribute("searchLocation", searchLocation);
-        log.info("--- reserveController --- 값 : {}", roomList);
 
-        return "/devroom/reserve/list";
-
+        return "/sharespot/reserve/list";
     }
-
+// ------------------------------------------------- end
     @GetMapping("/detail")
     public void detailGet(@RequestParam final Long roomNo, Model model, Principal principal) {
-
-
-        String memberId = null;
-        if(principal != null) {
-            memberId = principal.getName();
-        }
-
-        log.info("memberId {}", memberId);
-        // roomDTO select
-        RoomDto roomInfo = reserveService.findRoomInfo(roomNo);
-
-
         // 이미지 파일 패스
         String filePath = fileUtils.choosePath();
+        log.info("filePath {}", filePath);
+        // 방정보 가져오기
+        RoomInfoRequest roomInfo = reserveService.findRoomInfo(roomNo);
+        log.info("roomInfo = {}", roomInfo);
 
-        //thumbnailImage
-        RoomImageDto thumbnailImage = reserveService.getRoomThumbnailImageByRoomNo(roomNo);
-
-        // extraImage
-        List<RoomImageDto> extraImages = reserveService.getRoomExtraImageByRoomNo(roomNo);
+        // 썸네일 이미지
+        FileResponse thumbnailImage = reserveService.getThumbnailImage(roomNo);
+        log.info("thumbnailImage {}", thumbnailImage);
+        // 추가 이미지
+        List<FileResponse> extraImages = reserveService.getExtraImage(roomNo);
 
         // roomOptionImage 옵션과 옵션 이미지
-        List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
+//        List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
 
-        List<OptionAndImageDto> optionData = reserveService.getOptionAndImageByRoomNo(roomNo);
+//        List<OptionAndImageDto> optionData = reserveService.getOptionAndImageByRoomNo(roomNo);
 
-        log.info("--- reserveController --- 값 : {}", optionData);
+//        log.info("--- reserveController --- 값 : {}", optionData);
 
-
-
-        if(memberId != null) {
-            // bookmarkCheck
-            boolean bookmarkValue = reserveService.getBookmarkValue(memberId, roomNo);
-            log.info("controller boomarkValue : {}", bookmarkValue);
-            model.addAttribute("bookmark", bookmarkValue);
-        }
-
+//        if(memberId != null) {
+//            // bookmarkCheck
+//            boolean bookmarkValue = reserveService.getBookmarkValue(memberId, roomNo);
+//            log.info("controller boomarkValue : {}", bookmarkValue);
+//            model.addAttribute("bookmark", bookmarkValue);
+//        }
 
         model.addAttribute("roomInfo", roomInfo);
-        model.addAttribute("roomOptionInfo", roomOptionInfo);
+//        model.addAttribute("roomOptionInfo", roomOptionInfo);
         // 이미지 관련 model
         model.addAttribute("filePath", filePath);
         model.addAttribute("thumbnailImage", thumbnailImage);
         model.addAttribute("extraImages", extraImages);
-        model.addAttribute("optionData", optionData);
-
-
+//        model.addAttribute("optionData", optionData);
     }
 
     @GetMapping("/detail/reserve-option-ajax")

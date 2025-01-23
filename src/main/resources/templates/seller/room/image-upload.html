@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-    <link rel="stylesheet" th:href="@{/css/seller/room-create.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/create/room-create.css}">
 
     <title>Dev-room</title>
 </head>
@@ -42,12 +42,9 @@
         <!-- 옵션 이미지 -->
         <hr>
 
-
-
         <div th:each="roomOptionInfo : ${roomOptionInfo}" style="margin-bottom: 10px;">
 
-
-            <fieldset class="fieldset-style" style="margin-top: 16px";>
+            <fieldset class="fieldset-style" style="margin-top: 16px">
                 <legend th:text="${roomOptionInfo.roptionTitle}"></legend>
                 <input class="option-no" th:value="${roomOptionInfo.roptionNo}" type="hidden">
                 <div class="mb-3">

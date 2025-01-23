@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/member/mypage.css}" >
+
+
+
+    <title>Test</title>
+</head>
+
+
+<div layout:fragment="content">
+    <div class="content-middle-container">
+        <div style="width: 1000px">
+            <h1 style="align-self: start;">계정</h1>
+            <h3 th:text="${memberId}" style="align-self: start;"></h3>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 31px 31px;">
+                <div class="mypage-card" onclick="location.href='/devroom/member/mypage/edit'">
+                    <div><i class="bi bi-person-badge" style="font-size: 30px;"></i></div>
+
+                    <div style="margin: 44px 0 0 0;">
+                        <div style="margin: 44px 0 0 0;">계정 수정</div>
+                    </div>
+
+                </div>
+
+                <div class="mypage-card" onclick="location.href='/devroom/member/mypage/payment'">
+                    <div><i class="bi bi-credit-card" style="font-size: 30px;"></i></div>
+
+                    <div style="margin: 44px 0 0 0;">
+                        <div>결제 내역</div>
+                    </div>
+
+                </div>
+
+                <div class="mypage-card">
+                    <div><i class="bi bi-question-circle" style="font-size: 30px;"></i></div>
+
+                    <div style="margin: 44px 0 0 0;">
+                        <div>미정</div>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+
+        $(document).ready(function(){
+
+        })
+
+    </script>
+</th:block>
+
+</html>

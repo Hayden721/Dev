@@ -1,0 +1,66 @@
+.room-image-container {
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.upload-box {
+    height: 300px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 3px dashed #dbdbdb;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.drag-file {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-box.highlight {
+    border: 3px dashed red;
+}
+
+.image {
+    width: 40px;
+}
+
+.img-preview-container {
+    width: 100%;
+    background-color: #BCBFC8;
+    border-radius: 10px;
+}
+
+.preview-img {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.preview-div {
+    position: relative;
+    display: inline-block;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+.preview-img {
+    width: 300px;
+    height: 300px;
+}
+
+.thumbnail {
+    border: 3px solid #5b975b;
+    border-radius: 10px;
+}
+
+
+

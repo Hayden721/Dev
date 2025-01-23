@@ -1,0 +1,55 @@
+/* common css*/
+
+
+.thumbnail-image {
+    width: 235px;
+    height: 235px;
+    border-radius: 10px;
+    display: block;
+}
+
+
+
+
+
+.additional-images {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+}
+
+.extra-images-container {
+    height: 200px;
+    margin: 0 0 0 10px;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 10px;
+}
+
+.extra-image-div {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.extra-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+}
+
+.option-info-container {
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0 0 15px;
+}
+
+
+
+
+

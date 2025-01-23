@@ -1,4 +1,4 @@
-<link rel="stylesheet" th:href="@{/css/seller/room-detail-update.css}">
+<link rel="stylesheet" th:href="@{/css/pages/seller/room-update.css}">
 
     <div class="room-image-container">
         <!-- 썸네일 이미지 -->
@@ -24,13 +24,14 @@
 
                 <img class="extra-image image-js" th:src="${filePath} + '/' + ${addImage.createdDate} + '/' + ${addImage.saveName}" alt="none" th:data-image-no="${addImage.roomImageNo}">
                 <!-- overlay -->
+                <!-- 이미지 삭제 버튼 -->
                 <div class="overlay"><i class="bi bi-image" style="font-size: 20px; line-height: 20px;"></i></div>
 
                 <button type="button" class="btn-close img-delete-btn" data-bs-toggle="modal" data-bs-target="" style="top: 3%; left: 82%; width:13px; height: 13px;" aria-label="Close"></button>
             </div>
             <div class="extra-image-container">
                 <button class="btn extra-image-upload-btn">파일 선택</button>
-                <input type="file" name="image-edit" id="upload-extra-images"  accept="images/*" multiple>
+                <input type="file" name="image-edit" id="upload-extra-images" accept="images/*" multiple hidden="hidden">
             </div>
         </div>
     </div>
@@ -62,7 +63,7 @@
         extraImageUploadAjax();
         deleteImageBtnConfirm();
         deleteImage();
-        mouseHoverImageBlur();
+
         imageClickUpdateImages();
         thumbnailUploadAjax();
     });
@@ -208,21 +209,6 @@
         })
     }
 
-    // 이미지 위에 마우스 올렸을 때 이벤트
-    function mouseHoverImageBlur() {
-        // extraImage
-        const image = $('.image-js');
-
-        image.on('mouseenter', function () {
-            $(this).css('filter', 'blur(3px');
-            $(this).siblings('.overlay').css('opacity', '1');
-        })
-
-        image.on('mouseleave', function () {
-            $(this).css('filter', 'blur(0px)');
-            $(this).siblings('.overlay').css('opacity', '0');
-        })
-    }
 
     // 이미지를 클릭했을 때 동작, 이미지 업데이트 함수
     function imageClickUpdateImages() {

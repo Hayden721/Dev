@@ -1,0 +1,54 @@
+.room-list-container {
+    display: flex;
+    margin: 0 auto;
+
+}
+
+
+.room-list-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+@media (max-width: 1250px) {
+    .room-list-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* 2개의 열로 변경 */
+    }
+}
+
+@media (max-width: 1570px) {
+
+    .room-list-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3개의 열로 변경 */
+    }
+    .list-item {
+        width: 310px;
+    }
+}
+
+.list-item {
+    width: 310px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 30px;
+    background-color: #72B01D;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.list-item-inner {
+    height: 100%;
+    padding: 10px;
+    margin: 10px;
+}
+
+
+.null-container > span {
+    font-size: 20px;
+}
+
+

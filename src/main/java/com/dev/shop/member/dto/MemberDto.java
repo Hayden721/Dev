@@ -5,18 +5,16 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @ToString
-// 로그인에 사용
+
 public class MemberDto {
     private Long memberNo;
     private String memberId;
-    private String memberEmail;
     private String memberPw;
+    private String memberEmail;
     private String memberPhone;
     private String memberName;
-    private String memberAuth;
-    private String appendDate;
-    private String updateDate;
-
+    private String memberCreationDate;
+    private String memberUpdatedate;
 }

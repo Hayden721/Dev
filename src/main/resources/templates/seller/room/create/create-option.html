@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" href="/css/pages/seller/create/room-option.css">
+    <link rel="stylesheet" href="/css/image.css">
+    <script src="/js/seller/room/option.js"></script>
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="seller-content">
+
+
+    <div class="d-flex flex-column w-50 m-auto">
+        <h1>옵션 생성</h1>
+        <div>
+            <label class="float-end"> 옵션 개수
+                <select name="optionSelection" id="option-selection" class="form-select">
+                    <option value="0">개수 선택</option>
+                </select>
+            </label>
+        </div>
+        <!-- 옵션의 개수에 따라 옵션 input 생성 -->
+        <div id="generateInputForm"></div>
+        <div class="mb-3">
+            <button id="submit-btn" class="btn deep-green-btn auto-size-btn float-end" disabled>생성</button>
+        </div>
+    </div>
+
+
+</div> <!-- layout:fragment end -->
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+
+            generateOptions();
+            generateOptionForm();
+            optionSubmit();
+        });
+
+    </script>
+</th:block>
+</html>

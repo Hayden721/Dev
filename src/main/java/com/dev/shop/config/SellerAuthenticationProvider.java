@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,6 @@ public class SellerAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        //설계나 정책에 따라서 인증 메서드를 다양하게 구현할 수 있다. 아래는 가장 기본적인 예시이다.
 
         String sellerID = (String) authentication.getPrincipal();
         String sellerPw = (String) authentication.getCredentials();
@@ -35,16 +35,25 @@ public class SellerAuthenticationProvider implements AuthenticationProvider {
 
         log.info("sellerId : {}, sellerPw : {}", sellerID, sellerPw);
 
-        SellerDetailsDto user = (SellerDetailsDto) userDetailsService.loadUserByUsername(sellerID);
+        try {
+            SellerDetailsDto user = (SellerDetailsDto) userDetailsService.loadUserByUsername(sellerID);
 
-        log.info(" Seller user = {}", user);
+            log.info(" Seller user = {}", user);
 
+            if (user == null) {
+                throw new BadCredentialsException("No such username or wrong password");
+            }
 
-        if(user != null && passwordEncoder.matches(sellerPw, user.getPassword())) {
+            if (passwordEncoder.matches(sellerPw, user.getPassword())) {
 
-            token = new UsernamePasswordAuthenticationToken(sellerID, sellerPw, user.getAuthorities());
+                token = new UsernamePasswordAuthenticationToken(sellerID, sellerPw, user.getAuthorities());
 
-            return token;
+                return token;
+            }
+
+        } catch (UsernameNotFoundException e) {
+            log.info("인증 실패", e.getMessage());
+            throw e;
         }
 
         throw new BadCredentialsException("No such user or wrong password");

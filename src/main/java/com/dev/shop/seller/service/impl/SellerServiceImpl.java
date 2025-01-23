@@ -1,9 +1,7 @@
 package com.dev.shop.seller.service.impl;
 
-import com.dev.shop.seller.dto.OptionImageDto;
-import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
+import com.dev.shop.item.dto.FileResponse;
+import com.dev.shop.item.dto.OptionFileReqeuest;
 import com.dev.shop.seller.dto.*;
 import com.dev.shop.seller.dao.SellerDao;
 import com.dev.shop.seller.service.SellerService;
@@ -14,8 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,23 +30,45 @@ public class SellerServiceImpl implements SellerService {
     String localTime = format.format(time);
 
     @Override
-    public void sellerRegister(SellerDto sellerDto) {
+    public void sellerRegister(SellerRegisterRequest sellerRegister, String sellerPwConfirm) {
 
-        sellerDto.setSellerPw(bCryptPasswordEncoder.encode(sellerDto.getSellerPw()));
-        sellerDto.setSellerAuth("SELLER");
-        sellerDto.setAppendDate(localTime);
-        sellerDto.setUpdateDate(localTime);
+        if(sellerRegister.getSellerPw().equals(sellerPwConfirm)) {
+            SellerRegisterRequest registerInfo = new SellerRegisterRequest();
+            registerInfo.setSellerId(sellerRegister.getSellerId());
+            registerInfo.setSellerName(sellerRegister.getSellerName());
+            registerInfo.setSellerPw(bCryptPasswordEncoder.encode(sellerRegister.getSellerPw()));
+            registerInfo.setSellerEmail(sellerRegister.getSellerEmail());
+            registerInfo.setSellerPhone(sellerRegister.getSellerPhone());
+            registerInfo.setSellerCreationdate(localTime);
+            registerInfo.setSellerAuth("SELLER");
 
-        sellerDao.insertSellerRegister(sellerDto);
+            sellerDao.insertSellerRegister(registerInfo);
+        }
     }
 
     @Override
-    public Long insertRoomInfoByPostRoomDto(SellerRoomDto sellerRoomDto) {
+    public Long createRoom(RoomRequest roomInfo, String authId) {
+        Long sellerNo = sellerDao.selectSellerNoByAuthId(authId);
 
-        sellerDao.insertRoomInfoBySellerRoomDto(sellerRoomDto);
+        //로그인이 안된 상태에서 방을 생성하려고 할 때
+        if (authId == null) {
+            throw new RuntimeException("Invalid seller Id");
+        }
 
+        RoomRequest room = RoomRequest.builder()
+                .roomTitle(roomInfo.getRoomTitle())
+                .roomContent(roomInfo.getRoomContent())
+                .roomDiv(roomInfo.getRoomDiv())
+                .postcode(roomInfo.getPostcode())
+                .address(roomInfo.getAddress())
+                .detailAddress(roomInfo.getDetailAddress())
+                .extraAddress(roomInfo.getExtraAddress())
+                .sellerNo(sellerNo)
+                .build();
 
-        return sellerRoomDto.getRoomNo();
+        sellerDao.insertRoomInfo(room);
+
+        return room.getRoomNo();
     }
 
     @Override
@@ -55,90 +77,152 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public void insertRoomOptionInfoByOptions(List<PostRoomOptionDto> options) {
+    public int roomCountByAuthId(String authId) {
 
-        sellerDao.insertRoomOptionInfoByOptions(options);
+        Long sellerNo = sellerDao.selectSellerNoByAuthId(authId);
+
+        return sellerDao.selectRoomCountByAuthId(sellerNo);
     }
 
     @Override
-    public List<RoomListDto> getRoomListBySellerNo(Long sellerNo) {
+    public void createRoomOption(List<RoomOptionRequest> options, Long generatedRoomNo) {
+        List<RoomOptionRequest> roomOption = new ArrayList<>();
+
+        for(RoomOptionRequest option : options) {
+            RoomOptionRequest roomOptionResp = new RoomOptionRequest();
+            roomOptionResp.setRoomNo(generatedRoomNo);
+            roomOptionResp.setRoptionTitle(option.getRoptionTitle());
+            roomOptionResp.setRoptionContent(option.getRoptionContent());
+            roomOptionResp.setRoptionPrice(option.getRoptionPrice());
+
+            roomOption.add(roomOptionResp);
+        }
+
+        sellerDao.insertRoomOptionInfo(roomOption);
+    }
+
+    @Override
+    public List<RoomListDto> getRoomListByAuthId(String authId) {
+        Long sellerNo = getSellerNoByAuthId(authId);
+
         return sellerDao.selectRoomListBySellerNo(sellerNo);
     }
 
-    /**
-     * 방 정보 조회
-     * @param roomNo - 방 번호
-     * @return 방 정보 데이터
-     */
     @Override
-    public RoomDto getRoomDetailByRoomNo(Long roomNo) {
-
-        return sellerDao.selectRoomDetailByRoomNo(roomNo);
-    }
-
-    /**
-     * 옵션 정보 조회
-     * @param roomNo - 방번호
-     * @return DB에 저장된 옵션 정보
-     */
-    @Override
-    public List<RoomOptionDto> getRoomOptionInfoByRoomNo(Long roomNo) {
-        return sellerDao.selectRoomOptionInfoByRoomNo(roomNo);
+    public void removeErrorRoom(Long roomNo) {
+        sellerDao.deleteErrorRoom(roomNo);
     }
 
     @Override
-    public int getRoomOptionCountByRoomNo(Long roomNo) {
-        return sellerDao.selectRoomOptionCountByRoomNo(roomNo);
+    public List<RoomOptionResponse> getRoomOptionInfo(Long roomNo) {
+
+        return sellerDao.selectRoomOption(roomNo);
     }
 
     @Override
-    public int getRoomCountBySellerNo(Long sellerNo) {
-        return sellerDao.selectRoomCountBySellerNo(sellerNo);
+    public List<FileResponse> getRoomImages(Long roomNo) {
+        return sellerDao.selectRoomImage(roomNo);
     }
 
-    /**
-     * seller가 생성한 방 삭제
-     * @param roomNo - 방 번호
-     */
     @Override
-    public void removeRoomByRoomNo(Long roomNo) {
+    public void errorCreateRoom(Long errorRoomNo) {
+        sellerDao.updateRoomProgress(errorRoomNo);
+    }
 
-        int countRoomOption = sellerDao.selectRoomOptionCountByRoomNo(roomNo);
+    @Override
+    public FileResponse getThumbnailImage(Long roomNo) {
+        return sellerDao.selectThumbnailImage(roomNo);
+    }
 
-        // 옵션이 존재 할 때
-        if(countRoomOption > 0) {
-            // 1. roomOptionNo값 조회
-            List<Long> roomOptionNo = sellerDao.selectRoomOptionNoByRoomNo(roomNo);
-            log.debug("--- SellerServiceImpl room/detail roomOptionNo : {}", roomOptionNo);
-            // 2. roomOptionNo로 roomOptionImage delete
-            sellerDao.deleteRoomOptionImagesByRoomOptionNo(roomOptionNo);
+    @Override
+    public List<FileResponse> getExtraImage(Long roomNo) {
+        return sellerDao.selectExtraImage(roomNo);
+    }
 
-            // 3. roomOption 삭제
-            sellerDao.deleteRoomOptionByRoomNo(roomNo);
+    @Override
+    public RoomResponse getRoomInfo(Long roomNo) {
+        return sellerDao.selectRoomInfoByRoomNo(roomNo);
+    }
 
-            // 4. roomImage 사제
-            sellerDao.deleteRoomImageByRoomNo(roomNo);
 
-            // 5. room 삭제
-            sellerDao.deleteRoomByRoomNo(roomNo);
-        }else {
-            //옵션이 존재 하지 않을 때
 
-            // 1. roomImage 삭제
-            sellerDao.deleteRoomImageByRoomNo(roomNo);
-            // 2. room 삭제
-            sellerDao.deleteRoomByRoomNo(roomNo);
+    // 옵션 업데이트
+    @Override
+    public void updateOption(List<RoomOptionRequest> optionData) {
+        List<RoomOptionRequest> roomOption = new ArrayList<>();
+        for(RoomOptionRequest optionInfo : optionData) {
+            RoomOptionRequest roomOptionResp = RoomOptionRequest.builder()
+                    .roptionNo(optionInfo.getRoptionNo())
+                    .roptionTitle(optionInfo.getRoptionTitle())
+                    .roptionContent(optionInfo.getRoptionContent())
+                    .roptionPrice(optionInfo.getRoptionPrice())
+                    .build();
+            roomOption.add(roomOptionResp);
+        }
+        sellerDao.updateRoomOptionInfo(roomOption);
+    }
+
+
+
+    @Override
+    public int getOptionCount(Long roomNo) {
+        return sellerDao.selectOptionCount(roomNo);
+    }
+
+    @Override
+    public void addOption(List<RoomOptionRequest> optionData, Long roomNo, List<MultipartFile> optionImages) {
+        List<RoomOptionRequest> roomOption = new ArrayList<>();
+        List<OptionFileReqeuest> optionImageList = new ArrayList<>();
+        List<OptionFileReqeuest> refinedOptionImg = fileUtils.optionImageUploads(optionImages);
+        //옵션 정보 add
+        for(RoomOptionRequest option : optionData) {
+            RoomOptionRequest roomOptionResp = RoomOptionRequest.builder()
+                    .roomNo(roomNo)
+                    .roptionTitle(option.getRoptionTitle())
+                    .roptionContent(option.getRoptionContent())
+                    .roptionPrice(option.getRoptionPrice())
+                    .build();
+
+            roomOption.add(roomOptionResp);
+        }
+
+        sellerDao.insertNewOptions(roomOption);
+
+        // useGenerated를 사용해서 roptionNo 가지고 오기
+        List<Long> generatedOptionNos = roomOption.stream()
+                .map(RoomOptionRequest::getRoptionNo)
+                .collect(Collectors.toList());
+
+        if(!generatedOptionNos.isEmpty()) {
+            for (int i = 0; i < generatedOptionNos.size(); i++) {
+                OptionFileReqeuest refinedImg = refinedOptionImg.get(i);
+
+                OptionFileReqeuest optionResp = OptionFileReqeuest.builder()
+                        .originalName(refinedImg.getOriginalName())
+                        .saveName(refinedImg.getSaveName())
+                        .fileSize(refinedImg.getFileSize())
+                        .uploadDate(refinedImg.getUploadDate())
+                        .roptionNo(generatedOptionNos.get(i))
+                        .build();
+
+                optionImageList.add(optionResp);
+            }
+            sellerDao.addOptionImage(optionImageList);
+
         }
     }
 
     @Override
-    public List<ImageFileDto> getAdditionalImageByRoomNo(Long roomNo) {
-        return sellerDao.selectAdditionalImageByRoomNo(roomNo);
-    }
-
-    @Override
-    public ImageFileDto getThumbnailImageByRoomNo(Long roomNo) {
-        return sellerDao.selectThumbnailByRoomNo(roomNo);
+    public void deleteRoomOption(Long optionNo, Long optionImageNo) {
+        // optionImageNo가 들어오지 않았을 경우
+        if(optionImageNo == null || optionImageNo == 0) {
+            sellerDao.deleteOption(optionNo);
+        } else {
+            // 이미지 삭제
+            sellerDao.deleteOptionImage(optionImageNo);
+            // 이미지 삭제 후 옵션 삭제
+            sellerDao.deleteOption(optionNo);
+        }
     }
 
     @Override
@@ -146,163 +230,22 @@ public class SellerServiceImpl implements SellerService {
         return sellerDao.selectReserveManageInfoBySellerNo(sellerNo);
     }
 
-
     @Override
     public List<ReservationDto> getReservationInfoByRoomNo(Long roomNo) {
         return sellerDao.selectReservationInfoByRoomNo(roomNo);
     }
 
-    /**
-     * 옵션 정보와 이미지 정보 조회
-     * @param roomNo - 조회할 방 번호
-     * @return 방 번호로 조회한 데이터
-     */
     @Override
-    public List<RequestRoomOptionDto> getOptionInfoAndImage(Long roomNo) {
-        return sellerDao.selectOptionInfoAndImageByRoomNo(roomNo);
+    public List<OptionAndImageResponse> getOptionInfoAndImage(Long roomNo) {
+        return sellerDao.selectOptionAndImageByRoomNo(roomNo);
     }
 
-    /**
-     * 방 정보 업데이트
-     * @param data - 업데이트할 방 정보
-     */
     @Override
-    public void updateRoomInfoByData(RoomUpdateRequest data) {
+    public int checkIdDuplicateBySellerId(String sellerId) {
 
-        List<UpdateRoomInfoDto> roomInfo = data.getRoomInfo();
-        List<UpdateRoomOptionInfoDto> optionInfo = data.getOptionList();
-
-        log.info("sellerserviceimpl optionInfo : {}",optionInfo);
-
-        sellerDao.updateRoomInfoByRoomInfo(roomInfo);
-        sellerDao.updateRoomOptionInfoByOptionInfo(optionInfo);
+        return sellerDao.selectIdDuplicateBySellerId(sellerId);
     }
 
-
-    /**
-     * 이미지 업로드 (썸네일 이미지)
-     * @param roomNo - 방 번호
-     * @param thumbnailImage - 썸네일 이미지 데이터
-     */
-    @Override
-    public void sellerUploadThumbnailImageByRoomNo(Long roomNo, MultipartFile thumbnailImage) {
-        ImageFileDto refinedThumbnailImage = fileUtils.uploadFile(thumbnailImage);
-        log.info("refinedThumbnailImage {}", refinedThumbnailImage);
-        refinedThumbnailImage.setThumbnail('Y');
-        refinedThumbnailImage.setRoomNo(roomNo);
-//        refinedThumbnailImage.setCreatedDate(LocalDate.parse(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
-        sellerDao.insertThumbnailImage(refinedThumbnailImage);
-    }
-
-    /**
-     * 이미지 업로드 (추가 이미지)
-     * @param roomNo - 방 번호
-     * @param extraImages - 추가 이미지 데이터
-     */
-    @Override
-    public void sellerUploadExtraImagesByRoomNo(Long roomNo, List<MultipartFile> extraImages) {
-        log.info("extraImages {}", extraImages);
-        List<ImageFileDto> refinedImages = fileUtils.uploadFiles(extraImages);
-        log.info("refinedImage {} ", refinedImages);
-
-        for(ImageFileDto imageFile : refinedImages) {
-            imageFile.setThumbnail('N');
-            imageFile.setRoomNo(roomNo);
-        }
-
-        sellerDao.insertExtraImages(refinedImages);
-    }
-    @Override
-    public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
-
-        ImageFileDto refinedExtraImage = fileUtils.uploadFile(extraImage);
-        refinedExtraImage.setRoomImageNo(imageNo);
-
-
-        sellerDao.updateExtraImageByExtraImage(refinedExtraImage);
-
-    }
-
-
-    /**
-     * seller가 생성한 방에 새로운 옵션을 추가
-     * @param roomNo - 옵션을 추가 하기 위해 필요한 방 번호
-     * @param titles - 추가할 옵션의 제목
-     * @param prices - 추가할 옵션의 가격
-     * @param contents - 추가할 옵션의 설명
-     * @param images - 추가할 옵션의 이미지
-     */
-    @Override
-    public void insertRoomOptionByFormData(Long roomNo, List<String> titles, List<Integer> prices, List<String> contents, List<MultipartFile> images) {
-
-        List<PostRoomOptionDto> optionDataDto = new ArrayList<>();
-        List<Long> generatedKey = new ArrayList<>();
-
-        for (int i=0; i< titles.size(); i++) {
-            String roomOptionTitle = titles.get(i);
-            String roomOptionContent = contents.get(i);
-            int roomOptionPrice = prices.get(i);
-
-            PostRoomOptionDto roomOption = new PostRoomOptionDto(roomNo, roomOptionTitle, roomOptionContent, roomOptionPrice);
-            optionDataDto.add(roomOption);
-        }
-        log.info("optionDataDto : {}", optionDataDto);
-
-        for (PostRoomOptionDto item : optionDataDto) {
-            sellerDao.insertOptionInfoByOptionData(item);
-            System.out.println("Generated Key: " + generatedKey);
-            generatedKey.add(item.getRoomOptionNo());
-        }
-
-        log.info("제너레이트키 리스트 값 확인 : {}", generatedKey);
-
-        if (!generatedKey.isEmpty()) {
-
-            List<OptionImageDto> refinedImages = fileUtils.optionImageUploads(images);
-
-            for (int i=0; i < refinedImages.size(); i++) {
-                refinedImages.get(i).setRoptionNo(generatedKey.get(i));
-            }
-            log.info("이미지 데이터 변환 확인 : {}", refinedImages);
-            sellerDao.insertOptionImageByRefinedImages(refinedImages);
-
-        }
-    }
-
-    /**
-     * 옵션 삭제
-     * @param optionNo - 옵션 번호
-     * @param optionImageNo - 옵션 이미지 번호
-     */
-    @Override
-    public void deleteOptionByOptionNoAndOptionImageNo(Long optionNo, Long optionImageNo) {
-
-
-        // optionImageNo가 들어오지 않았을 경우
-        if(optionImageNo == null || optionImageNo == 0) {
-            sellerDao.deleteOptionByOptionNo(optionNo);
-        } else {
-            // 이미지 삭제
-            sellerDao.deleteOptionImageByOptionImageNo(optionImageNo);
-            // 이미지 삭제 후 옵션 삭제
-            sellerDao.deleteOptionByOptionNo(optionNo);
-        }
-
-    }
-
-    /**
-     * 옵션 이미지 업데이트
-     * @param optionImage - 업데이트 할 이미지 데이터
-     * @param optionImageNo 업데이트 할 이미지 번호
-     */
-    @Override
-    public void updateRoomOptionImageByOptionImageData(MultipartFile optionImage, Long optionImageNo) {
-        OptionImageDto refinedOptionImage = fileUtils.optionImageUpload(optionImage);
-        refinedOptionImage.setOptionImageNo(optionImageNo);
-
-        sellerDao.updateRoomOptionImageByRefinedOptionImage(refinedOptionImage);
-
-    }
 
 
 }

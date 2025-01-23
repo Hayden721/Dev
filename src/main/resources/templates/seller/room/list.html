@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
-    <link rel="stylesheet" th:href="@{/css/seller/room-list.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/room-list.css}">
 
 
     <title>ShareSpot</title>
@@ -39,7 +39,6 @@
                             <span th:text="${roomList.cnt} + '개'" style="font-size: 20px;"></span>
                         </span>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -49,16 +48,8 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
         $(document).ready(function() {
-            menuListColor();
-        });
 
-        function menuListColor() {
-            $('.room-manage').css({
-                'background-color': '#F3EFF5',
-                'color': '#0D0A0B',
-                'border-radius': '5px'
-            });
-        }
+        });
 
     </script>
 </th:block>

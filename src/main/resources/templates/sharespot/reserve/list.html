@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/config}">
+<head>
+
+    <link rel="stylesheet" th:href="@{/css/pages/reserve/list.css}" >
+
+    <title>ShareSpot</title>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="list-wrapper">
+
+        <div style="margin-top: 10px;"></div>
+
+        <div class="option-container">
+            <form id="searchForm" class="option-form" role="search" onsubmit="return false;"  style="display: flex; flex-direction: row;">
+                <div class="option-box">
+                    <div class="option-checkbox-container">
+                        <div>공간</div>
+                        <label class="form-check-label"><input name="checkDiv" type="checkbox" value="studyroom" class="form-check-input" onclick="movePage()">스터디룸</label>
+                        <label class="form-check-label"><input name="checkDiv" type="checkbox" value="meeting" class="form-check-input" onclick="movePage()">회의룸</label>
+                        <label class="form-check-label"><input name="checkDiv" type="checkbox" value="office" class="form-check-input" onclick="movePage()">오피스</label>
+                    </div>
+
+                    <hr/>
+
+                    <div class="location-option-search">
+                        <div>지역</div>
+                        <label class="form-check-label"><input name="locOption" type="checkbox" value="서울" class="form-check-input" onclick="movePage()">서울</label>
+                        <label class="form-check-label"><input name="locOption" type="checkbox" value="경기" class="form-check-input" onclick="movePage()">경기</label>
+                    </div>
+                </div>
+
+                <div class="keyword-search-container">
+                    <input class="form-control me-2" id="keyword" name="keyword" type="search" placeholder="검색어를 입력하세요." aria-label="Search">
+                    <button class="btn btn-primary option-button" onclick="movePage(1);" type="submit"><i class="bi bi-search"></i></button>
+                </div>
+
+            </form>
+        </div>
+
+        <div style="margin-top: 10px;"></div>
+
+        <div id="list-container">
+            <div th:each="roomList : ${roomList.list}" class="room-card" th:onclick="|location.href='@{/sharespot/reserve/detail(roomNo=${roomList.roomNo})}'|">
+
+                <img th:if="${roomList.originalName} != noImage" th:src="${filePath} + '/' + ${roomList.uploadDate} + '/' + ${roomList.saveName}" th:alt="${roomList.originalName}">
+                <img th:unless="${roomList.originalName} != noImage" src="/images/test-image.png" alt="images">
+                <div class="content">
+                    <h3 th:text="${roomList.roomTitle}"></h3>
+
+                    <div th:switch="${roomList.roomDiv}" style="font-size: 17px;">
+                        <p th:case="'studyroom'">스터디룸</p>
+                        <p th:case="'meeting'">회의실</p>
+                        <p th:case="'office'">개인오피스</p>
+                    </div>
+
+                    <p th:text="${roomList.address} + ${roomList.detailAddress}" style="font-size: 17px;"></p>
+                </div>
+
+            </div> <!-- room-container -->
+        </div> <!-- list-container end -->
+
+        <div class="pagination-container"></div>
+
+    </div>
+</div> <!-- content end -->
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        $(document).ready(function(){
+            setQueryStringParams();
+            findAllList();
+            activePagingButton();
+            afterSubmitCheckbox();
+
+        });
+
+        function afterSubmitCheckbox() {
+            // 지역 선택 옵션
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedLocations = urlParams.get('searchLocation');
+            const selectedDives = urlParams.get('searchDiv');
+            console.log("selectedLocations check", selectedLocations);
+
+            $('input[name="locOption"]').each(function () {
+                $(this).prop('checked', selectedLocations.includes($(this).val()));
+            })
+
+            //공간 옵션 선택
+            $('input[name="checkDiv"]').each(function () {
+                $(this).prop('checked', selectedDives.includes($(this).val()));
+            })
+        }
+
+        function setQueryStringParams() {
+            if (!location.search) {
+                return false;
+            }
+
+            const form = $('#searchForm');
+
+            new URLSearchParams(location.search).forEach((value, key) => {
+
+                console.log("옵션 : ",`${key}:${value}`);
+                const inputField = form.find(`[name="${key}"]`);
+                // console.log("---" + inputField.length);
+
+                if (inputField.length) {
+                    inputField.val(value);
+                }
+            });
+        }
+
+        function findAllList() {
+            const roomList = [[${roomList.list}]];
+
+            if (!roomList.length) {
+                $('#list-container').html('<b>방이 없어요</b>').css("display", "flex");
+
+                drawPage();
+            }
+
+            const pagination = [[ ${roomList.pagination} ]];
+
+            //@ModelAttribute를 이용해서 뷰(HTML)로 전달한 SearchDto탑의 객체인 params를 의미
+            const params = [[ ${params} ]];
+
+            drawPage(pagination, params);
+        }
+
+        // 페이징
+        function drawPage(pagination, params) {
+            // 필수 파라미터가 없는 경우 html을 제거
+            if(!pagination || !params) {
+                $('.pagination-container').html('');
+                // throw new Error('Missing required parameters...');
+            }
+
+            let html = `
+                <div aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item page-start"><a class="page-link" href="javascript:void(0);" onclick="movePage(1)"><i class="bi bi-chevron-double-left"></i></a></li>
+                    <li class="page-item page-prev"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.startPage - 1})"><i class="bi bi-chevron-left"></i></a></li>
+                `;
+
+            html += '<li class="page-item">';
+            for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+                html += (i !== params.page)
+                    ? `<li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="movePage(${i});">${i}</a></li>`
+                    : `<li class="page-item active"><span class="page-link">${i}</span></li>`
+            }
+
+            html += `
+                    <li class="page-item page-next"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.endPage} + 1);" class="page_bt next"><i class="bi bi-chevron-right"></i></a></li>
+                    <li class="page-item page-end"><a class="page-link" href="javascript:void(0);" onclick="movePage(${pagination.totalPageCount});" class="page_bt last"><i class="bi bi-chevron-double-right"></i></a></li>
+                </ul>
+                </div>
+
+            `;
+
+            // console.log(html);
+            $('.pagination-container').html(html);
+        }
+
+        function movePage(page) {
+            const keywordValue = $("#keyword").val();
+            console.log("movePage test", keywordValue);
+
+
+            let locationValue = [];
+            $('input[name="locOption"]:checked').each(function () {
+                locationValue.push($(this).val());
+            })
+
+            let divValue = [];
+            $('input[name="checkDiv"]:checked').each(function () {
+                divValue.push($(this).val());
+            })
+
+
+            // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
+
+            const queryParams = {
+                page: (page) ? page : 1,
+                recordSize: 9,
+                pageSize: 5,
+                keyword: keywordValue,
+                searchLocation: locationValue,
+                searchDiv: divValue
+            }
+            /*
+             * 2. location.pathname : 리스트 페이지의 URI("/post/list.do")를 의미
+             *    new URLSearchParams(queryParams).toString() : queryParams의 모든 프로퍼티(key-value)를 쿼리 스트링으로 변환
+             *    URI + 쿼리 스트링에 해당하는 주소로 이동
+             *    (해당 함수가 리턴해주는 값을 브라우저 콘솔(console)에 찍어보시면 쉽게 이해하실 수 있습니다.)
+             */
+            location.href = location.pathname + '?' + new URLSearchParams(queryParams).toString();
+        }
+
+        function activePagingButton() {
+            var $span = $(".page-item.active span");
+            var spanText = $span.text();
+
+            var spanNumber = parseInt(spanText);
+
+            console.log("spanNumber", spanNumber);
+            const pagination = [[ ${roomList.pagination} ]];
+
+
+            let startPage = pagination.startPage;
+
+            console.log("prevPage : ", pagination.prevPage);
+
+            //페이징 이동
+            if (pagination.prevPage === false) {
+                $('.page-start').css('pointer-events', 'none');
+                // $('.page-prev').css('pointer-events', 'none');
+            }
+
+            if(pagination.nextPage === false) {
+                $('.page-end').css('pointer-events', 'none');
+                // $('.page-next').css('pointer-events', 'none');
+            }
+
+            // 이전 이동
+            if(pagination.startPage === spanNumber) {
+                $('.page-prev').css('pointer-events', 'none');
+            }
+            // 다음 이동
+            if(pagination.endPage === spanNumber) {
+                $('.page-next').css('pointer-events', 'none');
+            }
+            // console.log("같은 값인가요>", pagination.startPage === pageValue);
+        }
+
+
+        /*]]>*/
+    </script>
+</th:block>
+
+
+
+</html>

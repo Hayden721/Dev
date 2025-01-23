@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -13,18 +14,17 @@ import java.time.format.DateTimeFormatter;
 @ToString
 
 public class FileResponse {
-    private Long roomImageNo;
+    private Long roomimageNo;
     private String originalName;
     private String saveName;
     private Long fileSize;
     private char thumbnail;
     private char fileDelete;
-    private LocalDateTime createDate;
-    private Long roomNo;
+    private LocalDate uploadDate;
 
-    public String getCreateDate() {
+    public String getUploadDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return this.createDate.format(formatter);
+        return this.uploadDate.format(formatter);
     }
 
 }

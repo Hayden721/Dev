@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,18 +23,18 @@ public class ReserveRoomListDto {
     private String address;
     private String detailAddress;
     private String extraAddress;
-    private int roomDelete;
+    private String roomDelete;
     private Long sellerNo;
 
     private int optionCnt;
 
     // thumbnail image
-    private LocalDateTime createdDate;
+    private LocalDate uploadDate;
     private String saveName;
     private String originalName;
 
-    public String getCreatedDate() {
+    public String getUploadDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return this.createdDate.format(formatter);
+        return this.uploadDate.format(formatter);
     }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+
+    <link rel="stylesheet" th:href="@{/css/pages/seller/create/room-create.css}" >
+
+
+    <title>Dev-room</title>
+</head>
+
+
+<div layout:fragment="seller-content">
+    <div class="validate-container">
+        <span class="fs-2" th:text="${checkRoomCount} + '/' + '12' "></span>
+        <button class="btn deep-green-btn validate-style" onclick="location.href='/seller/create/room'">등록하기</button>
+    </div>
+</div>
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            menuListColor();
+            roomCreationImpossible();
+        });
+        
+        function roomCreationImpossible() {
+                const checkRoomCount = [[ ${checkRoomCount} ]];
+            if (checkRoomCount === 12) {
+                $.ajax({
+                    type: "GET",
+                    url: "/seller/create/error/max-room",
+                    dataType: "html",
+                    success: function (result) {
+                        $('.verification-container').html(result);
+                    }
+
+                })
+            }
+        }
+        
+        // function createButtonActivate() {
+        //     const checkRoomCount = [[ ${checkRoomCount} ]];
+        //     if(checkRoomCount === 12) {
+        //         $(".verification-btn-style").prop("disabled", true);
+        //     }else {
+        //         $(".verification-btn-style").prop("disabled", false);
+        //     }
+        // }
+
+
+    </script>
+</th:block>
+</html>
+

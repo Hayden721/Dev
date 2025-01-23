@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/register.css" />
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script type="module" src="/js/register.js"></script>
+
+<div class="register-container">
+
+    <form id="register-form">
+        <div class="mb-2">
+            <label for="id" class="form-label">ID</label>
+            <div style="display: flex;">
+                <input type="text" class="form-control" id="id" placeholder="아이디" name="memberId" required>
+                <button type="button" style="width: 125px; margin: 0 0 0 5px;" class="btn normal-btn" id="duplicate-btn">중복 체크</button>
+                <input type="text" value="" id="id-duplicate-value" required>
+            </div>
+            <div style="height: 25px;">
+                <span id="id-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div>
+            <label for="password" class="form-label">비밀번호</label>
+            <input type="text" class="form-control" id="password" placeholder="영문 대소문자, 숫자를 조합해 입력해주세요(8~16자)" name="memberPw" required>
+            <div style="height: 25px;">
+                <span id="password-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div>
+            <label for="password-confirm" class="form-label">비밀번호 확인</label>
+            <input type="text" class="form-control" id="password-confirm" placeholder="비밀번호 확인" name="memberPwConfirm" required>
+            <div style="height: 25px;">
+                <span id="pw-confirm-message" class="warn-message"></span>
+            </div>
+            <input type="text" value="0" id="pw-check-value" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" placeholder="이름" name="memberName" required>
+            <div style="height: 25px;">
+                <span id="name-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <label for="email" class="form-label">이메일</label>
+            <input type="text" class="form-control" id="email" placeholder="xxx@example.com" name="memberEmail" required>
+            <span id="email-message" class="warn-message"></span>
+            <input type="text" value="0" id="email-confirm-value" required>
+
+        </div>
+
+        <div class="mb-2">
+            <label for="phone" class="form-label">전화번호</label>
+            <input type="text" class="form-control" id="phone" placeholder="'-'없이 작성해주세요." name="memberPhone" required>
+            <div style="height: 25px;">
+                <span id="phone-message" class="warn-message"></span>
+            </div>
+        </div>
+
+        <div class="btn-container mb-2">
+            <button class="btn btn-primary register-btn" id="" disabled>회원가입</button>
+            <button type="button" class="btn btn-danger" onclick="location.href='/devroom/member/login'">취소</button>
+        </div>
+    </form>
+</div>
+</body>
+
+<script th:inline="javascript" type="module">
+    import { checkInputValues, registerFormat, passwordConfirm, idDuplicateCheck, register } from '/js/register.js';
+
+    $(document).ready(function () {
+        idDuplicateCheck("/sharespot/member/id-duplicate-check");
+        passwordConfirm();
+        register("/sharespot/member/register", "/sharespot/member/login");
+        registerFormat();
+        // 입력창 확인
+        $('#id-duplicate-value, #password ,#pw-confirm-value, #name, #email, #phone').on('input', function () {
+            checkInputValues();
+        })
+
+    })
+
+</script>
+</html>

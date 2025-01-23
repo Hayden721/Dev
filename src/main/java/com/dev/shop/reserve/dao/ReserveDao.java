@@ -1,10 +1,9 @@
 package com.dev.shop.reserve.dao;
 
+import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.reserve.dto.*;
-import com.dev.shop.seller.dto.RoomImageDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+
 @Mapper
 public interface ReserveDao {
 
@@ -20,7 +19,7 @@ public interface ReserveDao {
     List<ReserveRoomListDto> selectRoomList(CriteriaDto criteriaDto);
 
     /**
-     *
+     * 개시물의 총 개수를 조회한다.
      * @param criteriaDto - list 페이지에서 보낸 criteria 데이터
      * @return 게시물의 개수
      */
@@ -31,7 +30,7 @@ public interface ReserveDao {
      * @param roomNo - 방 번호(Primary key)
      * @return 방 번호에 맞는 방 정보
      */
-    RoomDto selectRoomInfoByRoomNo(Long roomNo);
+    RoomInfoRequest selectRoomInfoByRoomNo(Long roomNo);
 
     /**
      * 방 옵션 조회
@@ -73,17 +72,19 @@ public interface ReserveDao {
      * @param roomNo - 방 번호(Primary key)
      * @return 썸네일 아닌 이미지
      */
-    List<RoomImageDto> selectRoomExtraImageByRoomNo(Long roomNo);
+    List<FileResponse> selectExtraImage(Long roomNo);
 
     /**
      *
      * @param roomNo - 방 번호(Primary key)
      * @return 썸네일 이미지 데이터
      */
-    RoomImageDto selectRoomThumbnailByRoomNo(Long roomNo);
+//    RoomImageDto selectRoomThumbnailByRoomNo(Long roomNo);
 
     boolean selectBookmarkedRoom(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
 
     List<OptionAndImageDto> selectOptionAndImage(Long roomNo);
+
+    FileResponse selectThumbnailImage(Long roomNo);
 }

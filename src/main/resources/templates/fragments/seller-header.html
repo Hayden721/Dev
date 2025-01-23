@@ -2,19 +2,12 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<div th:fragment="seller-header">
-
-  <nav>
+<header th:fragment="seller-header" class="header-style">
     <div class="header-logo">
-      <a th:href="@{/seller/main}"><img src="/images/logo/seller-spot-removebg.png"></a>
+      <a th:href="@{/seller/main}"><img src="/images/logo/seller-spot-removebg-200x90.png"></a>
     </div>
-
-    <ul class="header-ul">
-
+    <ul class="d-flex header-menu">
       <li sec:authorize="isAuthenticated()"><a href="/seller/logout">로그아웃</a></li>
     </ul>
-  </nav>
-
-
-</div>
+</header>
 </html>

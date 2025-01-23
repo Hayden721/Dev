@@ -17,13 +17,13 @@ public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String refererUrl = request.getHeader("Referer");
         if (refererUrl != null && !refererUrl.isEmpty()) {
-            if(refererUrl.endsWith("/devroom/member/login")) {
-                response.sendRedirect("/devroom/member/main");
+            if(refererUrl.endsWith("/sharespot/member/login")) {
+                response.sendRedirect("/sharespot/member/main");
             }else {
                 response.sendRedirect(refererUrl);
             }
         } else {
-            response.sendRedirect("/devroom/member/main");
+            response.sendRedirect("/sharespot/member/main");
             super.onLogoutSuccess(request, response, authentication);
         }
 

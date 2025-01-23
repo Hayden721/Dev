@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-    <link rel="stylesheet" th:href="@{/css/seller/room-image.css}">
+    <link rel="stylesheet" th:href="@{/css/pages/seller/create/room-image.css}">
 
     <title>Dev-room</title>
 </head>
@@ -19,7 +19,6 @@
     <form id="defaultForm" method="post" autocomplete="off" enctype="multipart/form-data">
         <input name="roomNo" th:value="${roomNo}">
         <!-- 저장했던 데이터들 image-upload에 가져오기 -->
-
 
         <div class="mb-3 thumbnail-image">
             <label for="formFile" class="form-label">추가 이미지</label>
@@ -53,7 +52,6 @@
 
 <!-- 옵션 이미지 -->
 <!-- 생성된 옵션 개수 받은만큼 div를 생성해서 옵션을 나열하고 이미지    -->
-
 </div>
 
 <th:block layout:fragment="script">

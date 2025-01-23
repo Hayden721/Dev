@@ -3,12 +3,11 @@ package com.dev.shop.member.service.impl;
 import com.dev.shop.member.dao.MemberDao;
 import com.dev.shop.member.dto.*;
 import com.dev.shop.member.service.MemberService;
-import com.dev.shop.reserve.dto.ReserveRoomListDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
+
     private final MemberDao memberDao;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
     String localTime = format.format(time);
 
     /**
-     * 최근 등록된 방 (6개)
+     * 최근 등록된 방 조회 (6개 제한)
      * @return 최근 등록된 방과 이미지 정보
      */
     @Override
@@ -38,6 +38,12 @@ public class MemberServiceImpl implements MemberService {
         return memberDao.selectRoomAndImage();
     }
 
+    /**
+     * 해당 방을 북마크 했는지 안했는지 확인한다.
+     * @param memberId - 로그인한 유저의 아이디
+     * @param roomNo - 북마크하려는 방 넘버
+     * @return 북마크를 상태를 boolean 값으로 반환
+     */
     @Override
     public boolean roomBookmark(String memberId, Long roomNo) {
         //memberId로 memberNo 조회
@@ -58,16 +64,20 @@ public class MemberServiceImpl implements MemberService {
         }
 
         //2. 만약 북마크가 존재하지 않으면 insert / 존재한다면 delete
-
     }
 
-    // 결제 내역 페이징 수정 중
+    @Override
+    public int checkIdDuplicateByMemberId(String memberId) {
+
+        return memberDao.selectIdDuplicateByMemberId(memberId);
+
+    }
 
     /**
      * 결제 내역 페이징
      * @param memberId - 로그인한 멤버 ID
-     * @param params -
-     * @return
+     * @param params
+     * @return - 페이지네이션 리스트
      */
     @Override
     public PagingResponse<PaymentHistoryDto> getMemberPaymentHistoryByMemberId(String memberId, ReservationCriteriaDto params) {
@@ -87,6 +97,11 @@ public class MemberServiceImpl implements MemberService {
         return new PagingResponse<>(list, pagination);
     }
 
+    /**
+     * 북마크된 공간 리스트를 가져온다.
+     * @param memberId - 로그인한 멤버
+     * @return 북마크된 공간 리스트
+     */
     @Override
     public List<BookmarkedDto> getBookmarkedRoomListByMemberId(String memberId) {
         Long memberNo = memberDao.selectMemberNo(memberId);
@@ -97,17 +112,28 @@ public class MemberServiceImpl implements MemberService {
 
     /**
      * 회원가입
-     * @param memberDto - 입력한 회원가입 정보
+     *
+     * @param memberDto       - 입력한 회원가입 정보
+     * @param memberPwConfirm - 비밀번호 확인
      */
     @Override
-    public void memberRegister(MemberDto memberDto) {
+    public void memberRegister(MemberRequest memberRequest, String memberPwConfirm) {
 
-        memberDto.setMemberPw(bCryptPasswordEncoder.encode(memberDto.getMemberPw()));
-        memberDto.setMemberAuth("USER");
-        memberDto.setAppendDate(localTime);
-        memberDto.setUpdateDate(localTime);
+        if(memberRequest.getMemberPw().equals(memberPwConfirm)) {
+            MemberRequest member = MemberRequest.builder()
+                    .memberId(memberRequest.getMemberId())
+                    .memberPw(bCryptPasswordEncoder.encode(memberRequest.getMemberPw()))
+                    .memberEmail(memberRequest.getMemberEmail())
+                    .memberPhone(memberRequest.getMemberPhone())
+                    .memberName(memberRequest.getMemberName())
+                    .memberCreationDate(localTime)
+                    .memberAuth("MEMBER")
+                    .build();
 
-        memberDao.insertMemberRegister(memberDto);
+
+            memberDao.insertMemberRegister(member);
+
+        }
     }
 
     @Override
@@ -121,13 +147,12 @@ public class MemberServiceImpl implements MemberService {
         String oldPw = memberDao.selectMemberPw(memberDto.getMemberNo());
 
         memberDto.setMemberPhone(memberDto.getMemberPhone());
-        memberDto.setUpdateDate(localTime);
+        memberDto.setMemberUpdatedate(localTime);
         memberDto.setMemberEmail(memberDto.getMemberEmail());
 
         if (bCryptPasswordEncoder.matches(memberDto.getMemberPw(), oldPw) && memberNewPw.equals(memberNewPwChk) && memberDto.getMemberPw() != null) {
 
             memberDto.setMemberPw(bCryptPasswordEncoder.encode(memberNewPw));
-
             memberDao.updateMemberInformation(memberDto);
 
         } else {

@@ -20,11 +20,11 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
         log.info("--- [CustomDetailsServiceImpl] 여기까지 옴");
         log.info("{}", memberId);
+
         MemberDetailsDto dto = memberDao.selectMemberById(memberId);
 
-        if (dto.getMemberId() == null) {
+        if (dto == null || dto.getMemberId() == null) {
             throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");
-
         }
         return dto;
     }

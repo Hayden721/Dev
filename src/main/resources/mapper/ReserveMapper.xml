@@ -4,20 +4,22 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
-    <!--  SELECT -    -->
+
     <update id="updateReservationStatus">
         UPDATE reservation_tb r
         INNER JOIN (
-        SELECT reservation_no, end_date_time, reservation_status
-        FROM reservation_tb
-        WHERE end_date_time &lt;= CURRENT_TIMESTAMP
+            SELECT reservation_no, end_date_time, reservation_status
+            FROM reservation_tb
+            WHERE end_date_time &lt;= CURRENT_TIMESTAMP
         AND reservation_status = 1
         ) t ON r.reservation_no = t.reservation_no
         SET r.reservation_status = 2
     </update>
 
     <select id="selectRoomList" resultType="ReserveRoomListDto">
-        select a.*, IFNULL(b.cnt, 0) as cnt, IFNULL(c.created_date, '0101-01-01'), IFNULL(c.save_name, 'noImage'), IFNULL(c.original_name, 'noImage')
+        SELECT a.room_no, a.room_title, a.room_div, a.room_content, a.postcode, a.address, a.detail_address, a.extra_address, a.room_delete, a.seller_no,
+        IFNULL(b.cnt, 0) as option_cnt, IFNULL(c.upload_date, '0101-01-01') as upload_date,
+        IFNULL(c.save_name, 'noImage') as save_name, IFNULL(c.original_name, 'noImage') as original_name
         FROM room_tb a
         LEFT JOIN (
             SELECT room_no, COUNT(roption_no) cnt
@@ -26,14 +28,14 @@
         ) b
             ON a.room_no = b.room_no
         LEFT JOIN (
-            select room_no, thumbnail, file_delete, created_date, save_name, original_name
-            from roomimage_tb
-            where thumbnail = 'Y'
-            and file_delete = 'N'
-        ) c (room_no, thumbnail, file_delete, created_date, save_name, original_name)
+            SELECT room_no, thumbnail, file_delete, upload_date, save_name, original_name
+            FROM roomimage_tb
+            WHERE thumbnail = 'Y'
+                AND file_delete = 'N'
+        ) c
             ON a.room_no = c.room_no
-        WHERE a.room_delete = 0
-            AND b.cnt != 0
+            WHERE a.room_delete = 'N'
+            AND IFNULL(b.cnt, 0) != 0
 
         <!-- 공간 옵션값이 존재 할 때 -->
         <if test="searchDiv != null and searchDiv.size() > 0">
@@ -56,7 +58,6 @@
             )
         </if>
 
-
         ORDER BY a.room_no DESC
 
         LIMIT #{pagination.limitStart}, #{recordSize}
@@ -66,7 +67,7 @@
     <select id="countAllList" resultType="int">
         select COUNT(*) as room_count
         from (
-            select a.*, IFNULL(b.cnt, 0) as cnt
+            SELECT a.*, IFNULL(b.cnt, 0) as cnt
             FROM room_tb a
             LEFT JOIN (
                 SELECT room_no, COUNT(roption_no) cnt
@@ -81,7 +82,7 @@
                 AND file_delete = 'N'
             ) c
             ON a.room_no = c.room_no
-            WHERE a.room_delete = 0
+            WHERE a.room_delete = 'N'
                 AND b.cnt != 0
 
         <!-- 공간 옵션값이 존재 할 때 -->
@@ -106,13 +107,12 @@
         </if>
 
         ) as subquery_result
-
     </select>
 
-    <select id="selectRoomInfoByRoomNo" resultType="RoomDto">
-        SELECT *
+    <select id="selectRoomInfoByRoomNo" resultType="com.dev.shop.reserve.dto.RoomInfoRequest">
+        SELECT room_no, room_title, room_div, room_content, postcode, address, detail_address, extra_address, seller_no
         FROM room_tb
-        where room_no = #{roomNo}
+        WHERE room_no = #{roomNo}
     </select>
 
     <select id="selectRoomOptionInfoByRoomNo" resultType="RoomOptionDto">
@@ -120,6 +120,25 @@
         FROM roomoption_tb
         where room_no = #{roomNo}
     </select>
+
+    <select id="selectThumbnailImage" resultType="com.dev.shop.item.dto.FileResponse">
+        SELECT roomimage_no, original_name, save_name, file_size, thumbnail, file_delete, upload_date
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+            and file_delete = 'N'
+            and thumbnail = 'Y'
+    </select>
+
+    <select id="selectExtraImage" resultType="com.dev.shop.item.dto.FileResponse">
+        SELECT roomimage_no, original_name, save_name, file_size, thumbnail, file_delete, upload_date
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+            and file_delete = 'N'
+            and thumbnail = 'N'
+        ORDER BY upload_date DESC
+    </select>
+
+<!--  ////////////////////////////////////////////////////////////////////////////////  -->
 
     <select id="getReservedTime" resultType="java.lang.String">
         SELECT start_time
@@ -156,38 +175,35 @@
         WHERE member_id = #{memberId}
     </select>
 
-    <select id="selectRoomThumbnailByRoomNo" resultType="com.dev.shop.seller.dto.RoomImageDto">
-        SELECT *
-        FROM roomimage_tb
-        WHERE room_no = #{roomNo}
-        and file_delete = 'N'
-        and thumbnail = 'Y'
+<!--    <select id="selectRoomThumbnailByRoomNo" resultType="com.dev.shop.seller.dto.RoomImageDto">-->
+<!--        SELECT *-->
+<!--        FROM roomimage_tb-->
+<!--        WHERE room_no = #{roomNo}-->
+<!--        and file_delete = 'N'-->
+<!--        and thumbnail = 'Y'-->
 
-    </select>
+<!--    </select>-->
 
-    <select id="selectRoomExtraImageByRoomNo" resultType="com.dev.shop.seller.dto.RoomImageDto">
-        SELECT *
-        FROM roomimage_tb
-        WHERE room_no = #{roomNo}
-            and file_delete = 'N'
-            and thumbnail = 'N'
-        ORDER BY created_date DESC
-    </select>
 
-    <select id="selectBookmarkedRoom">
+
+
+
+    <select id="selectBookmarkedRoom" resultType="boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ElSE false END
         FROM bookmark_tb
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
     <select id="selectOptionAndImage" resultType="com.dev.shop.reserve.dto.OptionAndImageDto">
-        select a.*, IFNULL(b.roptionimage_no, '0') as roptionimage_no, IFNULL(b.original_name, 'noImage') as original_name, IFNULL(b.save_name, 'noImage') as save_name, IFNULL(b.file_size, '0') as file_size, IFNULL(b.file_delete, 'N') as file_delete, IFNULL(b.created_date, '0101-01-01') as created_date
+        select a.*, IFNULL(b.roptionimage_no, '0') as roptionimage_no, IFNULL(b.original_name, 'noImage') as original_name, IFNULL(b.save_name, 'noImage') as save_name, IFNULL(b.file_size, '0') as file_size, IFNULL(b.file_delete, 'N') as file_delete, IFNULL(b.upload_date, '0101-01-01') as upload_date
         FROM roomoption_tb a
         left join roomoptionimage_tb b
         on a.roption_no = b.roption_no
         WHERE a.room_no = #{roomNo};
 
     </select>
+
+
 
 
     <insert id="insertReserveInfo">

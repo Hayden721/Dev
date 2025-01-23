@@ -1,0 +1,32 @@
+.side-menu {
+    width: 100%;
+    min-width: 290px;
+    min-height: 100vh;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+
+}
+
+.menu-list {
+    height: 40px;
+    padding: 7px;
+    margin: 0 0 5px 0;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+.menu-list:hover{
+    width: 100%;
+    background-color: #39721D;
+    transition: 0.7s;
+    color: #F3EFF5;
+    border-radius: 5px;
+}
+.menu-active {
+    background-color: #39721D;
+    color: white;
+    border-radius: 5px;
+}
+
+

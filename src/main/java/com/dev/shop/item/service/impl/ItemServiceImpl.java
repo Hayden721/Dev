@@ -1,11 +1,9 @@
 package com.dev.shop.item.service.impl;
 
 import com.dev.shop.item.dao.ItemDao;
-import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.item.dto.FileResponse;
-import com.dev.shop.seller.dto.OptionImageDto;
+import com.dev.shop.item.dto.FileRequest;
+import com.dev.shop.item.dto.OptionFileReqeuest;
 import com.dev.shop.item.service.ItemService;
-import com.dev.shop.reserve.dto.RoomOptionDto;
 import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -23,73 +23,149 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemDao itemDao;
     private final FileUtils fileUtils;
+
     @Override
-    public void saveImagesByRoomNo(Long roomNo, List<MultipartFile> files, MultipartFile thumbnail) {
+    public void uploadRoomImage(MultipartFile thumbnail, List<MultipartFile> extraImg, Long roomNo) {
+        List<FileRequest> wholeImage = new ArrayList<>();
+        FileRequest refinedThumbnail = fileUtils.uploadFile(thumbnail); // 썸네일 이미지
+        List<FileRequest> refinedImages = (extraImg != null && !extraImg.isEmpty())
+                ? fileUtils.uploadFiles(extraImg)
+                : new ArrayList<>(); // extraImg가 null이 아니고 isEmpty가 아니면 데이터 정제, 반대라면 빈 리스트 반환
 
-        List<ImageFileDto> refinedImages = fileUtils.uploadFiles(files);
-        ImageFileDto refinedThumbnail = fileUtils.uploadFile(thumbnail);
-
-
-        log.info("ItemService --------------------- {}", refinedImages);
-        log.info("ItemService ---------------------thumbnail {}", refinedThumbnail);
-
+        // 둘 다 없는 경우 return
         if(CollectionUtils.isEmpty(refinedImages) && refinedThumbnail == null) {
             return;
         }
-
-        for (ImageFileDto file : refinedImages) {
-            file.setThumbnail('N');
-            file.setRoomNo(roomNo);
-        }
-
-        // thumbnail 이미지 데이터 처리
-
+        // 정제된 썸네일이 null이 아닐 때
         if(refinedThumbnail != null) {
-            refinedThumbnail.setThumbnail('Y');
-            refinedThumbnail.setRoomNo(roomNo);
+            FileRequest thumbnailImage = FileRequest.builder()
+                .originalName(refinedThumbnail.getOriginalName())
+                .saveName(refinedThumbnail.getSaveName())
+                .fileSize(refinedThumbnail.getFileSize())
+                .uploadDate(refinedThumbnail.getUploadDate())
+                .thumbnail('Y')
+                .roomNo(roomNo)
+                .build();
 
-            refinedImages.add(refinedThumbnail);
-        }
-        itemDao.insertImageFilesByRoomNo(refinedImages);
-
-    }
-
-    @Override
-    public void sellerUpdateImageByImageNo(Long imageNo, MultipartFile extraImage) {
-        ImageFileDto refinedImage = fileUtils.uploadFile(extraImage);
-
-        itemDao.UpdateRoomImage(refinedImage, imageNo);
-    }
-
-    @Override
-    public List<FileResponse> getFileInfoByRoomNo(Long roomNo) {
-        return itemDao.selectFileInfoByRoomNo(roomNo);
-    }
-
-    @Override
-    public List<RoomOptionDto> getRoomOptionByRoomNo(Long roomNo) {
-        return itemDao.selectRoomOptionByRoomNo(roomNo);
-    }
-
-    @Override
-    public void saveOptionImageByRoomOptionNo(List<MultipartFile> optionImage, List<Long> roptionNo) {
-        List<OptionImageDto> refinedOptionImage = fileUtils.optionImageUploads(optionImage);
-        log.info("----------------- itemServiceImpl refinedOptionImage : {} ", refinedOptionImage);
-
-        for(int i=0; i<refinedOptionImage.size(); i++) {
-            refinedOptionImage.get(i).setRoptionNo(roptionNo.get(i));
+            wholeImage.add(thumbnailImage);
         }
 
-        log.info("----------------- itemServiceImpl refinedOptionImage2 : {} ", refinedOptionImage);
-
-        if(!refinedOptionImage.isEmpty()) {
-            itemDao.insertOptionImageSaveByRefindOptionImage(refinedOptionImage);
+        if(refinedImages != null) {
+            for (FileRequest file : refinedImages) {
+                FileRequest extraImage = FileRequest.builder()
+                        .originalName(file.getOriginalName())
+                        .saveName(file.getSaveName())
+                        .fileSize(file.getFileSize())
+                        .uploadDate(file.getUploadDate())
+                        .thumbnail('N')
+                        .roomNo(roomNo)
+                        .build();
+                wholeImage.add(extraImage);
+            }
         }
+
+        itemDao.insertRoomImages(wholeImage);
+
     }
 
     @Override
-    public void deleteRoomImageByImageNo(Long imageNo) {
-        itemDao.updateRoomImageByImageNo(imageNo);
+    public void optionImageUpload(Map<String, MultipartFile> optionImg) {
+        List<OptionFileReqeuest> imagesList = new ArrayList<>();
+
+        for(Map.Entry<String, MultipartFile> entry : optionImg.entrySet()) {
+            // 1. MultipartFile 분리 key = roptionNo, value = imgData
+            Long roptionNo = Long.valueOf(entry.getKey()); // roptionNo
+            MultipartFile img = entry.getValue(); // 이미지
+            log.info("img : {}", img);
+            OptionFileReqeuest imgMapping = fileUtils.optionImageUpload(img);
+            log.info("imgMapping : {}", imgMapping);
+
+            OptionFileReqeuest image = OptionFileReqeuest.builder()
+                .originalName(imgMapping.getOriginalName())
+                .saveName(imgMapping.getSaveName())
+                .fileSize(imgMapping.getFileSize())
+                .uploadDate(imgMapping.getUploadDate())
+                .roptionNo(roptionNo)
+                .build();
+
+            imagesList.add(image);
+            log.info("imagesList : {}", imagesList );
+        }
+        itemDao.insertOptionImage(imagesList);
+    }
+
+    @Override
+    public void updateRoomImage(Map<String, MultipartFile> imageFiles) {
+//        if(division.equals("room")) {
+//            List<FileRequest> imagesList = new ArrayList<>();
+//            // room image
+//            for(Map.Entry<String, MultipartFile> entry : imageFiles.entrySet()) {
+//                Long roomimageNo = Long.valueOf(entry.getKey()); // 키값 추출
+//                MultipartFile img = entry.getValue(); // 벨류값 추출
+//                log.info("roomimageNo key : {}", roomimageNo);
+//                log.info("img value : {}", img);
+//
+//                // multipart 데이터 변환
+//                FileRequest imgMapping = fileUtils.uploadFile(img);
+//
+//                FileRequest image = FileRequest.builder()
+//                        .roomimageNo(roomimageNo)
+//                        .originalName(imgMapping.getOriginalName())
+//                        .saveName(imgMapping.getSaveName())
+//                        .fileSize(imgMapping.getFileSize())
+//                        .uploadDate(imgMapping.getUploadDate())
+//                        .build();
+//
+//                imagesList.add(image);
+//            }
+//
+//            itemDao.updateRoomImage(imagesList);
+//
+//        } else if(division.equals("option")) { //option image
+//            List<OptionFileReqeuest> imagesList = new ArrayList<>();
+//            for(Map.Entry<String, MultipartFile> entry : imageFiles.entrySet()) {
+//                Long roptionImageNo = Long.valueOf(entry.getKey());
+//                MultipartFile img = entry.getValue();
+//                log.info("image division serviceImpl: {}", division);
+//
+//                OptionFileReqeuest optionImgMapping = fileUtils.optionImageUpload(img);
+//                OptionFileReqeuest optionImg = OptionFileReqeuest.builder()
+//                        .roptionimageNo(roptionImageNo)
+//                        .originalName(optionImgMapping.getOriginalName())
+//                        .saveName(optionImgMapping.getSaveName())
+//                        .fileSize(optionImgMapping.getFileSize())
+//                        .uploadDate(optionImgMapping.getUploadDate())
+//                        .build();
+//
+//                imagesList.add(optionImg);
+//            }
+//            itemDao.updateOptionImage(imagesList);
+    }
+
+    @Override
+    public void updateOptionImage(Map<String, MultipartFile> optionImgFormData) {
+        List<OptionFileReqeuest> imagesList = new ArrayList<>();
+        for(Map.Entry<String, MultipartFile> entry : optionImgFormData.entrySet()) {
+                Long optionImageNo = Long.valueOf(entry.getKey()); // 키값 추출 (optionImageNo)
+                MultipartFile img = entry.getValue(); // 벨류값 추출 (Multipart Data)
+                log.info("roomimageNo key : {}", optionImageNo);
+                log.info("img value : {}", img);
+
+                // multipart 데이터 변환
+                OptionFileReqeuest optionImgMapping = fileUtils.optionImageUpload(img);
+
+                OptionFileReqeuest image = OptionFileReqeuest.builder()
+                        .roptionimageNo(optionImageNo)
+                        .originalName(optionImgMapping.getOriginalName())
+                        .saveName(optionImgMapping.getSaveName())
+                        .fileSize(optionImgMapping.getFileSize())
+                        .uploadDate(optionImgMapping.getUploadDate())
+                        .build();
+//
+                imagesList.add(image);
+            }
+
+            itemDao.updateOptionImage(imagesList);
     }
 
 

@@ -5,41 +5,46 @@
 
 <mapper namespace="com.dev.shop.item.dao.ItemDao">
 
-    <insert id="insertImageFilesByRoomNo" parameterType="list">
-        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, file_delete,created_date, room_no)
+
+
+    <insert id="insertRoomImages">
+        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, upload_date, room_no)
         VALUES
-        <foreach collection="list" item="file" separator=",">
-            ( null, #{file.originalName}, #{file.saveName}, #{file.fileSize}, #{file.thumbnail}, 'N', NOW(), #{file.roomNo} )
+        <foreach collection="list" item="image" separator=",">
+            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, #{image.thumbnail}, #{image.uploadDate}, #{image.roomNo} )
         </foreach>
+
     </insert>
-    <insert id="insertOptionImageSaveByRefindOptionImage">
+    <insert id="insertOptionImage">
         INSERT INTO roomoptionimage_tb (
-            roptionimage_no, original_name, save_name, file_size, file_delete, created_date, roption_no
+            roptionimage_no, original_name, save_name, file_size, upload_date, roption_no
         )
         VALUES
         <foreach collection="list" item="image" separator=",">
-            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, 'N', NOW(), #{image.roptionNo})
+            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, #{image.uploadDate},#{image.roptionNo})
         </foreach>
     </insert>
-    <insert id="insertRoomImages">
-        INSERT INTO roomimage_tb ( roomimage_no, original_name, save_name, file_size, thumbnail, file_delete,created_date, room_no)
-        VALUES
-        <foreach collection="list" item="image" separator=",">
-            ( null, #{image.originalName}, #{image.saveName}, #{image.fileSize}, #{image.thumbnail}, 'N', NOW(), #{image.roomNo} )
-        </foreach>
-
-    </insert>
 
 
-    <update id="updateRoomImageByImageNo">
-        UPDATE roomimage_tb
-        SET file_delete = 'Y'
-        WHERE roomimage_no = #{imageNo}
-    </update>
-    <update id="UpdateRoomImage">
+    <update id="updateRoomImage">
+        <foreach collection="imagesList" item="image" separator=";">
         UPDATE roomImage_tb
-        SET original_name = #{refinedImage.originalName}, save_name = #{refinedImage.saveName}, created_date =#{refinedImage.createdDate}
-        WHERE roomimage_no = #{imageNo}
+
+        SET original_name = #{image.originalName}, save_name = #{image.saveName}, file_size = #{image.fileSize},
+            upload_date = #{image.uploadDate}
+
+        WHERE roomimage_no = #{image.roomimageNo}
+        </foreach>
+    </update>
+    <update id="updateOptionImage">
+        <foreach collection="imagesList" item="image" separator=";">
+            UPDATE roomoptionimage_tb
+
+            SET original_name = #{image.originalName}, save_name = #{image.saveName}, file_size = #{image.fileSize},
+            upload_date = #{image.uploadDate}
+
+            WHERE roptionimage_no = #{image.roptionimageNo}
+        </foreach>
     </update>
 
 
@@ -56,17 +61,19 @@
     </select>
 
     <select id="selectAdditionalImageByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
-        select * from roomimage_tb
-        where room_no = #{roomNo}
-        and thumbnail= 'N'
-        and file_delete = 'N';
+        SELECT *
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+            AND thumbnail= 'N'
+            AND file_delete = 'N';
     </select>
 
     <select id="selectThumbnailByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
-        select * from roomimage_tb
-        where room_no = #{roomNo}
-        and thumbnail= 'Y'
-        and file_delete = 'N';
+        SELECT *
+        FROM roomimage_tb
+        WHERE room_no = #{roomNo}
+            AND thumbnail= 'Y'
+            AND file_delete = 'N';
     </select>
 
 </mapper>

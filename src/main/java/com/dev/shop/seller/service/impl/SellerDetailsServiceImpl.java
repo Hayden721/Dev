@@ -22,10 +22,9 @@ public class SellerDetailsServiceImpl implements UserDetailsService {
         log.info("--- [SellerCustomDetailsServiceImpl] 여기까지 옴");
         log.info("{}", sellerId);
         SellerDetailsDto dto = sellerDao.selectSellerById(sellerId);
-//        log.info("--- [customDetailServiceImpl] 데이터값 확인 : {}", dto);
-        if (dto.getSellerId() == null) {
-            throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");
 
+        if (dto == null || dto.getSellerId() == null) {
+            throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");
         }
         return dto;
     }

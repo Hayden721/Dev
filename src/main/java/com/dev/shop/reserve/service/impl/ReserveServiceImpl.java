@@ -1,17 +1,16 @@
 package com.dev.shop.reserve.service.impl;
 
+import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.reserve.dao.ReserveDao;
 import com.dev.shop.reserve.dto.*;
 import com.dev.shop.reserve.service.ReserveService;
 
-import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.Pagination;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,9 +28,9 @@ public class ReserveServiceImpl implements ReserveService {
     public PagingResponse<ReserveRoomListDto> findAllRoom(CriteriaDto params) {
         // 조건에 해당하는 데이터가 없는 경우, 응답 데이터에 비어있는 리스트와 null을 담아 반환
 
-
         // 게시물 카운트
         int count = reserveDao.countAllList(params);
+        log.info("count {}", count);
         if (count < 1) {
             return new PagingResponse<>(Collections.emptyList(), null);
         }
@@ -46,9 +45,15 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public RoomDto findRoomInfo(Long roomNo) {
+    public RoomInfoRequest findRoomInfo(Long roomNo) {
         return reserveDao.selectRoomInfoByRoomNo(roomNo);
     }
+
+
+//    @Override
+//    public RoomRequest findRoomInfo(Long roomNo) {
+//        return reserveDao.selectRoomInfoByRoomNo(roomNo);
+//    }
 
     @Override
     public List<RoomOptionDto> findRoomOptionInfo(Long roomNo) {
@@ -142,13 +147,13 @@ public class ReserveServiceImpl implements ReserveService {
     }
 
     @Override
-    public List<RoomImageDto> getRoomExtraImageByRoomNo(Long roomNo) {
-        return reserveDao.selectRoomExtraImageByRoomNo(roomNo);
+    public FileResponse getThumbnailImage(Long roomNo) {
+        return reserveDao.selectThumbnailImage(roomNo);
     }
 
     @Override
-    public RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo) {
-        return reserveDao.selectRoomThumbnailByRoomNo(roomNo);
+    public List<FileResponse> getExtraImage(Long roomNo) {
+        return reserveDao.selectExtraImage(roomNo);
     }
 
     @Override

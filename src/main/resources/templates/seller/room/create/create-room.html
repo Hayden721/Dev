@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" th:href="@{/css/pages/seller/create/room-create.css}">
+    <link rel="stylesheet" th:href="@{/css/image.css}">
+
+    <script src="/js/daumPost.js"></script>
+    <script src="/js/seller/room/room.js"></script>
+    <title>Dev-room</title>
+
+</head>
+
+<div layout:fragment="seller-content">
+
+    <div class="width-650-center-container">
+        <h1 class="mt-2">방등록</h1>
+        <div class="mb-1">
+            <label for="title" class="form-label w-100">업체명
+                <input type="text" class="form-control" id="title" placeholder="방 이름" name="roomTitle">
+            </label>
+        </div>
+        <div class="mb-1">
+            <label for="content" class="form-label w-100">업체 설명
+                <textarea class="form-control" id="content" rows="7" maxlength="100" name="roomContent" style="resize: none"></textarea>
+            </label>
+            <div id="count-letters" class="text-end">
+                <p id="letter-counter">
+                    <span id="remaining-letters"></span>
+                    <span class="slash">/</span>
+                    <span id="letter-maxlength"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <label> 업체 구분
+                <select class="form-select" name="roomDiv" id="room-div" style="width: 130px; text-align-last: center;">
+                    <option value="">선택</option>
+                    <option value="studyroom">스터디룸</option>
+                    <option value="meeting">회의실</option>
+                    <option value="office">사무실</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="d-flex flex-column mb-1">
+            <label class="form-label w-50"> 주소
+                <div class="d-flex mb-2">
+                    <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postcode" style="width: 170px">
+                    <input type="button" class="btn green-btn ms-2" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" style="width: 144px;">
+                </div>
+                <input type="text" class="form-control width-300" id="sample6_address" placeholder="주소" name="address"><br>
+                <input type="text" class="form-control width-300" id="sample6_detailAddress" placeholder="상세주소" name="detailAddress" style="margin-bottom: 3px">
+                <input type="text" class="form-control width-150" id="sample6_extraAddress" placeholder="참고항목" name="extraAddress" style="width: 175px">
+            </label>
+        </div>
+        <div class="mb-2">
+            <button class="btn deep-green-btn auto-size-btn float-end" id="submit-btn" disabled>다음 단계</button>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+        $(document).ready(function() {
+            roomContentTextCount();
+            nextButtonActivate(); // 버튼 활성화
+            createRoomSubmit(); // 방 생성
+        });
+    </script>
+</th:block>
+</html>
+

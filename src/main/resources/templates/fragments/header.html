@@ -2,15 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 
-<div th:fragment="header">
+<header th:fragment="header">
 
-  <nav>
     <div class="header-logo">
-      <a href="/devroom/member/main"><img src="/images/logo/share-spot-removebg-200x90.png"></a>
+      <a href="/sharespot/member/main">
+        <img src="/images/logo/share-spot-removebg-200x90.png">
+      </a>
     </div>
 
     <div id="spotBtn" style="width: 80px; height: 45px; background-color: #3f7d20; display: flex; justify-content: center; align-items: center; border-radius: 10px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;">
-      <a href="/devroom/reserve/list"  style="font-size: 20px; color: #f3eff5;"> SPOT! </a>
+      <a th:href="@{/sharespot/reserve/list/?page=1&recordSize=9&pageSize=5&keyword=&searchLocation=&searchDiv=}" style="font-size: 20px; color: #f3eff5;"> SPOT! </a>
     </div>
 
       <div class="mymenu-container" sec:authorize="isAnonymous()">
@@ -20,8 +21,8 @@
         </button>
         <div class="mypage-menu">
           <ul>
-            <li><a style="width: 100%;" href="/devroom/member/login"><div>로그인</div></a></li>
-            <li><a href="/devroom/member/register"><div>회원가입</div></a></li>
+            <li><a style="width: 100%;" href="/sharespot/member/login"><div>로그인</div></a></li>
+            <li><a href="/sharespot/member/register"><div>회원가입</div></a></li>
           </ul>
         </div>
       </div>
@@ -33,18 +34,15 @@
       </button>
       <div class="mypage-menu" style="display: none;">
         <ul>
-          <li><a href="/devroom/member/mypage/reservation-info"><div>예약</div></a></li>
-          <li><a href="/devroom/member/mypage/bookmark/list"><div>북마크</div></a></li>
+          <li><a href="/sharespot/member/mypage/reservation-info"><div>예약</div></a></li>
+          <li><a href="/sharespot/member/mypage/bookmark/list"><div>북마크</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
-          <li><a href="/devroom/member/mypage/account"><div>계정</div></a></li>
+          <li><a href="/sharespot/member/mypage/account"><div>계정</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
-          <li><a href="/devroom/member/logout"><div>로그아웃</div></a></li>
+          <li><a href="/sharespot/member/logout"><div>로그아웃</div></a></li>
         </ul>
       </div>
     </div>
-
-  </nav>
-
 
   <script th:inline="javascript" type="text/javascript">
 
@@ -53,6 +51,7 @@
     });
 
     function mypageMenuToggle() {
+      $('.mypage-menu').hide();
 
       $(document).on('click', function (event) {
 
@@ -64,12 +63,11 @@
       $('.mypage-btn').click(function () {
         $('.mypage-menu').toggle();
       })
-
     }
 
   </script>
 
-</div>
+</header>
 
 
 

@@ -17,32 +17,32 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+    <!-- 다음 주소 -->
+    <script th:inline="javascript" type="text/javascript" src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/common.css}">
-    <link rel="stylesheet" th:href="@{/css/header.css}">
-    <link rel="stylesheet" th:href="@{/css/footer.css}">
-    <link rel="stylesheet" th:href="@{/css/mypage-menu.css}">
+    <link rel="stylesheet" th:href="@{/css/layouts/header.css}">
+    <link rel="stylesheet" th:href="@{/css/layouts/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/layouts/mypage-menu.css}">
+    <link rel="stylesheet" th:href="@{/css/components/button.css}">
 
 
 </head>
 <body>
-    <div class="wrap">
-        <!-- header fragment 사용 -->
-        <th:block th:replace="fragments/header :: header"></th:block>
-        <div style="margin: 10px 13% 0 13%; display: flex; flex-direction: row; background-color: violet">
-            <!-- mypage-menu -->
 
+    <!-- header fragment 사용 -->
+    <th:block th:replace="fragments/header :: header"></th:block>
+    <div style="margin: 10px 13% 0 13%; display: flex; flex-direction: row; ">
+        <!-- content fragment 사용 -->
+        <div style="display: flex; flex-direction: row; justify-content: center; margin: 0 auto">
+            <th:block th:replace="fragments/mypage-menu :: mypage-menu" ></th:block>
 
-            <!-- content fragment 사용 -->
-            <div style="display: flex; flex-direction: row; justify-content: center; margin: 0 auto">
-                <th:block th:replace="fragments/mypage-menu :: mypage-menu" ></th:block>
-
-                <div class="mypage-container">
-                    <th:block layout:fragment="mypage-content"></th:block>
-                </div>
+            <div class="mypage-container">
+                <th:block layout:fragment="mypage-content"></th:block>
             </div>
         </div>
     </div>
+
 
     <!-- js 사용-->
     <th:block layout:fragment="script"></th:block>
@@ -52,7 +52,7 @@
         <th:block th:replace="fragments/footer :: footer"></th:block>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 </html>

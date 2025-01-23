@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" href="/css/pages/seller/seller-room.css">
+    <link rel="stylesheet" href="/css/image.css">
+
+    <script src="/js/daumPost.js"></script>
+
+    <script src="/js/seller/room/room.js"></script>
+    <script src="/js/seller/room/image.js"></script>
+    <script src="/js/seller/room/update.js"></script>
+
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="seller-content">
+
+    <div class="width-900-center-container mb-2">
+        <input th:value="${roomInfo.roomNo}" name="roomNo" hidden/>
+        <div class="gray-wrap flex-column">
+            <h1>방 수정</h1>
+            <!-- 방 번호 -->
+            <div class="d-flex flex-column">
+                <div class="mb-2 d-flex flex-column">
+                    <label for="room-title">방 이름
+                        <input id="room-title" class="form-control" th:value="${roomInfo.roomTitle}" name="roomTitle">
+                    </label>
+
+                    <div class="mb-1">
+                        <label for="content" class="form-label w-100">업체 설명
+                            <textarea th:text="${roomInfo.roomContent}" class="form-control" id="content" rows="7" maxlength="100" name="roomContent" style="resize: none"></textarea>
+                        </label>
+                        <div id="count-letters" class="text-end">
+                            <p id="letter-counter">
+                                <span id="remaining-letters"></span>
+                                <span class="slash">/</span>
+                                <span id="letter-maxlength"></span>
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <label style="width: 120px;">업체 구분
+                        <input th:value="${roomInfo.roomDiv}" name="room-div-info" hidden>
+                        <select class="form-select room-div" name="roomDiv" style="text-align: center;">
+                            <option value="studyroom">스터디룸</option>
+                            <option value="meeting">회의실</option>
+                            <option value="office">사무실</option>
+                        </select>
+                    </label>
+                </div>
+                <!-- 주소  -->
+                <div class="d-flex flex-column" style="margin-top: 10px;">
+                <h2>주소</h2>
+                    <div>
+                        <label class="form-label">우편번호
+                            <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postCode" th:value="${roomInfo.postCode}" style="width: 200px;">
+                        </label>
+                    </div>
+
+                    <label>주소
+                        <div class="d-flex">
+                            <input type="text" class="form-control" id="sample6_address" placeholder="주소" name="address" th:value="${roomInfo.address}" style="width: 300px;"><br>
+                            <input type="button" class="btn normal-btn" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" style="margin: 0 0 0 5px;">
+                        </div>
+                    </label>
+
+                    <label>상세주소
+                        <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="detailAddr" style="margin-bottom: 3px; width: 300px;" th:value="${roomInfo.detailAddress}" >
+                    </label>
+                    <label>참고
+                        <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="extraAddr" style="width: 175px" th:value="${roomInfo.extraAddress}">
+                    </label>
+                </div>
+            </div> <!-- room-container END -->
+        </div>
+
+     <!-- room-container END -->
+
+        <div class="gray-wrap flex-column">
+            <h1>이미지</h1>
+
+            <div class="d-flex">
+                <div class="thumbnail-container position-relative container-hover">
+                    <img class="thumbnail-image preview-img" th:if="${thumbnailImg != null}" th:src="${filePath} + '/' + ${thumbnailImg.uploadDate} + '/' + ${thumbnailImg.saveName}" th:alt="${thumbnailImg.originalName}">
+                    <img class="thumbnail-image" th:unless="${thumbnailImg != null}"  src="https://www.dummyimage.com/200x200/000/fff" alt="none">
+
+                    <input class="room-image-no" th:value="${thumbnailImg.roomimageNo}" hidden/> <!-- imgNo value -->
+                    <input class="image-input thumbnail-input" value="" type="file" name="thumbnailImage" data-image-division="room" hidden/>
+
+                    <div class="overlay">
+                        <i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i>
+                    </div>
+                </div>
+
+                <!-- 썸네일 아닌 이미지 -->
+                <div class="extra-images-container">
+                    <div class="container-hover position-relative" th:each="extra : ${extraImg}">
+                        <img class="extra-image preview-img" th:src="${filePath} + '/' + ${extra.uploadDate} + '/' + ${extra.saveName}" alt="none">
+                        <input class="room-image-no" th:value="${extra.roomimageNo}" hidden/> <!-- imgNo value-->
+                        <input class="image-input extra-input" value="" type="file" name="extraImage" data-image-division="room" hidden/>
+
+                        <div class="overlay">
+                            <i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn auto-size-btn btn-danger float-end me-1 " data-bs-toggle="modal" data-bs-target="#room-delete-modal" aria-label="Close">방삭제</button>
+            <button class="btn auto-size-btn deep-green-btn update-btn" id="submit-btn">수정</button>
+        </div>
+    </div>
+</div>
+<!-- 방 삭제 Modal -->
+    <div class="modal fade" id="room-delete-modal" tabindex="-1" aria-labelledby="roomDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="roomDeleteModalLabel">방 삭제</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    해당 방을 삭제하시겠습니까?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">아니요</button>
+                    <button type="button" class="btn btn-primary room-delete-btn">예</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript" type="text/javascript">
+        /*<![CDATA[*/
+        $(document).ready(function() {
+
+            //image.js
+            overlayClickTrigger();
+
+
+
+
+            divChange(); // 방 구분 변경
+            roomContentTextCount(); // 설명 글자 수 카운터
+            nextButtonActivate();
+
+        });
+
+
+        // 옵션 입력칸 빈칸 검사
+        function checkInput() {
+            // .value-check 클래스를 가진 입력란에 대해 input 이벤트를 감지
+            $('.value-check').on('input', function() {
+                // 빈 칸 여부 확인
+                var valueCheck = false;
+                $('.value-check').each(function() {
+                    if ($(this).val().trim() === '') {
+                        valueCheck = true;
+                        return false; // 빈 칸 발견 시 반복 중단
+                    }
+                });
+
+                // 빈 칸이 없으면 버튼 활성화, 빈 칸이 있으면 비활성화
+                if (valueCheck) {
+                    $('#create-room-button').prop('disabled', true); // 비활성화
+                } else {
+                    $('#create-room-button').prop('disabled', false); // 활성화
+                }
+            });
+        }
+
+
+    /*]]>*/
+    </script>
+</th:block>
+</html>

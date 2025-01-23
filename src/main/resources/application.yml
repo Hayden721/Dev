@@ -3,6 +3,7 @@ server:
   servlet:
     session:
       timeout: 300m
+      persistent: true
 
 spring:
   devtools:
@@ -11,7 +12,7 @@ spring:
     livereload:
       enabled: false
   datasource:
-    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/devshop?serverTimezone=UTC&characterEncoding=UTF-8&allowMultiQueries=true
+    url: jdbc:log4jdbc:mysql://127.0.0.1:3306/shareSpot?serverTimezone=UTC&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: root1234
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
@@ -27,12 +28,13 @@ spring:
       thread-name-prefix: scheduling-pool
 
   thymeleaf:
-    prefix: classpath:templates/
+    prefix: classpath:/templates/
     check-template-location: true
     suffix: .html
     cache: false
   main:
     allow-bean-definition-overriding: true
+
 
 
 mybatis:

@@ -1,16 +1,15 @@
 package com.dev.shop.seller.controller;
 
-
-import com.dev.shop.reserve.dto.RoomDto;
-import com.dev.shop.reserve.dto.RoomOptionDto;
+import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.seller.dto.*;
 import com.dev.shop.seller.service.SellerService;
 import com.dev.shop.utils.FileUtils;
+import com.mysql.cj.Session;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,14 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-
 
 @Controller
 @RequestMapping("/seller")
@@ -41,36 +37,33 @@ public class SellerController {
 
     // sellerSpot 메인 페이지
     @GetMapping("/main")
-    public void mainGet() {
+    public void sellerMain() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         log.info("--- [/seller/login] 권한 확인 : {}", authorities);
     }
     // 로그인 페이지
     @GetMapping("/login")
-    public String loginGet(){
+    public String login(@RequestParam(value = "error", required = false ) String error, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("--- [/seller/login] 토큰값 : {}", authentication);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
         boolean hasUserAuthority = authorities.stream().anyMatch(grantedAuthority -> "USER".equals(grantedAuthority.getAuthority()));
-        log.info("=================== {}", hasUserAuthority);
 
         if(hasUserAuthority) {
             return "redirect:/seller/logout";
         }
 
-        log.info("------------------ authorities : {}",authorities);
-
+        model.addAttribute("error", error);
         return "seller/login";
     }
 
     // 로그아웃
     @GetMapping("/logout")
     public String sellerLogoutGet(HttpServletRequest request, HttpServletResponse response) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
@@ -82,194 +75,221 @@ public class SellerController {
 
     // 회원 가입
     @GetMapping("/register")
-    public String registerGet() {
-        log.info("--- [/seller/register] --- GET");
-
-
-
-            return "/seller/register";
-
-
+    public String register() {
+        return "/seller/register";
     }
 
     @PostMapping("/register")
-    public void memberRegisterPost(SellerDto sellerDto) {
-        log.info("memberDetailDto : {}", sellerDto);
-
-        sellerService.sellerRegister(sellerDto);
-
+    public void register(SellerRegisterRequest sellerRegister, @RequestParam("sellerPwConfirm") String sellerPwConfirm) {
+        sellerService.sellerRegister(sellerRegister, sellerPwConfirm);
     }
 
-    @GetMapping("/room/create-error")
-    public void roomCreateError() {
+    @GetMapping("/id-duplicate-check")
+    @ResponseBody
+    public ResponseEntity<?> idDuplicate(@RequestParam("idValue") String sellerId) {
+        int duplicateValue = sellerService.checkIdDuplicateBySellerId(sellerId);
 
+        return ResponseEntity.ok(duplicateValue);
     }
 
-    // 방 생성할 때 생성 가능한지 검증
-    @GetMapping("/room/create-verification")
-    public String createRoomVerification(Model model) {
+    @GetMapping("/create/room/validate")
+    public String validateCreateRoom(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long sellerNo = sellerService.getSellerNoByAuthId(authId);
-
-        int checkRoomCount = sellerService.getRoomCountBySellerNo(sellerNo);
-
-
+        int checkRoomCount = sellerService.roomCountByAuthId(authId);
 
         model.addAttribute("checkRoomCount", checkRoomCount);
 
-        if (checkRoomCount == 12) {
-            return "redirect:/seller/room/create-error";
-        }else {
-            return "/seller/room/create-verification";
-        }
-
+        return "/seller/room/create/validate";
     }
 
-    // 방 만들기 GET
-    @GetMapping("/room/create")
-    public String roomCreateGet(Model model) {
+    // 방 만들기
+    @GetMapping("/create/room")
+    public String createRoom() {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long sellerNo = sellerService.getSellerNoByAuthId(authId);
 
-        int checkRoomCount = sellerService.getRoomCountBySellerNo(sellerNo);
-
-        model.addAttribute("sellerNo", sellerNo);
-
-        if (checkRoomCount == 12) {
-            return "/seller/room/create-error";
-        } else {
-            return "/seller/room/create";
-        }
+        return "/seller/room/create/create-room";
     }
-    // 방 만들기 POST
-    @PostMapping("/room/create")
-    public void roomCreatePost(@RequestBody SellerRoomDto sellerRoomDto, HttpSession session) {
-        log.info("------------sellerRoomDto = {}",sellerRoomDto);
-        Long generatedRoomNo = sellerService.insertRoomInfoByPostRoomDto(sellerRoomDto);
+
+    // 방 만들기
+    @PostMapping("/create/room")
+    public ResponseEntity<?> createRoom(@RequestBody RoomRequest roomInfo, HttpSession session) {
+        // 로그인한 아이디
+        String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // 방을 만들면 roomNo를 반환
+        Long generatedRoomNo = sellerService.createRoom(roomInfo, authId);
+
+        log.info("roomInfo {}", roomInfo);
         log.info("--------------11111111111---- {}", generatedRoomNo);
 
         session.setAttribute("generatedRoomNo", generatedRoomNo);
-
+        return ResponseEntity.ok("/seller/create/room/image");
     }
 
-    @GetMapping("/room/option-create")
-    public String roomOptionCreateGet(HttpSession session) {
+    // 방 생성 후 이미지 페이지
+    @GetMapping("/create/room/image")
+    public String roomImage() {
+        return "/seller/room/create/image";
+    }
 
+    @GetMapping("/create/option")
+    public String createRoomOption(HttpSession session) {
         Long generatedRoomNo = (Long) session.getAttribute("generatedRoomNo");
-        log.info("--------1231212-- {}", generatedRoomNo);
 
-        return "/seller/room/option-create";
-    }
-    @PostMapping("/room/option-create")
-    public ResponseEntity<?> roomOptionCreatePost(@RequestBody List<PostRoomOptionDto> options) {
-        log.info("----------------- json test : {}", options);
-
-        // 1. 방을 만든다. 2. 만든 방에 대한 roomNo 필요 3. roomNo를 찾아서 그에 대한 roomOption데이터를 insert해야한다.
-        sellerService.insertRoomOptionInfoByOptions(options);
-
-        PostRoomOptionDto findRoomNo = options.get(0);
-        Long roomNo = Long.valueOf(findRoomNo.getRoomNo());
-        log.info("/room/option-create --------- roomNo : {}", roomNo);
-
-
-
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/room/detail")
-    public void roomListDetail(@RequestParam final Long roomNo,  Model model) {
-
-
-
-        // 방 정보
-        RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo); // 방 정보
-        // 룸 옵션 카운트
-        int roomOptionCount = sellerService.getRoomOptionCountByRoomNo(roomNo);
-
-        // 썸네일 이미지
-        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-
-        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-
-        // 방 옵션 정보
-        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
-
-
-        model.addAttribute("roomInfo", roomInfo);
-        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
-        model.addAttribute("roomOptionCount", roomOptionCount);
-        model.addAttribute("roomNo", roomNo);
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("additionalImage", additionalImage);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-    }
-
-    @GetMapping("/room/update")
-    public String roomUpdateGet(@RequestParam("roomNo") Long roomNo, Model model) {
-        log.info("/room/detail/update roomNo : {}", roomNo);
-
-        RoomDto roomInfo =  sellerService.getRoomDetailByRoomNo(roomNo);
-        List<RoomOptionDto> roomOptionInfo = sellerService.getRoomOptionInfoByRoomNo(roomNo);
-
-        // 썸네일 이미지
-        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-
-        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-
-
-
-        model.addAttribute("roomInfo", roomInfo);
-        model.addAttribute("roomOptionInfo", roomOptionInfo);
-        model.addAttribute("roomNo", roomNo);
-
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("additionalImage", additionalImage);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-
-
-        return "/seller/room/update";
+        log.info("session roomNo {}", generatedRoomNo);
+        // 세션값 없으면 접근 차단
+        if (generatedRoomNo == null) {
+            return "redirect:/seller/room/create-error";
+        }
+            return "/seller/room/create/create-option";
     }
 
 
+    @PostMapping("/create/option")
+    public ResponseEntity<?> roomOptionCreatePost(@RequestBody List<RoomOptionRequest> options, HttpSession session) {
+        Long generatedRoomNo = (Long) session.getAttribute("generatedRoomNo");
+        log.info("options {}", options);
+        sellerService.createRoomOption(options, generatedRoomNo);
 
-    @PostMapping("/room/update")
-    public ResponseEntity<?> roomUpdatePost(@RequestBody RoomUpdateRequest data) {
-
-        List<UpdateRoomOptionInfoDto> roomInfo =  data.getOptionList();
-
-        log.info("/room/detail/update roomInfo {}", roomInfo);
-        log.info("/room/detail/update info {}", data);
-        sellerService.updateRoomInfoByData(data);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("/seller/create/option/image");
     }
 
-    @PostMapping("/room/delete")
-    public String roomDelete(@RequestParam("roomNo") Long roomNo) {
+    @GetMapping("/create/option/image")
+    public String optionImage(HttpSession session, Model model) {
+//        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
+        Long roomNo = 12L;
+        // 데이터 조회
+        List<RoomOptionResponse> optionInfo = sellerService.getRoomOptionInfo(roomNo);
 
-        sellerService.removeRoomByRoomNo(roomNo);
+        model.addAttribute("optionInfo", optionInfo);
 
-        return "redirect:/seller/room/list";
+        return "/seller/room/create/option-image";
     }
+
     @GetMapping("/room/list")
     public String roomListGet(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long sellerNo = sellerService.getSellerNoByAuthId(authId);
-
-        int checkRoomCount = sellerService.getRoomCountBySellerNo(sellerNo);
+        int checkRoomCount = sellerService.roomCountByAuthId(authId);
 
         if (checkRoomCount == 0) {
             return "/seller/room/empty";
         } else {
-            List<RoomListDto> roomList = sellerService.getRoomListBySellerNo(sellerNo);
+            List<RoomListDto> roomList = sellerService.getRoomListByAuthId(authId);
 
             model.addAttribute("roomList", roomList);
 
             return "/seller/room/list";
         }
-
     }
 
+    // 방 상세페이지
+    @GetMapping("/room/detail")
+    public String roomListDetail(@RequestParam final Long roomNo, Model model) {
+        RoomResponse roomInfo =  sellerService.getRoomInfo(roomNo); // 방 정보 O
+        // 썸네일 이미지
+        FileResponse thumbnailImg = sellerService.getThumbnailImage(roomNo);
+        List<FileResponse> extraImg = sellerService.getExtraImage(roomNo);
+        List<OptionAndImageResponse> optionAndImage = sellerService.getOptionInfoAndImage(roomNo);
+        if((thumbnailImg == null || extraImg == null)) {
+            return "/seller/room/error/detail-error";
+        } else {
+            model.addAttribute("roomInfo", roomInfo);
+            model.addAttribute("extra", extraImg);
+            model.addAttribute("thumbnail", thumbnailImg);
+            model.addAttribute("optionAndImage", optionAndImage);
+            model.addAttribute("filePath", filePath);
+
+            return "/seller/room/detail";
+        }
+    }
+
+    @GetMapping("/room/update")
+    public String roomUpdateGet(@RequestParam("roomNo") Long roomNo, Model model) {
+        log.info("/room/detail/update roomNo : {}", roomNo);
+        RoomResponse roomInfo = sellerService.getRoomInfo(roomNo);// 방 정보
+        FileResponse thumbnailImg = sellerService.getThumbnailImage(roomNo);
+        List<FileResponse> extraImg = sellerService.getExtraImage(roomNo);
+
+        model.addAttribute("roomInfo", roomInfo);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("extraImg", extraImg);
+        model.addAttribute("thumbnailImg", thumbnailImg);
+
+        return "/seller/room/update/update-room";
+    }
+
+    // Post /room/update
+
+
+    @GetMapping("/room/option/update")
+    public String updateOption(@RequestParam("roomNo") Long roomNo,Model model) {
+        int optionTotal = sellerService.getOptionCount(roomNo);
+        List<OptionAndImageResponse> optionAndImg = sellerService.getOptionInfoAndImage(roomNo);
+
+        model.addAttribute("optionTotal", optionTotal);
+        model.addAttribute("filePath", filePath);
+        model.addAttribute("optionAndImg", optionAndImg);
+
+        return "/seller/room/update/update-option";
+    }
+
+    @PostMapping("/room/option/update")
+    @ResponseBody
+    public ResponseEntity<?> updateOption(
+            @RequestParam("roomNo") Long roomNo,
+            @RequestBody List<RoomOptionRequest> optionData) {
+        log.info("roomNo {}", roomNo);
+        log.info("updateOption : {}", optionData);
+        try {
+            sellerService.updateOption(optionData);
+            return ResponseEntity.ok().body("/seller/room/detail?roomNo=" + roomNo);
+
+        } catch (Exception e) {
+            log.error("옵션 수정 오류 : {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 중 오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/room/option/add")
+    public ResponseEntity<?> addOption(@RequestParam("roomNo") Long roomNo,
+                                       @RequestPart List<RoomOptionRequest> optionData,
+                                       @RequestPart List<MultipartFile> optionImages,
+                                       HttpSession session
+                                       ) {
+        sellerService.addOption(optionData, roomNo, optionImages);
+        log.info("optionImage : {}", optionImages);
+
+        return ResponseEntity.ok().body("/seller/room/detail?roomNo=" + roomNo);
+    }
+
+    // option function
+    @PostMapping("/room/option/delete")
+    @ResponseBody
+    public ResponseEntity<?> roomDeleteOptionPost(@RequestParam("roptionNo") Long optionNo,
+                                     @RequestParam("optionImageNo") Long optionImageNo,
+                                     @RequestParam("roomNo") Long roomNo) {
+        log.info("roomNo {}", roomNo);
+        log.info("roptionNo : {}", optionNo);
+        log.info("optionImageNo : {}", optionImageNo);
+
+        // optionImageNo가 없을 때 데이터 처리 optionImageNo가 null, 0일 때 optionImageNo를 어떻게 해야 할까
+
+        sellerService.deleteRoomOption(optionNo, optionImageNo);
+
+        return ResponseEntity.ok().body("/seller/room/option/update?roomNo=" + roomNo);
+    }
+
+
+//    ------------------------------------ 수정 완료
+
+
+    // 방 삭제
+    @PostMapping("/room/delete")
+    public void roomDelete(@RequestParam("roomNo") Long roomNo) {
+        log.info("roomNo: {}", roomNo);
+    }
+
+    //
     @GetMapping("/reserve/manage")
     public void sellerReserveManage(Model model) {
         String authId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -290,118 +310,37 @@ public class SellerController {
         model.addAttribute("reservationInfo", reservationInfo);
     }
 
-// ------------------- image function
-    // 이미지 업로드 에러
-    @GetMapping("/error/image-upload-error")
-    public void imageUploadError() {
 
+    //------------------------------------------ error 관련
+    //로그인 오류 세션 없애기
+    @GetMapping("/login/error-session-remove")
+    public String loginErrorSessionRemove(HttpServletRequest request) {
+        log.info("로그인 오류 세션 삭제전 확인 : {}", request.getSession().getAttribute("errorMsg"));
+        request.getSession().removeAttribute("errorMsg");
+
+        return "redirect:/seller/login";
     }
 
-    // 이미지 ajax(upload, update, delete 할 때 사용)
-    @GetMapping("/images/update-images-ajax")
-    public void sellerRoomImageGetAjax(@RequestParam("roomNo") Long roomNo, Model model) {
-
-        // 썸네일 이미지
-        ImageFileDto thumbnailImage = sellerService.getThumbnailImageByRoomNo(roomNo);
-        // 추가 이미지
-        List<ImageFileDto> additionalImage = sellerService.getAdditionalImageByRoomNo(roomNo);
-
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("thumbnailImage", thumbnailImage);
-        model.addAttribute("additionalImage", additionalImage);
-
-
-
+    @GetMapping("/create/error/max-room")
+    public String errorMaxRoom(Model model) {
+        return "/seller/room/error/max-room";
     }
 
-    // detail 페이지에서 이미지 업로드 기능
-    @ResponseBody
-    @PostMapping("/room/detail/upload/image")
-    public void sellerRoomImageUploadPost(@RequestPart(name = "extraImages", required = false) List<MultipartFile> extraImages,
-                                          @RequestPart(name = "thumbnailImage", required = false) MultipartFile thumbnailImage,
-                                          @RequestParam("roomNo") Long roomNo) {
+    // 방 생성중 오류 발생 시 사용
+    @PostMapping("/error/delete/room")
+    public ResponseEntity<?> deleteRoom(HttpSession session) {
+        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
 
-        log.info("/seller/room/detail/upload/image roomNo : {}", roomNo);
+        sellerService.removeErrorRoom(roomNo);
 
+        session.removeAttribute("generatedRoomNo");
 
-        if (thumbnailImage == null) {
-            if (extraImages != null && !extraImages.isEmpty()) {
-                log.info("/seller/room/detail/upload/image extraImages : {}", extraImages);
-                sellerService.sellerUploadExtraImagesByRoomNo(roomNo, extraImages);
-            }
-        } else {
-            if (!thumbnailImage.isEmpty()) {
-                log.info("/seller/room/detail/upload/image thumbnailImage : {}", thumbnailImage);
-                sellerService.sellerUploadThumbnailImageByRoomNo(roomNo, thumbnailImage);
-            }
-        }
+        return ResponseEntity.ok().build();
     }
 
-    // 이미지 업데이트 수정 중
-    @ResponseBody
-    @PostMapping("/room/detail/update/image")
-    public void sellerRoomImageUpdatePost(
-            @RequestPart(value = "extraImage") MultipartFile extraImage,
-                                          @RequestParam("imageNo") Long imageNo) {
-
-        log.info("/seller/room/detail/update/image imageNo : {}", imageNo);
-        log.info("/seller/room/detail/update/image imageData : {}", extraImage);
-        sellerService.sellerUpdateImageByImageNo(imageNo, extraImage);
-
-    }
-
-// option function
-
-    // 옵션 ajax로 호출
-    @GetMapping("/room/update/option-get-ajax")
-    public void sellerOptionAjaxGet(Model model, @RequestParam("roomNo") Long roomNo) {
-        // 방 옵션 정보
-        List<RequestRoomOptionDto> optionInfoAndImage = sellerService.getOptionInfoAndImage(roomNo);
-
-        model.addAttribute("filePath", filePath);
-        model.addAttribute("optionInfoAndImage", optionInfoAndImage);
-    }
-
-    @PostMapping("/room/update/add-option")
-    @ResponseBody
-    public ResponseEntity<String> roomAddOptionsPost(
-            @RequestParam("roomNo") Long roomNo,
-            @RequestParam("titles[]") List<String> titles,
-            @RequestParam("prices[]") List<Integer> prices,
-            @RequestParam("contents[]") List<String> contents,
-            @RequestParam("images[]") List<MultipartFile> images
-    ) {
-
-        log.info("roomNo {}", roomNo);
-        log.info("titles {}", titles);
-
-
-
-        sellerService.insertRoomOptionByFormData(roomNo, titles, prices, contents, images);
-
-        return ResponseEntity.ok("good");
-
-
-    }
-
-    @PostMapping("/room/option/delete")
-    @ResponseBody
-    public void roomDeleteOptionPost(@RequestParam("optionNo") Long optionNo, @RequestParam(name="optionImageNo", required = false) Long optionImageNo) {
-        log.info("optionNo : {}", optionNo);
-        log.info("optionImageNo : {}", optionImageNo);
-
-        // optionImageNo가 없을 때 데이터 처리 optionImageNo가 null, 0일 때 optionImageNo를 어떻게 해야 할까
-
-        sellerService.deleteOptionByOptionNoAndOptionImageNo(optionNo, optionImageNo);
-    }
-
-    @ResponseBody
-    @PostMapping("/room/update/option-image")
-    public void roomOptionImageUpdatePost(@RequestPart("optionImage") MultipartFile optionImage,
-                                      @RequestParam("optionImageNo") Long optionImageNo) {
-        log.info("optionImage {}", optionImage);
-        log.info("optionImageNo {}", optionImageNo);
-
-        sellerService.updateRoomOptionImageByOptionImageData(optionImage, optionImageNo);
+    @PostMapping("/error/create/room")
+    public void errorCreateRoom(HttpSession session) {
+        Long errorRoomNo = (Long) session.getAttribute("generatedRoomNo");
+        sellerService.errorCreateRoom(errorRoomNo);
     }
 }

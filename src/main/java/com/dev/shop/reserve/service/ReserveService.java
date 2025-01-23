@@ -1,7 +1,7 @@
 package com.dev.shop.reserve.service;
 
+import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.reserve.dto.*;
-import com.dev.shop.seller.dto.RoomImageDto;
 import com.dev.shop.utils.PagingResponse;
 
 import java.util.ArrayList;
@@ -9,9 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public interface ReserveService {
+    /**
+     * 예약 가능한 방 조회
+     * @param roomDto -
+     * @return
+     */
     PagingResponse<ReserveRoomListDto> findAllRoom(CriteriaDto roomDto);
 
-    RoomDto findRoomInfo(Long roomNo);
+    RoomInfoRequest findRoomInfo(Long roomNo);
 
 
     List<RoomOptionDto> findRoomOptionInfo(Long roomNo);
@@ -26,13 +31,21 @@ public interface ReserveService {
 
     void updateReservationStatus();
 
-    List<RoomImageDto> getRoomExtraImageByRoomNo(Long roomNo);
+    /**
+     *
+     * @param roomNo
+     * @return
+     */
+    FileResponse getThumbnailImage(Long roomNo);
+
+    List<FileResponse> getExtraImage(Long roomNo);
 
 
-    RoomImageDto getRoomThumbnailImageByRoomNo(Long roomNo);
 
     boolean getBookmarkValue(String memberId, Long roomNo);
 
 
     List<OptionAndImageDto> getOptionAndImageByRoomNo(Long roomNo);
+
+
 }

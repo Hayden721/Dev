@@ -7,16 +7,18 @@
 
     <insert id="insertMemberRegister">
         INSERT INTO member_tb (
-            member_id, member_email, member_pw, member_auth, member_phone, member_name
-            , member_appenddate, member_updatedate)
+            member_id, member_pw, member_name, member_email, member_phone, member_creationDate, member_auth
+        )
         VALUES(
-            #{memberId}, #{memberEmail}, #{memberPw}, #{memberAuth},#{memberPhone}, #{memberName}
-            , #{appendDate}, #{updateDate})
+            #{memberId}, #{memberPw}, #{memberName}, #{memberEmail}, #{memberPhone}, #{memberCreationDate}, #{memberAuth}
+        )
     </insert>
+
     <insert id="insertBookmark">
         INSERT INTO bookmark_tb(member_no, room_no)
         VALUES (#{memberNo}, #{roomNo})
     </insert>
+
     <update id="updateMemberInformation">
         <choose>
             <when test="memberPw != ''">
@@ -120,7 +122,7 @@
                 and file_delete = 'N'
             ) c (room_no, thumbnail, file_delete, created_date, save_name, original_name)
         ON a.room_no = c.room_no
-            WHERE a.room_delete = 0
+            WHERE a.room_delete = 'N'
             AND b.cnt != 0
             order by room_no desc
         LIMIT 0, 6
@@ -229,6 +231,13 @@
             AND thumbnail = 'Y'
             AND file_delete = 'N'
     </select>
+
+    <select id="selectIdDuplicateByMemberId" resultType="int">
+        SELECT COUNT(*)
+        FROM member_tb
+        WHERE member_id = #{memberId}
+    </select>
+
 
 
 </mapper>

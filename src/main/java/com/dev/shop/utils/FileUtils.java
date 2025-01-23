@@ -1,7 +1,7 @@
 package com.dev.shop.utils;
 
-import com.dev.shop.seller.dto.ImageFileDto;
-import com.dev.shop.seller.dto.OptionImageDto;
+import com.dev.shop.item.dto.FileRequest;
+import com.dev.shop.item.dto.OptionFileReqeuest;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,8 +20,6 @@ import java.util.UUID;
 @Component
 @Getter
 public class FileUtils {
-
-
     private final String uploadPath = choosePath();
 
     public String choosePath() {
@@ -37,9 +35,9 @@ public class FileUtils {
         }
 
     }
-    // main image upload
-    public List<ImageFileDto> uploadFiles(final List<MultipartFile> multipartFiles) {
-        List<ImageFileDto> files = new ArrayList<>();
+    // main image upload (여러개 일 때)
+    public List<FileRequest> uploadFiles(final List<MultipartFile> multipartFiles) {
+        List<FileRequest> files = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (multipartFile.isEmpty()) {
                 continue;
@@ -49,7 +47,7 @@ public class FileUtils {
         return files;
     }
 
-    public ImageFileDto uploadFile(final MultipartFile multipartFile) {
+    public FileRequest uploadFile(final MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -64,19 +62,17 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
 
-        return ImageFileDto.builder()
+        return FileRequest.builder()
                 .originalName(multipartFile.getOriginalFilename())
                 .saveName(saveName)
+                .uploadDate(LocalDate.parse(today))
                 .fileSize(multipartFile.getSize())
-                .createdDate(LocalDate.parse(today))
                 .build();
     }
 
 
     //OpitonImageUpload 옵션 이미지 업로드에 사용
-
-
-    public OptionImageDto optionImageUpload(final MultipartFile multipartFile) {
+    public OptionFileReqeuest optionImageUpload(final MultipartFile multipartFile) {
         if(multipartFile.isEmpty()) {
             return null;
         }
@@ -91,16 +87,16 @@ public class FileUtils {
             throw new RuntimeException(e);
         }
 
-        return OptionImageDto.builder()
+        return OptionFileReqeuest.builder()
                 .originalName(multipartFile.getOriginalFilename())
                 .saveName(saveName)
+                .uploadDate(LocalDate.parse(today))
                 .fileSize(multipartFile.getSize())
-                .createdDate(LocalDate.parse(today))
                 .build();
     }
 
-    public List<OptionImageDto> optionImageUploads(final List<MultipartFile> multipartFiles) {
-        List<OptionImageDto> files = new ArrayList<>();
+    public List<OptionFileReqeuest> optionImageUploads(final List<MultipartFile> multipartFiles) {
+        List<OptionFileReqeuest> files = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             if (multipartFile.isEmpty()) {
                 continue;
