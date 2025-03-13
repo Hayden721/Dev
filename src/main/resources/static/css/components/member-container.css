@@ -1,0 +1,54 @@
+.center-align-container {
+    min-height: 100vh;
+    min-width: 1200px;
+    display: flex;
+    justify-content: center;
+
+}
+
+/* 카드 container */
+.room-card {
+    width: 380px;
+    height: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    background-color: #F3EFF5;
+    cursor: pointer;
+}
+
+.room-card img { /* 카드 이미지 */
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 15px 15px 0 0;
+}
+
+.card-content {
+    padding: 10px;
+}
+
+.card-title {
+    font-weight: bold;
+    font-size: 33px;
+    margin-bottom: 1rem;
+}
+
+.card-div {
+    font-size: 18px;
+}
+
+.card-address {
+    white-space: nowrap;
+    font-size: 18px;
+}
+
+.text-ellipsis {
+    white-space: nowrap;/* 한 줄로 표시 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+
+/* 카드 container end */

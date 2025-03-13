@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/calendar.css}">
 </head>
 <body>
 
@@ -25,7 +26,7 @@
 
     </div>
         <!--     TimeAjax       -->
-        <div class="reserveTimeAjax"></div>
+        <div id="reserveTimeAjax"></div>
 </div>
 
 <script th:inline="javascript" type="text/javascript">
@@ -34,8 +35,6 @@
         buildCalendar(new Date());
 
     });
-
-    var date = new Date();
 
     function buildCalendar(date) {
 
@@ -69,18 +68,17 @@
 
         console.log(today.getDate());
 
-        var calendarPos = 0;
-        var calendarDay = 0;
-        for (var index1 = 0; index1 < calendarWeekCount; index1++) {
+        let calendarPos = 0;
+        let calendarDay = 0;
+        for (let index1 = 0; index1 < calendarWeekCount; index1++) {
             html += "<tr>";
-            for (var index2 = 0; index2 < 7; index2++) {
+            for (let index2 = 0; index2 < 7; index2++) {
                 html += "<td style='padding: 10px 10px; text-align: center;'>"
                 if(calendarMonthStartDay <= calendarPos && calendarDay < calendarMonthLastDate) {
                     calendarDay++;
                     html+= "<span";
 
-                    var cellDate = new Date(calendarYear, calendarMonth -1, calendarDay)
-                    console.log("여기다", cellDate);
+                    const cellDate = new Date(calendarYear, calendarMonth -1, calendarDay)
 
                     if (calendarYear === today.getFullYear() && calendarMonth === today.getMonth() + 1
                         && calendarDay === today.getDate()) {
@@ -118,17 +116,6 @@
         buildCalendar(new Date());
     });
 
-
-    var calendarYear = date.getFullYear(); // 년
-    console.log(calendarYear);
-    var calendarMonth = date.getMonth() + 1; // 월
-    console.log(calendarMonth);
-    var calendarToday = date.getDate(); // 일
-    console.log(calendarToday);
-
-    var compareToday = calendarYear + "-" + calendarMonth + "-" + calendarToday;
-    console.log(calendarYear + "-" + calendarMonth + "-" + calendarToday);
-
     // 날짜 클릭
     $(document).on("click", "#calendar table > tbody > tr > td > span", function(event) {
 
@@ -137,7 +124,7 @@
         const calendarDay = $('#calendar table > tbody > tr > td > span');
             $.ajax({
                 type: 'get',           // 타입 (get, post, put 등등)
-                url: './detail/reserve-time-ajax',  // 요청할 서버url
+                url: '/sharespot/reserve/ajax/reserve-time',  // 요청할 서버url
                 dataType: 'html',       // 데이터 타입 (html, xml, json, text 등등)
                 data: {  // 보낼 데이터 (Object , String, Array)
                     roomNo : [[${roomNo}]],
@@ -146,7 +133,7 @@
                     selectDate: clickDate
                 },
                 success: function (result) { // 결과 성공 콜백함수
-                    $(".reserveTimeAjax").html(result)
+                    $("#reserveTimeAjax").html(result)
                 },
                 error: function (request, status, error) {
                     console.log(error)

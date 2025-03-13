@@ -15,47 +15,47 @@ public interface MemberDao {
      * @param memberId - 로그인 멤버의 id
      * @return 멤버의 정보
      */
-    MemberDetailsDto selectMemberById(String memberId);
+    MemberDetailsDto selectMemberToken(String memberId);
 
-    /**
-     * 멤버 회원가입
-     * @param memberDto - 회원가입 정보
-     */
     void insertMemberRegister(MemberRequest member);
 
-    MemberDto selectMemberInfoById(String authId);
+    MemberResponse selectMemberInfo(String memberId);
 
-    void updateMemberInformation(MemberDto memberDto);
+    void updateMemberInformation(MemberResponse memberResponse);
 
     String selectMemberPw(Long memberNo);
 
     Long selectMemberNo(String authId);
 
-    List<getReserveInfoDto> selectReservationInfoByMemberNo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
+    List<ReservationResponse> selectReservationInfo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 
     int countReservationInfo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
+
+    int countReservationEndInfo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 
     /**
      * 멤버가 선택한 예약 삭제
      * @param reservationNo - 예약 번호
      */
-    void updateReservationByReservationNo(Long reservationNo);
+    void updateReservation(Long reservationNo);
 
-    List<RoomAndImageDto> selectRoomAndImage();
+    List<RoomAndImageResponse> selectRoomAndImage();
 
-    void insertBookmark(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
-    void deleteBookmark(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
-    Boolean selectBookmarkData(@Param("memberNo") Long memberNo, @Param("roomNo") Long roomNo);
 
     int countPaymentHistory(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 
     List<PaymentHistoryDto> selectMemberPaymentHistoryByMemberNo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 
-    List<BookmarkedDto> selectBookmarkedListByMemberNo(Long memberNo);
+    List<BookmarkResponse> selectBookmarkList(Long memberNo);
 
     int selectIdDuplicateByMemberId(String memberId);
 
 
+    int updateMemberPassword(@Param("memberNo") Long memberNo, @Param("encodePassword") String encodePassword);
+
+    int selectMemberAccount(@Param("memberId") String memberId, @Param("memberName") String memberName);
+
+    List<ReservationResponse> selectReservationEndInfo(@Param("memberNo") Long memberNo, @Param("params") ReservationCriteriaDto params);
 }

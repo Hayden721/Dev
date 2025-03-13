@@ -8,10 +8,6 @@
     display: block;
 }
 
-
-
-
-
 .additional-images {
     width: 100px;
     height: 100px;
@@ -19,10 +15,16 @@
 }
 
 .extra-images-container {
-    height: 200px;
     margin: 0 0 0 10px;
     display: grid;
     grid-template-columns: repeat(3,1fr);
+    grid-gap: 10px;
+}
+
+.images-repeat4-container {
+    margin: 0 0 0 10px;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
     grid-gap: 10px;
 }
 
@@ -42,6 +44,7 @@
     border-radius: 10px;
 }
 
+
 .option-info-container {
     width: 700px;
     display: flex;
@@ -49,7 +52,24 @@
     margin: 15px 0 0 15px;
 }
 
+#image-upload-btn {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: #007bff;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 10px;
 
+}
+#image-upload-btn input[type="file"] {
+    display: none;
+}
 
 
 

@@ -5,7 +5,7 @@
 <header th:fragment="header">
 
     <div class="header-logo">
-      <a href="/sharespot/member/main">
+      <a href="/sharespot/main">
         <img src="/images/logo/share-spot-removebg-200x90.png">
       </a>
     </div>
@@ -29,15 +29,15 @@
 
     <div class="mymenu-container" sec:authorize="isAuthenticated()">
       <button class="mypage-btn">
-        <span style="margin: 0 4px 0 0;"><i class="bi bi-list" style="font-size: 26px;"></i></span>
-        <span style="margin: 0 0 0 4px;"><i class="bi bi-person-fill" style="font-size: 26px"></i></span>
+        <span style="margin: 0 4px 0 0;"><i class="bi bi-list fs-4"></i></span>
+        <span style="margin: 0 0 0 4px;"><i class="bi bi-person-fill fs-4"></i></span>
       </button>
       <div class="mypage-menu" style="display: none;">
         <ul>
-          <li><a href="/sharespot/member/mypage/reservation-info"><div>예약</div></a></li>
-          <li><a href="/sharespot/member/mypage/bookmark/list"><div>북마크</div></a></li>
+          <li><a href="/sharespot/mypage/reservation/list"><div>예약</div></a></li>
+          <li><a href="/sharespot/mypage/bookmark/list"><div>북마크</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
-          <li><a href="/sharespot/member/mypage/account"><div>계정</div></a></li>
+          <li><a href="/sharespot/mypage"><div>마이페이지</div></a></li>
           <li><hr style="margin: 5px 0 5px 0;"></li>
           <li><a href="/sharespot/member/logout"><div>로그아웃</div></a></li>
         </ul>
@@ -64,7 +64,6 @@
         $('.mypage-menu').toggle();
       })
     }
-
   </script>
 
 </header>

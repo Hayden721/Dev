@@ -6,14 +6,10 @@
 <mapper namespace="com.dev.shop.reserve.dao.ReserveDao">
 
     <update id="updateReservationStatus">
-        UPDATE reservation_tb r
-        INNER JOIN (
-            SELECT reservation_no, end_date_time, reservation_status
-            FROM reservation_tb
-            WHERE end_date_time &lt;= CURRENT_TIMESTAMP
-        AND reservation_status = 1
-        ) t ON r.reservation_no = t.reservation_no
-        SET r.reservation_status = 2
+        UPDATE reservation_tb
+        SET reservation_status = '3'
+        WHERE reserve_end_datetime &lt;= CURRENT_TIMESTAMP
+            AND reservation_status = '1'
     </update>
 
     <select id="selectRoomList" resultType="ReserveRoomListDto">
@@ -105,7 +101,6 @@
             </foreach>
             )
         </if>
-
         ) as subquery_result
     </select>
 
@@ -115,10 +110,11 @@
         WHERE room_no = #{roomNo}
     </select>
 
-    <select id="selectRoomOptionInfoByRoomNo" resultType="RoomOptionDto">
-        SELECT *
+    <select id="selectRoomOptionInfo" resultType="OptionResponse">
+        SELECT roption_no, roption_title, roption_price, roption_content, room_no
         FROM roomoption_tb
         where room_no = #{roomNo}
+            and roption_delete = 'N'
     </select>
 
     <select id="selectThumbnailImage" resultType="com.dev.shop.item.dto.FileResponse">
@@ -168,51 +164,45 @@
             AND reservation_date = #{selectDate}
     </select>
 
+    <select id="selectOptionAndImage" resultType="com.dev.shop.reserve.dto.OptionAddImageDto">
+        select a.*, IFNULL(b.roptionimage_no, '0') as roptionimage_no, IFNULL(b.original_name, 'noImage') as original_name, IFNULL(b.save_name, 'noImage') as save_name, IFNULL(b.file_size, '0') as file_size, IFNULL(b.file_delete, 'N') as file_delete, IFNULL(b.upload_date, '0101-01-01') as upload_date
+        FROM roomoption_tb a
+        left join roomoptionimage_tb b
+        on a.roption_no = b.roption_no
+        WHERE a.room_no = #{roomNo}
+    </select>
 
-    <select id="selectMemberNoByAuthId" resultType="java.lang.Long">
+    <select id="selectMemberNo" resultType="java.lang.Long">
         SELECT member_no
         FROM member_tb
         WHERE member_id = #{memberId}
     </select>
 
-<!--    <select id="selectRoomThumbnailByRoomNo" resultType="com.dev.shop.seller.dto.RoomImageDto">-->
-<!--        SELECT *-->
-<!--        FROM roomimage_tb-->
-<!--        WHERE room_no = #{roomNo}-->
-<!--        and file_delete = 'N'-->
-<!--        and thumbnail = 'Y'-->
-
-<!--    </select>-->
-
-
-
-
-
-    <select id="selectBookmarkedRoom" resultType="boolean">
+    <select id="selectBookmarkData" resultType="java.lang.Boolean">
         SELECT CASE WHEN COUNT(*) > 0 THEN true ElSE false END
         FROM bookmark_tb
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
-    <select id="selectOptionAndImage" resultType="com.dev.shop.reserve.dto.OptionAndImageDto">
-        select a.*, IFNULL(b.roptionimage_no, '0') as roptionimage_no, IFNULL(b.original_name, 'noImage') as original_name, IFNULL(b.save_name, 'noImage') as save_name, IFNULL(b.file_size, '0') as file_size, IFNULL(b.file_delete, 'N') as file_delete, IFNULL(b.upload_date, '0101-01-01') as upload_date
-        FROM roomoption_tb a
-        left join roomoptionimage_tb b
-        on a.roption_no = b.roption_no
-        WHERE a.room_no = #{roomNo};
-
-    </select>
-
-
-
 
     <insert id="insertReserveInfo">
         INSERT INTO reservation_tb (
-            reservation_date, reservation_creation_date, start_time, end_time, seller_no, member_no, room_no, roption_no, end_date_time, reservation_status
+            reservation_date, start_time, end_time, reservation_status, seller_no, member_no, room_no, roption_no, reservation_creationdate, reserve_end_datetime
             )
         VALUES (
-            #{parsingDate}, now(), #{reserveStartTime}, #{reserveEndTime}, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, #{endDateTime}, 1
+            #{parsingDate}, #{reserveStartTime}, #{reserveEndTime}, 1, #{sellerNo}, #{memberNo}, #{roomNo}, #{optionNo}, now(), #{endDateTime}
             )
     </insert>
+
+    <insert id="insertBookmark">
+        INSERT INTO bookmark_tb(member_no, room_no)
+        VALUES (#{memberNo}, #{roomNo})
+    </insert>
+
+    <delete id="deleteBookmark">
+        DELETE from bookmark_tb
+        WHERE member_no = #{memberNo}
+        AND room_no = #{roomNo}
+    </delete>
 
 </mapper>

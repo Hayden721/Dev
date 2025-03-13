@@ -16,18 +16,9 @@
         <div class="reserve-paging-container">
             <h1>예약</h1>
             <div class="search-container">
-                <form role="search" style="display: flex;">
-                    <label style="margin: 0 5px 5px 0">
-                        <select class="form-select" style="width: 120px; text-align-last: center;">
-                            <option value="">전체</option>
-                            <option value="1">예약</option>
-                            <option value="0">예약 취소</option>
-                            <option value="2">예약 종료</option>
-                        </select>
-                    </label>
-
-                    <input class="form-control" type="search" placeholder="Search" aria-label="Search" style="margin: 0 0 5px 0;">
-                    <button class="btn btn-outline-success" type="submit" style="margin: 0 0 5px 5px;">Search</button>
+                <form role="search" style="display: flex;" onsubmit="return false;">
+                    <input id="keyword" class="form-control" type="search" placeholder="Search" aria-label="Search" style="margin: 0 0 5px 0;">
+                    <button class="btn btn-outline-success" onclick="movePage(1)" type="submit" style="margin: 0 0 5px 5px;">Search</button>
                 </form>
             </div>
 
@@ -92,7 +83,6 @@
         $(document).ready(function () {
             sendReservationDataToModal();
             reservationCancelBtn();
-
             findAllList();
             activePagingButton();
         })
@@ -155,28 +145,12 @@
         function movePage(page) {
             const keywordValue = $("#keyword").val();
 
-            // const searchLocationValue = [];
-            // const searLocationVal = $("input[name=locOption]:checked").each(function () {
-            //     const val = $(this).val();
-            //     searchLocationValue.push(val);
-            // })
-            //
-            //
-            // const checkDivValue = [];
-            // const searTypeValue = $("input[name=checkDiv]:checked").each(function () {
-            //     const chk = $(this).val();
-            //     checkDivValue.push(chk);
-            // })
-
             // 1. drawPage( )의 각 버튼에 선언된 onclick 이벤트를 통해 전달받는 page(페이지 번호)를 기준으로 객체 생성
             const queryParams = {
                 page: (page) ? page : 1,
                 recordSize: 9,
                 pageSize: 5,
                 keyword: keywordValue,
-                // searchLocation: searchLocationValue,
-                // searchDiv: checkDivValue
-
             }
             /*
              * 2. location.pathname : 리스트 페이지의 URI("/post/list.do")를 의미
@@ -223,13 +197,16 @@
                 const reservationNo = $(this).data('reservation-no');
                 $.ajax({
                     type: 'POST',
-                    url: '/devroom/member/mypage/reservation/cancel',
-                    data: {reservationNo: reservationNo},
+                    url: '/sharespot/mypage/reservation/cancel',
+                    dataType: "html",
+                    data: {
+                        reservationNo: reservationNo
+                    },
                     success: function (response) {
-                        window.location.href='/devroom/member/mypage/reservation-info';
+                        window.location.href='/sharespot/member/mypage/reservation/list';
                     },
                     error: function () {
-                        window.location.href='/devroom/member/mypage/reservation/cancel/error'
+                        window.location.href='/sharespot/member/mypage/reservation/list'
                     }
 
                 })

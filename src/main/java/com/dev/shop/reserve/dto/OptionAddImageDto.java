@@ -1,18 +1,15 @@
 package com.dev.shop.reserve.dto;
 
 import lombok.*;
-import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Accessors(chain = true)
-public class OptionAndImageDto {
+public class OptionAddImageDto {
     // option
     private Long roptionNo;
     private String roptionTitle;
@@ -26,13 +23,13 @@ public class OptionAndImageDto {
     private String saveName;
     private Long fileSize;
     private char fileDelete;
-    private LocalDateTime createdDate;
+    private LocalDateTime uploadDate;
 
     private Long roomNo;
 
-    public String getCreatedDate() {
+    public String getUploadDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return this.createdDate.format(formatter);
+        return this.uploadDate.format(formatter);
     }
 }
 

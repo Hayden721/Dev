@@ -13,8 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @AllArgsConstructor
 @ToString
-public class BookmarkedDto {
-
+public class BookmarkResponse {
     private Long roomNo; // 번호(Primary Key)
     private String roomTitle; // 방제목
     private String roomDiv; // 방 구분 (스터디룸 / 회의실 / 공간대여)
@@ -23,16 +22,10 @@ public class BookmarkedDto {
     private String address;
     private String detailAddress;
     private String extraAddress;
-    private int roomDelete;
+
     private Long sellerNo;
 
-    // thumbnail image
-    private LocalDateTime createdDate;
-    private String saveName;
     private String originalName;
-
-    public String getCreatedDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return this.createdDate.format(formatter);
-    }
+    private String saveName;
+    private String uploadDate;
 }

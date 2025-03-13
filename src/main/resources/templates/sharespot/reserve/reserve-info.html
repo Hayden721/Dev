@@ -8,30 +8,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
     <link rel="stylesheet" th:href="@{/css/pages/member/mypage.css}" >
-
-
     <title>Dev-room</title>
 </head>
 
 
 <div layout:fragment="content">
 
-<div>
-    <form action="/devroom/reserve/reserve-pay" method="post">
-        예약할 정보 확인
-        <input name="selectDate" th:value="${selectDate}">
-        <input name="reserveStartTime" th:value="${reserveStartTime}">
-        <input name="reserveEndTime" th:value="${reserveEndTime}">
-        <input name="sellerNo" th:value="${sellerNo}">
-        <input name="memberNo" th:value="${memberNo}">
-        <input name="roomNo" th:value="${roomNo}">
-        <input name="optionNo" th:value="${optionNo}">
+    <div id="reserve-info-container" class="mt-4" style="display: flex; flex-direction: column; min-width: 900px; border-radius: 15px;
+    border: 1px solid #E6E6E6; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; padding: 10px;">
+        <h2>예약</h2>
+        <h3>옵션 제목</h3>
+        <div style="display: flex; flex-direction: row">
+            <div>1000w</div>
+            <div>/시</div>
+        </div>
 
-        <button>결제하기</button>
+        <div>예약 날짜</div>
+
+        <div>
+            <div class="d-flex flex-column">
+                <p>시작 시간</p>
+                <p>12:00</p>
+            </div>
+            <div class="d-flex flex-column">
+                <p>종료 시간</p>
+                <p>14:00</p>
+            </div>
+        </div>
+    </div>
+
+    <form action="/sharespot/reserve/pay" method="post">
+        <input name="selectDate" th:value="${selectDate}" hidden>
+        <input name="reserveStartTime" th:value="${reserveStartTime}" hidden>
+        <input name="reserveEndTime" th:value="${reserveEndTime}" hidden>
+        <input name="sellerNo" th:value="${sellerNo}" hidden>
+        <input name="memberNo" th:value="${memberNo}" hidden>
+        <input name="roomNo" th:value="${roomNo}" hidden>
+        <input name="optionNo" th:value="${optionNo}" hidden>
+        <button class="btn auto-size-btn deep-green-btn float-end">결제하기</button>
     </form>
-
-</div>
-
 </div>
 
 </html>

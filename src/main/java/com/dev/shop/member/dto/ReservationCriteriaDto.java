@@ -16,7 +16,7 @@ public class ReservationCriteriaDto {
     private int pageSize; // 하단에 출력될 페이지 사이즈
 
     private String keyword; // 검색 키워드
-    private String searchType; // 검색 타입
+    private List<String> searchType; // 검색 타입
 
     private Pagination pagination;
 

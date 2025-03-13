@@ -12,8 +12,6 @@
 
 <div layout:fragment="content">
 
-    <div class="list-wrapper">
-
         <div style="margin-top: 10px;"></div>
 
         <div class="option-container">
@@ -46,20 +44,17 @@
         <div style="margin-top: 10px;"></div>
 
         <div id="list-container">
-            <div th:each="roomList : ${roomList.list}" class="room-card" th:onclick="|location.href='@{/sharespot/reserve/detail(roomNo=${roomList.roomNo})}'|">
-
+            <div class="room-card" th:each="roomList : ${roomList.list}" th:onclick="|location.href='@{/sharespot/reserve/detail(roomNo=${roomList.roomNo})}'|">
                 <img th:if="${roomList.originalName} != noImage" th:src="${filePath} + '/' + ${roomList.uploadDate} + '/' + ${roomList.saveName}" th:alt="${roomList.originalName}">
                 <img th:unless="${roomList.originalName} != noImage" src="/images/test-image.png" alt="images">
-                <div class="content">
-                    <h3 th:text="${roomList.roomTitle}"></h3>
-
-                    <div th:switch="${roomList.roomDiv}" style="font-size: 17px;">
+                <div class="card-content">
+                    <p class="card-title text-ellipsis" th:text="${roomList.roomTitle}"></p>
+                    <div class="card-div" th:switch="${roomList.roomDiv}">
                         <p th:case="'studyroom'">스터디룸</p>
                         <p th:case="'meeting'">회의실</p>
-                        <p th:case="'office'">개인오피스</p>
+                        <p th:case="'office'">오피스</p>
                     </div>
-
-                    <p th:text="${roomList.address} + ${roomList.detailAddress}" style="font-size: 17px;"></p>
+                    <p class="card-address text-ellipsis" th:text="${roomList.address} + ${roomList.detailAddress}"></p>
                 </div>
 
             </div> <!-- room-container -->
@@ -67,7 +62,7 @@
 
         <div class="pagination-container"></div>
 
-    </div>
+
 </div> <!-- content end -->
 
 <th:block layout:fragment="script">
@@ -78,7 +73,6 @@
             findAllList();
             activePagingButton();
             afterSubmitCheckbox();
-
         });
 
         function afterSubmitCheckbox() {

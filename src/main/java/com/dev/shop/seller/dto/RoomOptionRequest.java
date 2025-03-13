@@ -1,5 +1,6 @@
 package com.dev.shop.seller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -7,10 +8,18 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class RoomOptionRequest {
+    @JsonProperty("rOptionNo")
     private Long roptionNo;
+
+    @JsonProperty("rOptionTitle")
     private String roptionTitle;
+
+    @JsonProperty("rOptionContent")
     private String roptionContent;
+
+    @JsonProperty("rOptionPrice")
     private int roptionPrice;
+
     private Long roomNo;
 
 

@@ -7,6 +7,7 @@ import com.dev.shop.utils.FileUtils;
 import com.dev.shop.utils.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,6 +48,20 @@ public class ReserveController {
 // ------------------------------------------------- end
     @GetMapping("/detail")
     public void detailGet(@RequestParam final Long roomNo, Model model, Principal principal) {
+        String memberId = null;
+
+        if(principal != null) {
+            memberId = principal.getName();
+        } else {
+            log.warn("Principal is null");
+        }
+
+        if(memberId != null) {
+
+            boolean bookmarkValue = reserveService.getBookmarkValue(memberId, roomNo);
+            log.info("controller boomarkValue : {}", bookmarkValue);
+            model.addAttribute("bookmark", bookmarkValue);
+        }
         // 이미지 파일 패스
         String filePath = fileUtils.choosePath();
         log.info("filePath {}", filePath);
@@ -61,39 +76,28 @@ public class ReserveController {
         List<FileResponse> extraImages = reserveService.getExtraImage(roomNo);
 
         // roomOptionImage 옵션과 옵션 이미지
-//        List<RoomOptionDto> roomOptionInfo = reserveService.findRoomOptionInfo(roomNo);
-
-//        List<OptionAndImageDto> optionData = reserveService.getOptionAndImageByRoomNo(roomNo);
-
-//        log.info("--- reserveController --- 값 : {}", optionData);
-
-//        if(memberId != null) {
-//            // bookmarkCheck
-//            boolean bookmarkValue = reserveService.getBookmarkValue(memberId, roomNo);
-//            log.info("controller boomarkValue : {}", bookmarkValue);
-//            model.addAttribute("bookmark", bookmarkValue);
-//        }
+        List<OptionAddImageDto> optionData = reserveService.getOptionAndImageByRoomNo(roomNo);
 
         model.addAttribute("roomInfo", roomInfo);
-//        model.addAttribute("roomOptionInfo", roomOptionInfo);
-        // 이미지 관련 model
         model.addAttribute("filePath", filePath);
         model.addAttribute("thumbnailImage", thumbnailImage);
         model.addAttribute("extraImages", extraImages);
-//        model.addAttribute("optionData", optionData);
+        model.addAttribute("optionData", optionData);
     }
 
-    @GetMapping("/detail/reserve-option-ajax")
-    public String reserveOptionAjaxGet(Long optionNo, Long roomNo, Long sellerNo, Model model) {
+
+// --------------- ajax
+    @GetMapping("/ajax/reserve-option")
+    public String ajaxReserveOption(Long optionNo, Long roomNo, Long sellerNo, Model model) {
 
         model.addAttribute("sellerNo", sellerNo);
         model.addAttribute("optionNo", optionNo);
         model.addAttribute("roomNo", roomNo);
 
-        return "/devroom/reserve/reserve-option-ajax";
+        return "/sharespot/reserve/ajax/reserve-option";
     }
 
-    @GetMapping("/detail/reserve-time-ajax")
+    @GetMapping("/ajax/reserve-time")
     public String reserveTimeAjaxGet(String selectDate, Long roomNo, Long optionNo, Long sellerNo ,Model model) {
 
         log.info("optionNo : {}", optionNo);
@@ -108,7 +112,7 @@ public class ReserveController {
         model.addAttribute("authId", authId);
         model.addAttribute("sellerNo", sellerNo);
 
-        return "/devroom/reserve/reserve-time-ajax";
+        return "/sharespot/reserve/ajax/reserve-time";
     }
 
     @PostMapping("/reserve-info")
@@ -118,7 +122,7 @@ public class ReserveController {
         log.info("----------------------- startTime : {}, endTime : {} ", reserveStartTime, reserveEndTime);
         log.info("----------------------- selectDate : {}, roomNo : {}, optionNo : {}, authId : {}", selectDate, roomNo, optionNo, authId);
 
-        Long memberNo = reserveService.getMemberNoByAuthId(authId);
+        Long memberNo = reserveService.getMemberNo(authId);
 
         model.addAttribute("reserveStartTime", reserveStartTime);
         model.addAttribute("reserveEndTime", reserveEndTime);
@@ -127,16 +131,27 @@ public class ReserveController {
         model.addAttribute("sellerNo", sellerNo);
         model.addAttribute("roomNo", roomNo);
         model.addAttribute("memberNo", memberNo);
-
-
     }
 
-    @PostMapping("/reserve-pay")
-    public void reservePayPost(Integer reserveStartTime, Integer reserveEndTime, Long optionNo, String selectDate, Long sellerNo, Long memberNo, Long roomNo) {
-
+    @PostMapping("/pay")
+    public String reservePayPost(Integer reserveStartTime, Integer reserveEndTime, Long optionNo, String selectDate, Long sellerNo, Long memberNo, Long roomNo) {
         log.info("------------ /reserve-pay ------------ selectDate : {}, startTime : {}, endTime : {}, sellerNo : {}, memberNo : {}, roomNo : {}, optionNo : {}", selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo );
         reserveService.insertReservation(selectDate, reserveStartTime, reserveEndTime, sellerNo, memberNo, roomNo, optionNo );
 
+        return "/sharespot/reserve/pay-success";
     }
 
+    @PostMapping("/bookmark")
+    public ResponseEntity<?> roomBookMark(@RequestParam("roomNo") Long roomNo, Principal principal) {
+        String memberId = principal.getName();
+        log.info("memberId {}", memberId);
+        log.info("roomNo {}", roomNo);
+
+        // 북마크가 되어 있는가? true 북마크 되었음, false 북마크 안되어 있음
+        boolean bookmarkVal = reserveService.roomBookmark(memberId, roomNo);
+        return ResponseEntity.ok(bookmarkVal);
+    }
 }
+
+
+

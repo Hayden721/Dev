@@ -16,6 +16,7 @@
     <script src="/js/seller/room/image.js"></script>
     <script src="/js/seller/room/update.js"></script>
 
+
     <title>Dev-room</title>
 </head>
 
@@ -45,10 +46,9 @@
                         </div>
                     </div>
 
-
                     <label style="width: 120px;">업체 구분
                         <input th:value="${roomInfo.roomDiv}" name="room-div-info" hidden>
-                        <select class="form-select room-div" name="roomDiv" style="text-align: center;">
+                        <select id="roomDiv" class="form-select room-div" name="roomDiv" style="text-align: center;">
                             <option value="studyroom">스터디룸</option>
                             <option value="meeting">회의실</option>
                             <option value="office">사무실</option>
@@ -60,7 +60,7 @@
                 <h2>주소</h2>
                     <div>
                         <label class="form-label">우편번호
-                            <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postCode" th:value="${roomInfo.postCode}" style="width: 200px;">
+                            <input type="text" class="form-control" id="sample6_postcode" placeholder="우편번호" name="postcode" th:value="${roomInfo.postCode}" style="width: 200px;">
                         </label>
                     </div>
 
@@ -72,10 +72,10 @@
                     </label>
 
                     <label>상세주소
-                        <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="detailAddr" style="margin-bottom: 3px; width: 300px;" th:value="${roomInfo.detailAddress}" >
+                        <input type="text" class="form-control" id="sample6_detailAddress" placeholder="상세주소" name="detailAddress" style="margin-bottom: 3px; width: 300px;" th:value="${roomInfo.detailAddress}" >
                     </label>
                     <label>참고
-                        <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="extraAddr" style="width: 175px" th:value="${roomInfo.extraAddress}">
+                        <input type="text" class="form-control" id="sample6_extraAddress" placeholder="참고항목" name="extraAddress" style="width: 175px" th:value="${roomInfo.extraAddress}">
                     </label>
                 </div>
             </div> <!-- room-container END -->
@@ -84,10 +84,10 @@
      <!-- room-container END -->
 
         <div class="gray-wrap flex-column">
-            <h1>이미지</h1>
+            <h1>기존 이미지</h1>
 
             <div class="d-flex">
-                <div class="thumbnail-container position-relative container-hover">
+                <div class="thumbnail-container position-relative container-hover" style="height: 235px;">
                     <img class="thumbnail-image preview-img" th:if="${thumbnailImg != null}" th:src="${filePath} + '/' + ${thumbnailImg.uploadDate} + '/' + ${thumbnailImg.saveName}" th:alt="${thumbnailImg.originalName}">
                     <img class="thumbnail-image" th:unless="${thumbnailImg != null}"  src="https://www.dummyimage.com/200x200/000/fff" alt="none">
 
@@ -101,7 +101,7 @@
 
                 <!-- 썸네일 아닌 이미지 -->
                 <div class="extra-images-container">
-                    <div class="container-hover position-relative" th:each="extra : ${extraImg}">
+                    <div class="container-hover position-relative" style="height: 200px;" th:each="extra : ${extraImg}">
                         <img class="extra-image preview-img" th:src="${filePath} + '/' + ${extra.uploadDate} + '/' + ${extra.saveName}" alt="none">
                         <input class="room-image-no" th:value="${extra.roomimageNo}" hidden/> <!-- imgNo value-->
                         <input class="image-input extra-input" value="" type="file" name="extraImage" data-image-division="room" hidden/>
@@ -109,8 +109,18 @@
                         <div class="overlay">
                             <i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i>
                         </div>
+
+                        <button style="right: -9px; top: -3px;" class="btn-close delete-btn image-del-btn"></button>
                     </div>
                 </div>
+            </div>
+
+            <hr>
+            <h1>추가할 이미지</h1>
+            <div class="images-repeat4-container">
+                <label id="image-upload-btn"> 이미지 추가
+                    <input type="file" class="image-add-input" multiple/>
+                </label>
             </div>
         </div>
 
@@ -119,7 +129,7 @@
             <button class="btn auto-size-btn deep-green-btn update-btn" id="submit-btn">수정</button>
         </div>
     </div>
-</div>
+
 <!-- 방 삭제 Modal -->
     <div class="modal fade" id="room-delete-modal" tabindex="-1" aria-labelledby="roomDeleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -138,7 +148,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -147,19 +156,30 @@
     <script th:inline="javascript" type="text/javascript">
         /*<![CDATA[*/
         $(document).ready(function() {
-
-            //image.js
-            overlayClickTrigger();
-
-
-
-
             divChange(); // 방 구분 변경
+
+            overlayClickTrigger(); // overlay 클릭 시
+            $('.image-input').on('change', function () { // 이미지 미리보기
+                handleImagePreview(this);
+            });
+
+            imageDel();
             roomContentTextCount(); // 설명 글자 수 카운터
             nextButtonActivate();
+            updateRoomSubmit();
 
+            // 이미지 추가 관련 dargImage.js에 function 작성
+            // 이미지 추가시 페이지에 이미지 추가, formData 추가
+            imageAdd();
+            // 이미지 삭제 시 formData와 페이지에서 이미지 삭제
+
+            // 추가할 이미지 업로드
+
+            $('.update-btn').on('click', function () {
+                imageAddAjax();
+                console.log("ajax 성공")
+            })
         });
-
 
         // 옵션 입력칸 빈칸 검사
         function checkInput() {
@@ -182,8 +202,6 @@
                 }
             });
         }
-
-
     /*]]>*/
     </script>
 </th:block>

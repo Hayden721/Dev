@@ -25,9 +25,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             // 로그인 후 이전페이지로 이동
             response.sendRedirect(previousPageUrl);
         } else if ("/sharespot/member/register".equals(previousPageUrl)) {
-            response.sendRedirect("/sharespot/member/main");
+            response.sendRedirect("/sharespot/main");
         } else {
-            response.sendRedirect("/sharespot/member/main");
+            response.sendRedirect("/sharespot/main");
         }
 
 

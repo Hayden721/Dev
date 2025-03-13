@@ -3,7 +3,7 @@ package com.dev.shop.seller.dao;
 
 import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.item.dto.OptionFileReqeuest;
-import com.dev.shop.reserve.dto.RoomOptionDto;
+import com.dev.shop.reserve.dto.OptionResponse;
 import com.dev.shop.seller.dto.*;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,37 +12,45 @@ import java.util.List;
 @Mapper
 public interface SellerDao {
     /**
-     * 아이디로 판매자 정보 가져오기
+     * 아이디로 판매자 정보 가져온다.
      * @param sellerId - 로그인 하려는 아이디
      * @return 판매자 정보
      */
     SellerDetailsDto selectSellerById(String sellerId);
 
     /**
-     * 판매자번호 조회
+     * 판매자번호를 조회한다.
      * @param authId - 로그인한 아이디
      * @return 판매자번호
      */
     Long selectSellerNoByAuthId(String authId);
 
     /**
-     *
-     * @param roomResponse
-     * @return
+     * 방 생성을 위해 정보를 저장한다.
+     * @param roomRequest
+     * @return 방 번호(roomNo)
      */
-    Long insertRoomInfo(RoomRequest roomResponse);
+    Long insertRoomInfo(RoomRequest roomRequest);
 
     /**
-     * 방 옵션 생성
+     * 방 옵션을 생성한다.
      * @param options - 방옵션 입력 데이터
      */
     void insertRoomOptionInfo(List<RoomOptionRequest> options);
 
+    /**
+     * 판매자가 생성한 공간을 조회한다.
+     * @param sellerNo - 로그인한 판매자 번호
+     * @return 판매자가 생성한 공간 정보
+     */
     List<RoomListDto> selectRoomListBySellerNo(Long sellerNo);
 
-    
-
-    List<RoomOptionDto> selectRoomOptionInfoByRoomNo(Long roomNo);
+    /**
+     *
+     * @param roomNo
+     * @return
+     */
+    List<OptionResponse> selectRoomOptionInfoByRoomNo(Long roomNo);
 
     int selectRoomOptionCountByRoomNo(Long roomNo);
 
@@ -53,7 +61,6 @@ public interface SellerDao {
     void deleteRoomByRoomNo(Long roomNo);
 
     void deleteRoomOptionByRoomNo(Long roomNo);
-
 
     List<ReserveManageDto> selectReserveManageInfoBySellerNo(Long sellerNo);
 
@@ -73,12 +80,9 @@ public interface SellerDao {
 
     void deleteOption(Long optionNo);
 
-
-
     int selectIdDuplicateBySellerId(String sellerId);
 
     void insertSellerRegister(SellerRegisterRequest registerInfo);
-
 
 
     int selectRoomCountByAuthId(Long sellerNo);
@@ -86,12 +90,20 @@ public interface SellerDao {
 
     void deleteErrorRoom(Long roomNo);
 
+    /**
+     * 방 옵션을 조회한다.
+     * @param roomNo -
+     * @return
+     */
     List<RoomOptionResponse> selectRoomOption(Long roomNo);
-
-    List<FileResponse> selectRoomImage(Long roomNo);
 
     void updateRoomProgress(Long errorRoomNo);
 
+    /**
+     * 썸네일 이미지를 조회한다.
+     * @param roomNo -
+     * @return
+     */
     FileResponse selectThumbnailImage(Long roomNo);
 
     List<FileResponse> selectExtraImage(Long roomNo);

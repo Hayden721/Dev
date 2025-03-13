@@ -7,8 +7,7 @@
 </head>
 <body>
 
-
-<form action="/devroom/reserve/reserve-info" method="post" class="time-form">
+<form action="/sharespot/reserve/reserve-info" method="post" class="time-form">
     <input th:name="roomNo" th:value="${roomNo}" hidden>
     <input th:name="optionNo" th:value="${optionNo}" hidden>
     <input th:name="selectDate" th:value="${selectDate}" hidden>
@@ -33,7 +32,7 @@
         <input type="radio" th:value="${endTime}" th:name="reserveEndTime" class="reservation-radio reservation-end-time">
     </div>
 
-    <button sec:authorize="isAuthenticated()" class="btn " style="float: right;">예약하기</button>
+    <button sec:authorize="isAuthenticated()" class="btn auto-size-btn deep-green-btn float-end">예약하기</button>
 
 </form>
 

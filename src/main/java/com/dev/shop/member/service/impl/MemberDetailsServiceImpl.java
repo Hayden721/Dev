@@ -21,7 +21,7 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
         log.info("--- [CustomDetailsServiceImpl] 여기까지 옴");
         log.info("{}", memberId);
 
-        MemberDetailsDto dto = memberDao.selectMemberById(memberId);
+        MemberDetailsDto dto = memberDao.selectMemberToken(memberId);
 
         if (dto == null || dto.getMemberId() == null) {
             throw new UsernameNotFoundException("해당 아이디가 존재하지 않습니다.");

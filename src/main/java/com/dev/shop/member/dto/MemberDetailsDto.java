@@ -21,8 +21,8 @@ public class MemberDetailsDto implements UserDetails {
 
     private Long memberNo;
     private String memberId;
-    private String memberEmail;
     private String memberPw;
+    private String memberEmail;
     private String memberPhone;
     private String memberName;
     private String memberAuth;

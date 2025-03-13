@@ -4,17 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
 @AllArgsConstructor
 @ToString
-public class getReserveInfoDto {
+public class ReservationResponse {
     private int rowNum;
     private Long reservationNo;
     private LocalDate reservationDate;
-    private Date reservationCreationDate;
+    private Date reservationCreationdate;
     private int startTime;
     private int endTime;
     private char reservationStatus;
@@ -24,7 +23,5 @@ public class getReserveInfoDto {
 
     private String roomTitle;
     private String roomOptionTitle;
-
-
 }
 

@@ -59,7 +59,7 @@
     <insert id="insertOptionInfoByOptionData" useGeneratedKeys="true" keyProperty="roomOptionNo">
         INSERT INTO roomoption_tb(roption_title, roption_price, roption_content, room_no, roption_delete)
         VALUES (
-            #{roptionTitle}, #{roptionPrice}, #{roptionContent}, #{roomNo}, 0
+            #{roptionTitle}, #{roptionPrice}, #{roptionContent}, #{roomNo}, 'N'
         )
     </insert>
 
@@ -67,7 +67,7 @@
         INSERT INTO roomoption_tb(roption_title, roption_price, roption_content, room_no, roption_delete)
         VALUES
         <foreach collection="list" item="option" separator=",">
-            (#{option.roptionTitle}, #{option.roptionPrice}, #{option.roptionContent}, #{option.roomNo}, 0)
+            (#{option.roptionTitle}, #{option.roptionPrice}, #{option.roptionContent}, #{option.roomNo}, 'N')
         </foreach>
     </insert>
 
@@ -111,7 +111,7 @@
         WHERE seller_no = #{sellerNo}
     </select>
 
-    <select id="selectRoomOptionInfoByRoomNo" resultType="com.dev.shop.reserve.dto.RoomOptionDto">
+    <select id="selectRoomOptionInfoByRoomNo" resultType="com.dev.shop.reserve.dto.OptionResponse">
         select *
         FROM roomoption_tb
         WHERE room_no = #{roomNo};
@@ -161,12 +161,7 @@
         FROM roomoption_tb
         WHERE room_no = #{roomNo}
     </select>
-    <select id="selectRoomImage" resultType="com.dev.shop.item.dto.FileResponse">
-        SELECT roomimage_no, original_name, save_name, file_size, thumbnail, file_delete, upload_date
-        FROM roomimage_tb
-        WHERE room_no = #{roomNo}
-        AND file_delete = 'N'
-    </select>
+
     <select id="selectThumbnailImage" resultType="com.dev.shop.item.dto.FileResponse">
         SELECT roomimage_no, original_name, save_name, file_size, thumbnail, file_delete, upload_date
         FROM roomimage_tb

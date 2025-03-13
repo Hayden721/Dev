@@ -48,13 +48,14 @@
     </update>
 
 
+
     <select id="selectFileInfoByRoomNo" resultType="com.dev.shop.item.dto.FileResponse">
         SELECT *
         FROM roomimage_tb
         WHERE room_no = #{roomNo}
     </select>
 
-    <select id="selectRoomOptionByRoomNo" resultType="com.dev.shop.reserve.dto.RoomOptionDto">
+    <select id="selectRoomOptionByRoomNo" resultType="com.dev.shop.reserve.dto.OptionResponse">
         SELECT *
         FROM roomoption_tb
         WHERE room_no = #{roomNo}
@@ -75,5 +76,12 @@
             AND thumbnail= 'Y'
             AND file_delete = 'N';
     </select>
+
+    <delete id="deleteRoomImage">
+        UPDATE roomimage_tb
+        SET file_delete = 'Y'
+        WHERE roomimage_no = #{imageNo}
+
+    </delete>
 
 </mapper>

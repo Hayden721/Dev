@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mypage-config}">
+<head>
+
+  <title>Test</title>
+</head>
+
+<div layout:fragment="mypage">
+
+    <div id="info-container"> <!--  회원정보  -->
+      <h2>마이페이지</h2>
+      <div class="d-flex flex-row justify-content-between align-self-center">
+        <span class="d-flex align-items-center fs-5">memberId</span>
+        <button id="member-edit-btn" class="btn green-btn" th:onclick="|location.href='@{/sharespot/mypage/edit}'|">회원수정</button>
+      </div>
+    </div>
+
+    <div> <!-- 예약 내역, 예약 취소 내역,  등등 -->
+      <div class="d-flex flex-column">
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/mypage/reservation/list}'|">
+          <span>예약 내역</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/mypage/reservation/end/list}'|">
+          <span>예약 취소/종료 내역</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/mypage/bookmark/list}'|">
+          <span>북마크</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <hr>
+
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/costomer/service}'|" disabled>
+          <span>고객센터</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/announcement}'|" disabled>
+          <span>공지사항</span>
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <br>
+
+        <button class="clear-btn mypage-menu-item" th:onclick="|location.href='@{/sharespot/member/logout}'|">
+          <span>로그아웃</span>
+        </button>
+      </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="script">
+  <script th:inline="javascript" type="text/javascript">
+    $(document).ready(function () {
+
+    })
+
+  </script>
+</th:block>
+
+</html>

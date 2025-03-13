@@ -4,7 +4,6 @@ import com.dev.shop.item.dto.FileResponse;
 import com.dev.shop.seller.dto.*;
 import com.dev.shop.seller.service.SellerService;
 import com.dev.shop.utils.FileUtils;
-import com.mysql.cj.Session;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -156,8 +155,8 @@ public class SellerController {
 
     @GetMapping("/create/option/image")
     public String optionImage(HttpSession session, Model model) {
-//        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
-        Long roomNo = 12L;
+        Long roomNo = (Long) session.getAttribute("generatedRoomNo");
+
         // 데이터 조회
         List<RoomOptionResponse> optionInfo = sellerService.getRoomOptionInfo(roomNo);
 
@@ -219,10 +218,16 @@ public class SellerController {
     }
 
     // Post /room/update
+    @PostMapping("/room/update")
+    public ResponseEntity<?> roomUpdatePost(@RequestBody RoomRequest roomInfo) {
+        log.info("/room/update roomInfo {}", roomInfo);
+        sellerService.updateRoom(roomInfo);
+        return ResponseEntity.ok("ok");
+    }
 
 
     @GetMapping("/room/option/update")
-    public String updateOption(@RequestParam("roomNo") Long roomNo,Model model) {
+    public String updateOptionGet(@RequestParam("roomNo") Long roomNo,Model model) {
         int optionTotal = sellerService.getOptionCount(roomNo);
         List<OptionAndImageResponse> optionAndImg = sellerService.getOptionInfoAndImage(roomNo);
 
@@ -235,7 +240,7 @@ public class SellerController {
 
     @PostMapping("/room/option/update")
     @ResponseBody
-    public ResponseEntity<?> updateOption(
+    public ResponseEntity<?> updateOptionPost(
             @RequestParam("roomNo") Long roomNo,
             @RequestBody List<RoomOptionRequest> optionData) {
         log.info("roomNo {}", roomNo);
@@ -253,11 +258,11 @@ public class SellerController {
     @PostMapping("/room/option/add")
     public ResponseEntity<?> addOption(@RequestParam("roomNo") Long roomNo,
                                        @RequestPart List<RoomOptionRequest> optionData,
-                                       @RequestPart List<MultipartFile> optionImages,
-                                       HttpSession session
+                                       @RequestPart List<MultipartFile> optionImages
                                        ) {
         sellerService.addOption(optionData, roomNo, optionImages);
         log.info("optionImage : {}", optionImages);
+        log.info("addOption : {}", optionData);
 
         return ResponseEntity.ok().body("/seller/room/detail?roomNo=" + roomNo);
     }

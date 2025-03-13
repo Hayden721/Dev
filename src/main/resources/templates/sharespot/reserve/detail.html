@@ -6,42 +6,43 @@
       layout:decorate="~{layouts/config}" xmlns="http://www.w3.org/1999/html">
 <head>
     <link rel="stylesheet" href="/css/pages/reserve/detail.css">
-
+    <script src="/js/reserve/detail.js"></script>
     <title>ShareSpot</title>
 </head>
 
 <div layout:fragment="content">
-    <div class="detail-wrap">
-        <div class="images-container">
-            <div class="thumbnail-img-container">
-                <img class="thumbnail-img" th:src="${filePath} + '/' + ${thumbnailImage.uploadDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}">
-            </div>
-            <div th:if="${extraImages.size()} >= 4">
-                <div th:with="images = ${extraImages.subList(0, 4)}" class="extra-img-container">
-                    <div th:each="extraImages : ${images}" class="extra-img-div">
-                        <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.uploadDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
-                    </div>
-                    <button class="btn whole-image-view btn-light" data-bs-toggle="modal" data-bs-target="#whole-image-view-modal">
-                        <span><i class="bi bi-grid-3x3-gap-fill"></i></span>
-                        <span>전체 사진 보기</span>
-                    </button>
+    <div class="detail-images-container mt-3">
+        <div class="thumbnail-img-container">
+            <img class="thumbnail-img" th:src="${filePath} + '/' + ${thumbnailImage.uploadDate} + '/' + ${thumbnailImage.saveName}" th:alt="${thumbnailImage.originalName}">
+        </div>
+        <div th:if="${extraImages.size()} >= 4">
+            <div th:with="images = ${extraImages.subList(0, 4)}" class="extra-img-container">
+                <div th:each="extraImages : ${images}" class="extra-img-div">
+                    <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.uploadDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
                 </div>
+                <button class="btn whole-image-view btn-light" data-bs-toggle="modal" data-bs-target="#whole-image-view-modal">
+                    <span><i class="bi bi-grid-3x3-gap-fill"></i></span>
+                    <span>전체 사진 보기</span>
+                </button>
             </div>
-
-            <div th:unless="${extraImages.size()} >= 4">
-                <div class="extra-img-container">
-                    <div th:each="extraImages : ${extraImages}" class="extra-img-div">
-                        <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.uploadDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="title-container">
-            <div style="display: flex; justify-content: space-between;">
+        <div th:unless="${extraImages.size()} >= 4">
+            <div class="extra-img-container">
+                <div th:each="extraImages : ${extraImages}" class="extra-img-div">
+                    <img class="extra-img" th:src="${filePath} + '/' + ${extraImages.uploadDate} + '/' + ${extraImages.saveName}" th:alt="${extraImages.originalName}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detail-content-container">
+        <div id="title-container"> <!-- 제목 -->
+            <div class="d-flex justify-content-between">
+                <input th:value="${roomInfo.roomNo}" name="roomNo" hidden/>
+                <input th:value="${roomInfo.sellerNo}" name="sellerNo" hidden/>
                 <h1 th:text="${roomInfo.roomTitle}"></h1>
-                <button style="margin-right: 10px;" class="btn bookmark-btn" sec:authorize="isAuthenticated()">
+                <button id="bookmark-btn" class="btn auto-size-btn green-btn" sec:authorize="isAuthenticated()">
                     <span class="bookmark-icon-container">
                         <i th:if="${bookmark}" style="font-size: 15px" class="bi bi-bookmark-fill"></i>
                         <i th:unless="${bookmark}" style="font-size: 15px" class="bi bi-bookmark"></i>
@@ -50,49 +51,44 @@
                 </button>
             </div>
 
+        <div id="div-container"> <!-- 방 구분 -->
             <span th:switch="${roomInfo.roomDiv}">
                 <span th:case="'studyroom'">스터디룸</span>
                 <span th:case="'meeting'">회의실</span>
                 <span th:case="'office'">개인오피스</span>
             </span>
+        </div>
 
-            <!-- 방 설명  -->
-            <div class="contnent-container">
-                <p th:text="${roomInfo.roomContent}"></p>
+        <div id="content-container"> <!-- 방 설명  -->
+            <p th:text="${roomInfo.roomContent}"></p>
+        </div>
+    </div>
+
+    <div id="option-container"> <!-- 옵션 -->
+        <div id="option-title-container">
+            <h2>옵션</h2>
+        </div>
+
+        <div class="d-flex mb-4">
+            <div id="option-detail-container">
+                <div th:each="optionData : ${optionData}" class="option-list">
+                    <input th:value="${optionData.roptionNo}" type="hidden">
+                    <div class="option-image-container">
+                        <img th:if="${optionData.roptionImageNo} != '0'" th:src="${filePath} + '/' + ${optionData.uploadDate} + '/' + ${optionData.saveName}" th:alt="${optionData.originalName}">
+                        <img th:unless="${optionData.roptionImageNo} != '0'" src="https://www.dummyimage.com/90x90/000/fff" alt="none">
+                    </div>
+
+                    <div class="option-data-container">
+                        <span class="option-title" th:text="${optionData.roptionTitle}"></span>
+                        <span class="option-content" th:text="${optionData.roptionContent}"></span>
+                        <span class="option-price" th:text="${optionData.roptionPrice}"></span>
+                    </div>
+
+                </div>
             </div>
-        </div> <!-- title-container END -->
-
-        <!--   옵션     -->
-<!--        <div id="option-wrap">-->
-<!--            <div class="option-title">-->
-<!--                <h2>옵션</h2>-->
-<!--            </div>-->
-
-<!--            <div class="option-sort">-->
-<!--                <div id="option-container">-->
-<!--                    <div th:each="optionData : ${optionData}" class="option-list">-->
-<!--                        <input th:value="${optionData.roptionNo}" type="hidden">-->
-<!--                        <div class="option-image-container">-->
-<!--                            <img th:if="${optionData.roptionImageNo} != '0'" th:src="${filePath} + '/' + ${optionData.uploadDate} + '/' + ${optionData.saveName}" th:alt="${optionData.originalName}">-->
-<!--                            <img th:unless="${optionData.roptionImageNo} != '0'" src="https://www.dummyimage.com/90x90/000/fff" alt="none">-->
-<!--                        </div>-->
-
-<!--                        <div class="option-data-container">-->
-<!--                            <span class="option-title" th:text="${optionData.roptionTitle}"></span>-->
-<!--                            <span class="option-content" th:text="${optionData.roptionContent}"></span>-->
-<!--                            <span class="option-price" th:text="${optionData.roptionPrice}"></span>-->
-<!--                        </div>-->
-
-<!--                    </div>-->
-<!--                </div>-->
-
-<!--                <div class="reserveOptionAjax" style="width: 720px; margin: 0 5px 0 0; "></div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
-
-    </div> <!-- detail-wrap END -->
+            <div class="reserveOptionAjax" style="width: 720px; margin: 0 5px 0 0; "></div>
+        </div>
+    </div>
 
     <!-- Modal -->
     <div class="modal fade" id="whole-image-view-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -112,67 +108,18 @@
             </div>
         </div>
     </div>
-
+    <input th:value="${bookmark}" name="bookmarked" hidden>
 </div> <!-- layout:fragment="content" END -->
 
 <th:block layout:fragment="script">
     <script th:inline="javascript" type="text/javascript">
-
     $(document).ready(function(){
-
+        isBookmarked();
+        getOptionInfo();
+        bookmark();
     });
-
-    $(".option-list").on("click", function () {
-        var roptionNo = $(this).find('input').val();
-
-        $.ajax({
-            type: 'get',           // 타입 (get, post, put 등등)
-            url: './detail/reserve-option-ajax',  // 요청할 서버url
-            dataType: 'html',       // 데이터 타입 (html, xml, json, text 등등)
-            data: {  // 보낼 데이터 (Object , String, Array)
-                roomNo: "[[${roomInfo.getRoomNo}]]",
-                sellerNo : "[[${roomInfo.getSellerNo}]]",
-                optionNo : roptionNo,
-            },
-            success: function (result) { // 결과 성공 콜백함수
-                $(".reserveOptionAjax").html(result)
-            },
-            error: function (request, status, error) {
-                console.log(error)
-            }
-        })
-
-    });
-
-    $('.bookmark-btn').click(function () {
-        const $this = $(this);
-        const $bookmark = $this.find('.bookmark-icon-container');
-        $.ajax({
-            type: 'post',           // 타입 (get, post, put 등등)
-            url: '/devroom/member/bookmark',  // 요청할 서버url
-            dataType: 'html',       // 데이터 타입 (html, xml, json, text 등등)
-            data: {  // 보낼 데이터 (Object , String, Array)
-                roomNo: "[[${roomInfo.getRoomNo}]]"
-
-            },
-            success: function (result) { // 결과 성공 콜백함수
-                console.log(result);
-
-                if(result === "true"){
-
-                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark-fill"></i>');
-                }else if(result === "false") {
-                    $bookmark.html('<i style="font-size: 15px" class="bi bi-bookmark"></i>')
-                }
-            },
-            error: function (request, status, error) {
-                console.log(error)
-            }
-        })
-    })
-
     </script>
 </th:block>
 
-
+</div>
 </html>

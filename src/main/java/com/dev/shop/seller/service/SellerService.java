@@ -58,7 +58,7 @@ public interface SellerService {
 
     List<RoomOptionResponse> getRoomOptionInfo(Long roomNo);
 
-    List<FileResponse> getRoomImages(Long roomNo);
+
 
     void errorCreateRoom(Long errorRoomNo);
 
@@ -75,4 +75,6 @@ public interface SellerService {
     void addOption(List<RoomOptionRequest> optionData, Long roomNo, List<MultipartFile> optionImages);
 
     void deleteRoomOption(Long optionNo, Long optionImageNo);
+
+    void updateRoom(RoomRequest roomInfo);
 }

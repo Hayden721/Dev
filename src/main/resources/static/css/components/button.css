@@ -1,0 +1,61 @@
+.auto-size-btn {
+    padding: 7px 12px; /* 상하, 좌우 패딩 */
+    min-width: 70px; /* 최소 너비 */
+    font-size: 16px; /* 기본 글자 크기 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+}
+
+.clear-btn {
+    border: 0;
+    background-color: transparent;
+}
+
+.deep-green-btn {
+    color: #F3EFF5;
+    background-color: #3f7d20;
+}
+.deep-green-btn:hover {
+    color: #F3EFF5;
+    background-color: #39721D;
+}
+
+.deep-green-btn[disabled] {
+    color: #F3EFF5;
+    background-color: #3f7d20;
+    border: none;
+}
+
+.deep-green-btn:active {
+    color: #F3EFF5;
+    background-color: #2f5e18;
+}
+
+
+.green-btn {
+    color: #F3EFF5;
+    background-color: #72B01D;
+}
+
+.green-btn:hover {
+    background-color: #679F19;
+    color: #F3EFF5;
+}
+
+.green-btn[disabled] {
+    color: #F3EFF5;
+    background-color: #72B01D;
+    border: none;
+}
+
+.charcoal-btn {
+    background-color: #454955;
+    color: #F3EFF5;
+}
+
+.delete-btn {
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+}

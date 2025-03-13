@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" href="/css/image.css">
+    <link rel="stylesheet" href="/css/pages/seller/create/room-option.css">
+
+    <script src="/js/seller/room/update.js" type="text/javascript"></script>
+    <script src="/js/seller/room/image.js" type="text/javascript"></script>
+    <script src="/js/seller/room/option.js" type="text/javascript"></script>
+    <title>Dev-room</title>
+</head>
+
+<div layout:fragment="seller-content">
+    <div class="width-900-center-container">
+        <input th:value="${optionTotal}" name="optionTotal" hidden/>
+        <h1>옵션 정보</h1>
+
+        <div style="display: flex; margin-bottom: 10px; justify-content: flex-end;">
+            <button class="btn green-btn auto-size-btn" data-bs-toggle="modal" data-bs-target="#add-option-modal" aria-label="Close">옵션 추가</button>
+        </div>
+
+        <div class="d-flex flex-column position-relative">
+            <div th:each="optionAndImg : ${optionAndImg}" class="option-detail-container position-relative mt-2 option-div">
+                <button style="right: -9px; top: -3px;" class="btn-close delete-btn"></button>
+                <input th:value="${optionAndImg.roptionNo}"  name="roptionNo" hidden>
+                <!-- 옵션 이미지 -->
+                <div class="option-image-container container-hover">
+                    <img class="option-image preview-img" th:src="${filePath} + '/' + ${optionAndImg.uploadDate} + '/' + ${optionAndImg.saveName}" th:alt="${optionAndImg.originalName}" th:if="${optionAndImg.roptionImageNo} != 0">
+                    <img class="option-image" src="https://www.dummyimage.com/200x200/000/fff" th:alt="${optionAndImg.originalName}" th:unless="${optionAndImg.roptionImageNo} != 0">
+                    <!-- 이미지 업로드를 위한 input -->
+                    <input type="file" class="option-image-input image-input" name="optionImage" data-image-division="option" hidden="hidden">
+                    <input class="room-image-no" th:value="${optionAndImg.roptionImageNo}" name="roomImageNo" hidden>
+
+                    <div class="overlay">
+                        <i class="bi bi-image" style="font-size: 30px; line-height: 30px;"></i>
+                    </div>
+
+                </div>
+
+                <div class="option-info-container">
+                    <div class="d-flex flex-column">
+                        <label>옵션 이름
+                            <input class="form-control input-check" th:value="${optionAndImg.roptionTitle}" name="optionTitle" style="width: 300px">
+                        </label>
+                        <div class="mt-1"></div>
+                        <label>옵션 가격
+                            <div class='input-group option-price' style="width: 150px;">
+                                <input th:value="${optionAndImg.roptionPrice}" name='optionPrice' class='form-control input-check'>
+                                <span class='input-group-text' id='basic-addon2'>₩</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="ms-2">
+                        <label>옵션 설명
+                            <textarea class="form-control option-content-textarea input-check" maxlength="100" th:text="${optionAndImg.roptionContent}"></textarea>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <button class="btn auto-size-btn deep-green-btn float-end" id="submit-btn">수정완료</button>
+        </div>
+    </div>
+
+
+    <!--  옵션 추가 modal  -->
+    <div class="modal fade" id="add-option-modal" tabindex="-1" aria-labelledby="addOptionModalLabel" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-xl" style="min-width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addOptionModalLabel">옵션 추가</h1>
+                    <button type="button" class="btn-close" id="option-modal-close-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-style">
+                    <div class="width-900-center-container d-flex flex-column">
+                        <div>
+                            <label class="float-end"> 옵션 개수
+                                <select name="optionSelection" id="option-selection" class="form-select">
+                                    <option value="0">개수 선택</option>
+                                </select>
+                            </label>
+                        </div>
+                        <input th:value="${optionCount}" name="count" hidden/>
+                        <!-- 옵션의 개수에 따라 옵션 input 생성 -->
+                        <div id="generateInputForm" style="display: flex; flex-direction: column; align-items: center;"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="option-close-btn" data-bs-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-primary" id="add-option-btn" data-bs-dismiss="modal">옵션 추가</button>
+                    <button type="button" class="btn btn-primary" id="option-btn" data-bs-dismiss="modal">테스트</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--  스피너  -->
+    <div id="spinner-overlay" style="display: none">
+        <div id="submit-loading-spinner" class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        // update.js
+        updateOptions(); // 새로운 옵션 <select> 생성
+        createOptionForm(); // 개수에 따라 옵션 폼 생성
+        inputCheckEvent();
+        //image.js
+        overlayClickTrigger(); // 이미지 클릭 트리거
+
+        $('.image-input').on('change', function () { // 이미지 미리보기
+            handleImagePreview(this);
+        });
+
+        // 기존에 있던 옵션 수정
+        $('#submit-btn').on('click', function () {
+
+            $('#spinner-overlay').show();
+            const optionImgData = getImageData();
+
+            updateOptionImageSubmit(optionImgData) //옵션 이미지 업데이트
+            .then(() => updateOptionInfoSubmit())
+                .then(() => {
+                    return new Promise((resolve) => setTimeout(resolve, 1000));
+                })
+                .then(() => {
+                    $('#spinner-overlay').hide();
+                })
+                .catch((error) => {
+                    $('#spinner-overlay').hide();
+                    alert("error : " + error);
+                })
+        });
+
+        $('#add-option-btn').on("click", function () { // 옵션 추가하기
+            console.log("#add-option-btn 클릭됨");
+            const addOptionInfo = getAddRoomOptionData();
+            console.log("addOptionInfo : ", addOptionInfo)
+
+            addOptionSubmit(addOptionInfo);
+
+        });
+
+        optionDeleteSubmit(); // 옵션 삭제하기
+        optionModalClear(); // 모달 닫았을 때 초기화
+    });
+    /*]]>*/
+    </script>
+</th:block>
+</html>

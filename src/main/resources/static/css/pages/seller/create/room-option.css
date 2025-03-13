@@ -1,0 +1,34 @@
+.option-content-textarea {
+    resize: none;
+    width: 345px;
+    height: 135px
+}
+
+.input-form > fieldset > label {
+    font-size: 16px;
+}
+
+.fieldset-style {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #F3EFF5;
+    border-radius: 20px;
+}
+
+.add-option-container {
+    width: 900px;
+    height: auto;
+    background-color: #BCBFC8;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    margin: 0 0 15px 0;
+    position: relative;
+}
+
+.option-info-container {
+    width: 100%;
+    display: flex;
+    margin: 0 0 0 15px;
+}

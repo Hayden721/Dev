@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko"
+
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/seller-config}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+    <link rel="stylesheet" href="/css/pages/seller/create/room-image.css">
+
+    <title>Dev-room</title>
+
+</head>
+
+<div layout:fragment="seller-content">
+    <div class="room-image-container">
+        <div class="upload-box mb-1">
+            <div id="drop-file" class="drag-file"> <!-- 사진 드래그 -->
+                <img src="/images/upload-image.png" alt="파일 아이콘" class="image">
+                <p class="message">Click or Drag files to upload</p>
+            </div>
+            <input type="file" id="image" name="imageData" class="image-input" accept="image/*" multiple hidden>
+        </div>
+
+        <div class="img-preview-container mb-3">
+            <h1 style="padding: 10px 0 0 10px;">이미지</h1>
+            <div class="grid-images-wrap mb-3"></div>
+        </div>
+
+        <div class="d-flex justify-content-center mb-3 float-end">
+            <button id="submit-btn" class="btn deep-green-btn">다음</button>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="script">
+<script src="/js/seller/room/dragImage.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    $(document).ready(function() {
+        $dragArea.on("dragover", highlightOn);
+        $dragArea.on("dragleave", highlightOff);
+        $dragArea.on("drop", imageDrop);
+        $dragArea.on("click", uploadBoxClick);
+        thumbnailClick();
+        inputChange();
+        uploadImages();
+        deleteImage();
+    });
+
+</script>
+</th:block>
+
+

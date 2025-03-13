@@ -1,3 +1,17 @@
+.center-align-700w-container {
+    min-height: 100vh;
+    width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+
+}
+
+.mypage-container {
+    min-width: 700px;
+    display: flex;
+    flex-direction: column;
+}
 .mypage-card {
     width: 310px;
     height: 140px;
@@ -5,4 +19,34 @@
     box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 8px 24px, rgba(17, 17, 26, 0.1) 0px 16px 48px;
     padding: 13px;
     cursor: pointer;
+}
+
+#info-container {
+    height: 400px;
+    background-color: #F3EFF5;
+    padding: 10px;
+}
+
+.mypage-menu-item {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+#member-edit-btn {
+    width: 88px;
+    height: 33px;
+    align-items: center;
+    display: flex;
+}
+
+#mypage-edit-container {
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #F3EFF5;
 }

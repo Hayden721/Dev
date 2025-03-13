@@ -120,11 +120,6 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<FileResponse> getRoomImages(Long roomNo) {
-        return sellerDao.selectRoomImage(roomNo);
-    }
-
-    @Override
     public void errorCreateRoom(Long errorRoomNo) {
         sellerDao.updateRoomProgress(errorRoomNo);
     }
@@ -143,7 +138,6 @@ public class SellerServiceImpl implements SellerService {
     public RoomResponse getRoomInfo(Long roomNo) {
         return sellerDao.selectRoomInfoByRoomNo(roomNo);
     }
-
 
 
     // 옵션 업데이트
@@ -208,7 +202,6 @@ public class SellerServiceImpl implements SellerService {
                 optionImageList.add(optionResp);
             }
             sellerDao.addOptionImage(optionImageList);
-
         }
     }
 
@@ -223,6 +216,11 @@ public class SellerServiceImpl implements SellerService {
             // 이미지 삭제 후 옵션 삭제
             sellerDao.deleteOption(optionNo);
         }
+    }
+
+    @Override
+    public void updateRoom(RoomRequest roomInfo) {
+        sellerDao.updateRoomInfo(roomInfo);
     }
 
     @Override

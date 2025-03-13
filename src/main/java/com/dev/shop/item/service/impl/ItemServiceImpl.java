@@ -96,50 +96,33 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void updateRoomImage(Map<String, MultipartFile> imageFiles) {
-//        if(division.equals("room")) {
-//            List<FileRequest> imagesList = new ArrayList<>();
-//            // room image
-//            for(Map.Entry<String, MultipartFile> entry : imageFiles.entrySet()) {
-//                Long roomimageNo = Long.valueOf(entry.getKey()); // 키값 추출
-//                MultipartFile img = entry.getValue(); // 벨류값 추출
-//                log.info("roomimageNo key : {}", roomimageNo);
-//                log.info("img value : {}", img);
-//
-//                // multipart 데이터 변환
-//                FileRequest imgMapping = fileUtils.uploadFile(img);
-//
-//                FileRequest image = FileRequest.builder()
-//                        .roomimageNo(roomimageNo)
-//                        .originalName(imgMapping.getOriginalName())
-//                        .saveName(imgMapping.getSaveName())
-//                        .fileSize(imgMapping.getFileSize())
-//                        .uploadDate(imgMapping.getUploadDate())
-//                        .build();
-//
-//                imagesList.add(image);
-//            }
-//
-//            itemDao.updateRoomImage(imagesList);
-//
-//        } else if(division.equals("option")) { //option image
-//            List<OptionFileReqeuest> imagesList = new ArrayList<>();
-//            for(Map.Entry<String, MultipartFile> entry : imageFiles.entrySet()) {
-//                Long roptionImageNo = Long.valueOf(entry.getKey());
-//                MultipartFile img = entry.getValue();
-//                log.info("image division serviceImpl: {}", division);
-//
-//                OptionFileReqeuest optionImgMapping = fileUtils.optionImageUpload(img);
-//                OptionFileReqeuest optionImg = OptionFileReqeuest.builder()
-//                        .roptionimageNo(roptionImageNo)
-//                        .originalName(optionImgMapping.getOriginalName())
-//                        .saveName(optionImgMapping.getSaveName())
-//                        .fileSize(optionImgMapping.getFileSize())
-//                        .uploadDate(optionImgMapping.getUploadDate())
-//                        .build();
-//
-//                imagesList.add(optionImg);
-//            }
-//            itemDao.updateOptionImage(imagesList);
+        if(imageFiles.isEmpty()) {
+            return;
+        }
+        List<FileRequest> imagesList = new ArrayList<>();
+        // room image
+        for(Map.Entry<String, MultipartFile> entry : imageFiles.entrySet()) {
+            Long roomimageNo = Long.valueOf(entry.getKey()); // 키값 추출
+            MultipartFile img = entry.getValue(); // 벨류값 추출
+            log.info("roomimageNo key : {}", roomimageNo);
+            log.info("img value : {}", img);
+
+            // multipart 데이터 변환
+            FileRequest imgMapping = fileUtils.uploadFile(img);
+
+            FileRequest image = FileRequest.builder()
+                    .roomimageNo(roomimageNo)
+                    .originalName(imgMapping.getOriginalName())
+                    .saveName(imgMapping.getSaveName())
+                    .fileSize(imgMapping.getFileSize())
+                    .uploadDate(imgMapping.getUploadDate())
+                    .build();
+
+            imagesList.add(image);
+        }
+
+        itemDao.updateRoomImage(imagesList);
+
     }
 
     @Override
@@ -148,12 +131,10 @@ public class ItemServiceImpl implements ItemService {
         for(Map.Entry<String, MultipartFile> entry : optionImgFormData.entrySet()) {
                 Long optionImageNo = Long.valueOf(entry.getKey()); // 키값 추출 (optionImageNo)
                 MultipartFile img = entry.getValue(); // 벨류값 추출 (Multipart Data)
-                log.info("roomimageNo key : {}", optionImageNo);
-                log.info("img value : {}", img);
 
                 // multipart 데이터 변환
                 OptionFileReqeuest optionImgMapping = fileUtils.optionImageUpload(img);
-
+                log.info("optionImgMapping : {}", optionImgMapping);
                 OptionFileReqeuest image = OptionFileReqeuest.builder()
                         .roptionimageNo(optionImageNo)
                         .originalName(optionImgMapping.getOriginalName())
@@ -161,11 +142,38 @@ public class ItemServiceImpl implements ItemService {
                         .fileSize(optionImgMapping.getFileSize())
                         .uploadDate(optionImgMapping.getUploadDate())
                         .build();
-//
                 imagesList.add(image);
             }
 
             itemDao.updateOptionImage(imagesList);
+    }
+
+    @Override
+    public void imageDelete(Long imageNo) {
+        itemDao.deleteRoomImage(imageNo);
+    }
+
+    @Override
+    public void addImage(List<MultipartFile> image, Long roomNo) {
+        List<FileRequest> imgList = new ArrayList<>();
+        // image를 반복해서 정제
+        for(MultipartFile img : image) {
+            FileRequest convertedImage = fileUtils.uploadFile(img);
+
+            FileRequest buildImage = FileRequest.builder()
+                    .originalName(convertedImage.getOriginalName())
+                    .saveName(convertedImage.getSaveName())
+                    .fileSize(convertedImage.getFileSize())
+                    .uploadDate(convertedImage.getUploadDate())
+                    .roomNo(roomNo)
+                    .thumbnail('N')
+                    .build();
+
+            imgList.add(buildImage);
+        }
+        //
+        itemDao.insertRoomImages(imgList);
+
     }
 
 

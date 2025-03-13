@@ -7,8 +7,6 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/pages/member/mypage.css}" >
 
-
-
     <title>Test</title>
 </head>
 
@@ -20,7 +18,7 @@
             <h3 th:text="${memberId}" style="align-self: start;"></h3>
 
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 31px 31px;">
-                <div class="mypage-card" onclick="location.href='/devroom/member/mypage/edit'">
+                <div class="mypage-card" onclick="location.href='/sharespot/member/mypage/edit'">
                     <div><i class="bi bi-person-badge" style="font-size: 30px;"></i></div>
 
                     <div style="margin: 44px 0 0 0;">
@@ -29,7 +27,7 @@
 
                 </div>
 
-                <div class="mypage-card" onclick="location.href='/devroom/member/mypage/payment'">
+                <div class="mypage-card" onclick="location.href='/sharespot/member/mypage/payment'">
                     <div><i class="bi bi-credit-card" style="font-size: 30px;"></i></div>
 
                     <div style="margin: 44px 0 0 0;">
@@ -45,13 +43,8 @@
                         <div>미정</div>
                     </div>
                 </div>
-
-
-
             </div>
-
         </div>
-
     </div>
 
 </div>

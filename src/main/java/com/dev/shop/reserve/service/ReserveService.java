@@ -18,14 +18,14 @@ public interface ReserveService {
 
     RoomInfoRequest findRoomInfo(Long roomNo);
 
-
-    List<RoomOptionDto> findRoomOptionInfo(Long roomNo);
-
     Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, Long roomNo, Long optionNo);
 
-
-
-    Long getMemberNoByAuthId(String authId);
+    /**
+     *
+     * @param authId
+     * @return
+     */
+    Long getMemberNo(String authId);
 
     void insertReservation(String selectDate, Integer reserveStartTime, Integer reserveEndTime, Long sellerNo, Long memberNo, Long roomNo, Long optionNo);
 
@@ -45,7 +45,8 @@ public interface ReserveService {
     boolean getBookmarkValue(String memberId, Long roomNo);
 
 
-    List<OptionAndImageDto> getOptionAndImageByRoomNo(Long roomNo);
+    List<OptionAddImageDto> getOptionAndImageByRoomNo(Long roomNo);
 
 
+    boolean roomBookmark(String memberId, Long roomNo);
 }

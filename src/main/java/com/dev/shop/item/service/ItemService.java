@@ -13,4 +13,9 @@ public interface ItemService{
     void updateRoomImage(Map<String, MultipartFile> imageFiles);
 
     void updateOptionImage(Map<String, MultipartFile> optionImgFormData);
+
+
+    void imageDelete(Long imageNo);
+
+    void addImage(List<MultipartFile> image, Long roomNo);
 }

@@ -1,0 +1,91 @@
+.content-middle-container{
+    max-width: 1300px;
+    min-width: 900px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+} /* 컨텐츠 가운데 정렬 min-width: 900px */
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    min-width: 1200px;
+    width: 100%;
+} /* config 메인 컨테이너 */
+
+.section-style {
+    width: 100%;
+    min-width: 900px;
+    flex: 1;
+    padding: 5px;
+} /* 사이드 메뉴 있을 시 본문에 사용하는 컨테이너 */
+
+.option-detail-container {
+    background-color: #BCBFC8;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    margin: 0 0 15px 0;
+}
+
+.gray-wrap { /*  */
+    display: flex;
+    background-color: #BCBFC8;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 0 0 15px 0;
+}
+
+.option-image-container {
+    width: 190px;
+    height: 190px;
+    position: relative;
+    display: flex;
+    border-radius: 10px;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+} /* 옵션의 이미지 크기 컨테이너 */
+
+
+.width-650-center-container {
+    width: 650px;
+    margin: 0 auto;
+} /* width-650, 중앙 정렬 */
+
+.width-900-center-container {
+    width: 900px;
+    margin: 0 auto;
+} /* width-900, 중앙 정렬 */
+
+
+.grid-images-wrap {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    border-radius: 10px;
+    padding: 10px;
+    row-gap: 35px;
+} /* 이미지 그리드 4개 배치  */
+
+@media (max-width: 1250px) {
+    .grid-images-wrap {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 1570px) {
+    .grid-images-wrap {
+        grid-template-columns: repeat(3, 1fr); /* 3개의 열로 변경 */
+    }
+}
+
+.center-container { /* 정가운데(상하좌우) 컨테이너*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+
+
+

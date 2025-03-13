@@ -40,11 +40,9 @@ public class MemberSecurityConfig {
 
     @Bean
     public SecurityFilterChain MemberFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .authorizeRequests()
-                .antMatchers("/sharespot/member/main", "/sharespot/member/login", "/sharespot/member/register", "/sharespot/member/error-session-remove",
-                "/sharespot/member/id-duplicate-check", "/css/**", "/js/**", "/images/**", "/sharespot/reserve/**", "/test/**")
+                .antMatchers("/sharespot/main", "/sharespot/member/**","/css/**", "/js/**", "/images/**", "/sharespot/reserve/**", "/test/**", "/sharespot/ajax/**")
                 .permitAll();
 
         http

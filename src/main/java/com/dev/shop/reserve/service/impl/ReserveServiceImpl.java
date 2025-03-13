@@ -49,17 +49,6 @@ public class ReserveServiceImpl implements ReserveService {
         return reserveDao.selectRoomInfoByRoomNo(roomNo);
     }
 
-
-//    @Override
-//    public RoomRequest findRoomInfo(Long roomNo) {
-//        return reserveDao.selectRoomInfoByRoomNo(roomNo);
-//    }
-
-    @Override
-    public List<RoomOptionDto> findRoomOptionInfo(Long roomNo) {
-        return reserveDao.selectRoomOptionInfoByRoomNo(roomNo);
-    }
-
     @Override
     public Map<String, ArrayList<Integer>> getAvailableReservationTime(String selectDate, Long roomNo, Long optionNo) {
         //start_time, end_time Map
@@ -158,13 +147,13 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Override
     public boolean getBookmarkValue(String memberId, Long roomNo) {
-        Long memberNo = reserveDao.selectMemberNoByAuthId(memberId);
+        Long memberNo = reserveDao.selectMemberNo(memberId);
         log.info("memberNo {}", memberNo);
-        return reserveDao.selectBookmarkedRoom(memberNo, roomNo);
+        return reserveDao.selectBookmarkData(memberNo, roomNo);
     }
 
     @Override
-    public List<OptionAndImageDto> getOptionAndImageByRoomNo(Long roomNo) {
+    public List<OptionAddImageDto> getOptionAndImageByRoomNo(Long roomNo) {
         return reserveDao.selectOptionAndImage(roomNo);
     }
 
@@ -174,8 +163,36 @@ public class ReserveServiceImpl implements ReserveService {
      * @return member_no
      */
     @Override
-    public Long getMemberNoByAuthId(String authId) {
-        return reserveDao.selectMemberNoByAuthId(authId);
+    public Long getMemberNo(String authId) {
+        return reserveDao.selectMemberNo(authId);
+    }
+
+    /**
+     * 해당 방을 북마크 했는지 안했는지 확인한다.
+     * @param memberId - 로그인한 유저의 아이디
+     * @param roomNo - 북마크하려는 방 넘버
+     * @return 북마크를 상태를 boolean 값으로 반환
+     */
+    @Override
+    public boolean roomBookmark(String memberId, Long roomNo) {
+        //memberId로 memberNo 조회
+        Long memberNo = reserveDao.selectMemberNo(memberId);
+
+        // 1. 북마크하려는 유저와 방 번호를 사용해서 db에 조회
+        Boolean bookmark = reserveDao.selectBookmarkData(memberNo, roomNo);
+        log.info("bookmark : {}", bookmark);
+        if(!bookmark) {
+            reserveDao.insertBookmark(memberNo, roomNo);
+            // 북마크 insert 후 true 반환
+            return true;
+        }else {
+
+            reserveDao.deleteBookmark(memberNo, roomNo);
+            // 북마크 delete 후 false 반환
+            return false;
+        }
+
+        //2. 만약 북마크가 존재하지 않으면 insert / 존재한다면 delete
     }
 
 
