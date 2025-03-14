@@ -1,7 +1,6 @@
 package com.dev.shop.item.controller;
 
 import com.dev.shop.item.service.ItemService;
-import com.dev.shop.utils.FileUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ import java.util.Map;
 public class ItemController {
 
     private final ItemService itemService;
-    private final FileUtils fileUtils;
+
 
 
     // 방 이미지 업로드

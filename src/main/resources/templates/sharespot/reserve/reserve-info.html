@@ -16,23 +16,21 @@
 
     <div id="reserve-info-container" class="mt-4" style="display: flex; flex-direction: column; min-width: 900px; border-radius: 15px;
     border: 1px solid #E6E6E6; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; padding: 10px;">
-        <h2>예약</h2>
-        <h3>옵션 제목</h3>
+        <h1>예약</h1>
+        <h3 th:text="${roomTitle}"></h3>
+        <h4 th:text="${roptionTitle}"></h4>
         <div style="display: flex; flex-direction: row">
-            <div>1000w</div>
-            <div>/시</div>
         </div>
-
         <div>예약 날짜</div>
-
+            <p th:text="${selectDate}"></p>
         <div>
             <div class="d-flex flex-column">
                 <p>시작 시간</p>
-                <p>12:00</p>
+                <p th:text="${reserveStartTime} + '시'"></p>
             </div>
             <div class="d-flex flex-column">
                 <p>종료 시간</p>
-                <p>14:00</p>
+                <p th:text="${reserveEndTime} + '시'"></p>
             </div>
         </div>
     </div>

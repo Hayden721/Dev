@@ -195,5 +195,11 @@ public class ReserveServiceImpl implements ReserveService {
         //2. 만약 북마크가 존재하지 않으면 insert / 존재한다면 delete
     }
 
+    @Override
+    public String getRoomInfo(Long roomNo, Long optionNo) {
+
+        return reserveDao.selectRoomInfo(roomNo, optionNo);
+    }
+
 
 }

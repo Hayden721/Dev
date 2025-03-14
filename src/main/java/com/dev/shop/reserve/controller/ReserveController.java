@@ -123,6 +123,13 @@ public class ReserveController {
         log.info("----------------------- selectDate : {}, roomNo : {}, optionNo : {}, authId : {}", selectDate, roomNo, optionNo, authId);
 
         Long memberNo = reserveService.getMemberNo(authId);
+        String roomInfo = reserveService.getRoomInfo(roomNo, optionNo);
+        String[] result = roomInfo.split(" - ");
+        String roomTitle = result[0];
+        String roptionTitle = result[1];
+
+        model.addAttribute("roomTitle", roomTitle);
+        model.addAttribute("roptionTitle", roptionTitle);
 
         model.addAttribute("reserveStartTime", reserveStartTime);
         model.addAttribute("reserveEndTime", reserveEndTime);

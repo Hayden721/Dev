@@ -123,4 +123,5 @@ public interface ReserveDao {
     FileResponse selectThumbnailImage(Long roomNo);
 
 
+    String selectRoomInfo(@Param("roomNo") Long roomNo, @Param("optionNo") Long optionNo);
 }

@@ -184,6 +184,17 @@
         WHERE member_no = #{memberNo}
         AND room_no = #{roomNo}
     </select>
+    <select id="selectRoomInfo" resultType="java.lang.String">
+        select concat(a.room_title, ' - ', b.roption_title) as room_info
+        from room_tb a
+        left join(
+        select roption_no, roption_title, room_no
+        from roomoption_tb
+        where roption_delete = 'N'
+        ) b
+        on a.room_no = b.room_no
+        where a.room_no = #{roomNo} and b.roption_no = #{optionNo}
+    </select>
 
     <insert id="insertReserveInfo">
         INSERT INTO reservation_tb (

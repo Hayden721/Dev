@@ -49,4 +49,6 @@ public interface ReserveService {
 
 
     boolean roomBookmark(String memberId, Long roomNo);
+
+    String getRoomInfo(Long roomNo, Long optionNo);
 }
