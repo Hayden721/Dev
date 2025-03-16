@@ -48,3 +48,6 @@
 
 ## ERD
 https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ
+
+## 보고서
+https://docs.google.com/document/d/1z4PhNv9ANY4x-boDaXjr5Z-htitcXmxPMn-WSYksl1E/edit?usp=sharing
