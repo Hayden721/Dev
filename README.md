@@ -43,4 +43,7 @@
 [https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ](https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ)
 
 ## 보고서
-[https://docs.google.com/document/d/1z4PhNv9ANY4x-boDaXjr5Z-htitcXmxPMn-WSYksl1E/edit?usp=sharing](https://docs.google.com/document/d/1z4PhNv9ANY4x-boDaXjr5Z-htitcXmxPMn-WSYksl1E/edit?usp=sharing)
+[포트폴리오_공간 예약 서비스.pdf](https://github.com/user-attachments/files/19443742/_.pdf)
+
+https://drive.google.com/file/d/12z94wtLmu65h5qi-KGrhH3flcKBrwVzO/view?usp=drive_link
+
