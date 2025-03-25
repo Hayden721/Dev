@@ -38,7 +38,7 @@
 ![js](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white)
 
 ## ERD
-![공유 공간 ERD](https://github.com/user-attachments/assets/406d791a-c3a0-4ee1-b6ba-afe4bd0f77c9)
+<img src="https://github.com/user-attachments/assets/406d791a-c3a0-4ee1-b6ba-afe4bd0f77c9" width="300" height="200" /> 
 [https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ](https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ)
 
 ## 보고서
