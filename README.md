@@ -22,32 +22,23 @@
 ![js](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=CSS3&logoColor=white)
 ![js](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=white)
 
-
-
-
 ### Back-end
 ![js](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=SpringBoot&logoColor=white)
 ![js](https://img.shields.io/badge/java-007396?style=for-the-badge&logo=OpenJDK&logoColor=white")
-
-
 
 ### Library
 ![js](https://img.shields.io/badge/Thymeleaf-005F0F?style=for-the-badge&logo=Thymeleaf&logoColor=white)
 ![js](https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jQuery&logoColor=white)
 ![js](https://img.shields.io/badge/BootStrap-7952B3?style=for-the-badge&logo=BootStrap&logoColor=white)
 
-
-
 ![js](https://img.shields.io/badge/Mybatis-000000?style=for-the-badge&logo=Mybatis&logoColor=white)
 ![js](https://img.shields.io/badge/SpringSecurity-6DB33F?style=for-the-badge&logo=SpringSecurity&logoColor=white)
-
 
 ### DB
 ![js](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white)
 
-
 ## ERD
-
+![공유 공간 ERD](https://github.com/user-attachments/assets/406d791a-c3a0-4ee1-b6ba-afe4bd0f77c9)
 [https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ](https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ)
 
 ## 보고서
