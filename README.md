@@ -1,21 +1,7 @@
-# Project
-공간 예약 서비스
-일반 사용자와 공간 제공자가 사용 관리할 수 있는 서비스를 개발합니다.
+# 프로젝트 소개
+일반 사용자가 날짜와 시간을 선택해 공간을 예약할 수 있는 서비스 입니다.
 
-
-
-###  일반 사용자 페이지
-사용자가 사용, 예약하고자 하는 유형의 공간을 날짜와 시간을 지정하여 예약할 수 있고 예약 조회, 관리 등을 할 수 있습니다.
-
-
-
-###  공간 제공자(seller) 페이지
-제공하는 공간을 등록, 관리 등을 할 수 있습니다.
-
-
-
-# Development
-
+# ⚙️ 개발 환경
 ### Front-end
 
 ![js](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white)
@@ -37,6 +23,37 @@
 ### DB
 ![js](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white)
 
+## 📌 기능
+### 일반 사용자 페이지
+회원 관리
+- 로그인
+- 회원가입
+- 로그아웃
+- 회원 수정
+- 비밀번호 찾기
+  
+예약
+- 공간 예약
+- 예약 취소
+- 예약 조회
+  
+###  공간 판매자(seller) 페이지
+회원 관리
+- 로그인
+- 회원 가입
+- 로그아웃
+- 비밀 번호 찾기
+
+공간 관리
+- 공간 조회
+- 공간 추가
+- 공간 삭제
+- 공간 수정
+
+예약 관리
+- 예약 조회
+- 예약 취소
+
 ## ERD
 <img src="https://github.com/user-attachments/assets/406d791a-c3a0-4ee1-b6ba-afe4bd0f77c9" width="900" height="550" /> 
 
@@ -44,4 +61,3 @@
 
 ## 보고서
 https://drive.google.com/file/d/12z94wtLmu65h5qi-KGrhH3flcKBrwVzO/view?usp=drive_link
-
