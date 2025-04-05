@@ -23,7 +23,7 @@
 ### DB
 ![js](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white)
 
-## 📌 기능
+# 📌 기능
 ### 일반 사용자 페이지
 회원 관리
 - 로그인
@@ -54,12 +54,12 @@
 - 예약 조회
 - 예약 취소
 
-## ERD
+# ERD
 <img src="https://github.com/user-attachments/assets/406d791a-c3a0-4ee1-b6ba-afe4bd0f77c9" width="900" height="550" /> 
 
 [https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ](https://www.erdcloud.com/d/eKC3AXvYzvuGYFREJ)
 
-## 보고서
+# 보고서
 https://drive.google.com/file/d/12z94wtLmu65h5qi-KGrhH3flcKBrwVzO/view?usp=drive_link
 
 # 기술적 이슈 및 해결 경험
