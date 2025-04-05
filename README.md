@@ -64,6 +64,7 @@ https://drive.google.com/file/d/12z94wtLmu65h5qi-KGrhH3flcKBrwVzO/view?usp=drive
 
 # 기술적 이슈 및 해결 경험
 Spring Security - 회원 유형별 접근 제어
+
 판매자와 일반 사용자의 페이지 접근 권한을 구분하기 위해 @Order 어노테이션을 사용하여 Security 설정을 분리하고 적용할 수 있었습니다.
 
 # 결과 및 성과
